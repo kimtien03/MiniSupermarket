@@ -9,13 +9,13 @@ public class Cashier_MainJFrame extends javax.swing.JFrame implements ActionList
 
     public Cashier_MainJFrame() {
         initComponents();
-        this.setLocationRelativeTo(null);
-        addActionListener();
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Cashier_MainJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        this.setLocationRelativeTo(null);
+        addActionListener();
     }
     
     public void addActionListener() {
