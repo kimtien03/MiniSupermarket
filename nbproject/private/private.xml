@@ -3,10 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ADMIN/OneDrive/Máy%20tính/All%20Projects/QuanLySieuThiMini/ProJectSieuThi_CNPM/src/com/myproject/GUI/Login/Login_JFrame.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Máy%20tính/All%20Projects/QuanLySieuThiMini/ProJectSieuThi_CNPM/src/com/myproject/GUI/Login/Change_Password_JDialog.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Máy%20tính/All%20Projects/QuanLySieuThiMini/ProJectSieuThi_CNPM/src/com/myproject/GUI/Admin/Admin_MainJFrame.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Máy%20tính/All%20Projects/QuanLySieuThiMini/ProJectSieuThi_CNPM/src/com/myproject/GUI/Login/Forgot_Password_JDialog.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryPages/Import_Inventory.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryDialogs/AddNewProduct.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryPages/Preview_Inventory.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryDialogs/UpdateInventory.java</file>
         </group>
     </open-files>
 </project-private>
