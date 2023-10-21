@@ -2,15 +2,15 @@ package com.myproject.DTO;
 
 public class CTHD_BanHangDTO {
     private String MaHD;
-    private String MaHH;
+    private String MaCT_HH;
     private float SLBan;
 
     public CTHD_BanHangDTO() {
     }
 
-    public CTHD_BanHangDTO(String MaHD, String MaHH, float SLBan) {
+    public CTHD_BanHangDTO(String MaHD, String MaCT_HH, float SLBan) {
         this.MaHD = MaHD;
-        this.MaHH = MaHH;
+        this.MaCT_HH = MaCT_HH;
         this.SLBan = SLBan;
     }
     
@@ -22,12 +22,12 @@ public class CTHD_BanHangDTO {
         this.MaHD = MaHD;
     }
     
-    public String getMaHH() {
-        return MaHH;
+    public String getMaCT_HH() {
+        return MaCT_HH;
     }
 
-    public void setMaHH(String MaHH) {
-        this.MaHH = MaHH;
+    public void setMaCT_HH(String MaCT_HH) {
+        this.MaCT_HH = MaCT_HH;
     }
     
     public float getSLBan() {

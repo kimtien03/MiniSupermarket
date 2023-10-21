@@ -3,12 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryPages/Import_Inventory.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/MainInventory.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryDialogs/AddNewProduct.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryPages/ProductStorage.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryPages/Preview_Inventory.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryDialogs/UpdateInventory.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/QuanLy/MainFrame.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/QuanLy/QuanLyPanels/QLNCCPanel.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/QuanLy/QuanLyPanels/KhuyenMaiPanel.java</file>
         </group>
     </open-files>
 </project-private>
