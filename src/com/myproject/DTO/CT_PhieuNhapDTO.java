@@ -2,14 +2,14 @@ package com.myproject.DTO;
 
 public class CT_PhieuNhapDTO {
     private String MaPN;
-    private String MaHH;
+    private String MaCT_HH;
     private String MaNCC;
     private float SLNhap;
     private float DonGiaNhap;
 
-    public CT_PhieuNhapDTO(String MaPN, String MaHH, String MaNCC, int SLNhap, float DonGiaNhap) {
+    public CT_PhieuNhapDTO(String MaPN, String MaCT_HH, String MaNCC, int SLNhap, float DonGiaNhap) {
         this.MaPN = MaPN;
-        this.MaHH = MaHH;
+        this.MaCT_HH = MaCT_HH;
         this.MaNCC = MaNCC;
         this.SLNhap = SLNhap;
         this.DonGiaNhap = DonGiaNhap;
@@ -26,12 +26,12 @@ public class CT_PhieuNhapDTO {
         this.MaPN = MaPN;
     }
     
-    public String getMaHH() {
-        return MaHH;
+    public String getMaCT_HH() {
+        return MaCT_HH;
     }
 
-    public void setMaHH(String MaHH) {
-        this.MaHH = MaHH;
+    public void setMaCT_HH(String MaCT_HH) {
+        this.MaCT_HH = MaCT_HH;
     }
     
     public String getMaNCC() {

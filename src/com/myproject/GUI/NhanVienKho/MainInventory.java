@@ -1,6 +1,6 @@
 package com.myproject.GUI.NhanVienKho;
 
-import GUI.InventoryPages.Import_Inventory;
+import com.myproject.GUI.NhanVienKho.InventoryPages.Import_Inventory;
 import com.myproject.GUI.NhanVienKho.InventoryPages.ProductStorage;
 import com.myproject.GUI.NhanVienKho.InventoryPages.Preview_Inventory;
 import com.formdev.flatlaf.FlatLightLaf;

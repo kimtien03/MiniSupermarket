@@ -4,12 +4,14 @@ public class PhieuNhapDTO {
     private String MaPN;
     private String NgLapPhieu;
     private String MaNV;
+    private float ThanhTien;
     private boolean TinhTrang;
 
-    public PhieuNhapDTO(String MaPN, String NgLapPhieu, String MaNV,boolean TinhTrang) {
+    public PhieuNhapDTO(String MaPN, String NgLapPhieu, String MaNV, float ThanhTien, boolean TinhTrang) {
         this.MaPN = MaPN;
         this.NgLapPhieu = NgLapPhieu;
         this.MaNV = MaNV;
+        this.ThanhTien = ThanhTien;
         this.TinhTrang = TinhTrang;
     }
     public PhieuNhapDTO() {
@@ -37,6 +39,14 @@ public class PhieuNhapDTO {
 
     public void setMaNV(String MaNV) {
         this.MaNV = MaNV;
+    }
+
+    public float getThanhTien() {
+        return ThanhTien;
+    }
+
+    public void setThanhTien(float ThanhTien) {
+        this.ThanhTien = ThanhTien;
     }
     
     public boolean isTinhTrang() {
