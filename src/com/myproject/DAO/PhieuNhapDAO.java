@@ -14,7 +14,6 @@ public class PhieuNhapDAO extends conndb{
                String sql = "SELECT * FROM PHIEUNHAP";
                Statement s = con.createStatement();
                ResultSet rs = s.executeQuery(sql);
-               System.out.println(rs.next());
                while(rs.next()) {
                    PhieuNhapDTO p = new PhieuNhapDTO();
                    p.setMaPN(rs.getString("MaPhieuNhap"));

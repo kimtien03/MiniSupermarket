@@ -6,6 +6,7 @@ package com.myproject.GUI.QuanLy.QuanLyPanels;
 
 import com.myproject.BUS.PhieuNhapBUS;
 import com.myproject.DAO.PhieuNhapDAO;
+import com.myproject.DTO.CT_PhieuNhapDTO;
 import com.myproject.DTO.PhieuNhapDTO;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
     DefaultTableModel modelTablePN;
     DefaultTableModel modelTableCTPN;
     PhieuNhapBUS pn = new PhieuNhapBUS();
+    ArrayList<PhieuNhapDTO> arrPN = new ArrayList<>();
+    ArrayList<CT_PhieuNhapDTO> arrCTPN;
+    ArrayList<CT_PhieuNhapDTO> arrCTHH;
     public QLNhapHangPanel() {
         initComponents();
         modelTablePN = (DefaultTableModel) jtbPNH.getModel();
@@ -1159,10 +1163,33 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
         jtfSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jtfSearch.setToolTipText("Search here...");
         jtfSearch.setBorder(null);
+        jtfSearch.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                jtfSearchInputMethodTextChanged(evt);
+            }
+        });
+        jtfSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jtfSearchKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfSearchKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jtfSearchKeyTyped(evt);
+            }
+        });
 
         jLabel9.setText("Lọc");
 
         jcbboxFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất Cả", "Đã Duyệt", "Chưa Duyệt" }));
+        jcbboxFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbboxFilterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -1227,21 +1254,70 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     public void loadAllPN() {
         modelTablePN.setRowCount(0);
-        ArrayList<PhieuNhapDTO> arr = new ArrayList<>();
-        arr = pn.getAllPN();
-        for(int i=0;i<arr.size();i++) {
-            String maPN = arr.get(i).getMaPN();
-            Timestamp ngLap = arr.get(i).getNgLapPhieu();
-            String maNV = arr.get(i).getMaNV();
-            float thanhTien = arr.get(i).getThanhTien();
-            boolean tinhTrang = arr.get(i).isTinhTrang();
+        arrPN = pn.getAllPN();
+        for (PhieuNhapDTO p : arrPN) {
+            String maPN = p.getMaPN();
+            Timestamp ngLap = p.getNgLapPhieu();
+            String maNV = p.getMaNV();
+            float thanhTien = p.getThanhTien();
+            boolean tinhTrang = p.isTinhTrang();
             Object[] row = {maPN,ngLap,thanhTien,maNV,tinhTrang};
-            System.out.println(maNV);
             modelTablePN.addRow(row);
         }
         jtbPNH.setModel(modelTablePN);
     }
-    
+    public void FilterPN() {
+        modelTablePN.setRowCount(0);
+        arrPN = pn.getAllPN();
+        FilterStatus();
+        FilterSearch();
+        if(arrPN.size() !=0) {
+            for (PhieuNhapDTO p : arrPN) {
+                String maPN = p.getMaPN();
+                Timestamp ngLap = p.getNgLapPhieu();
+                String maNV = p.getMaNV();
+                float thanhTien = p.getThanhTien();
+                boolean tinhTrang = p.isTinhTrang();
+                Object[] row = {maPN,ngLap,thanhTien,maNV,tinhTrang};
+                modelTablePN.addRow(row);
+            }
+        }
+        jtbPNH.setModel(modelTablePN);
+    }
+    public void FilterSearch(){
+        String search = jtfSearch.getText();
+        if(!search.trim().equalsIgnoreCase("")) {
+            int i=0;
+            while(i<arrPN.size()) {
+                String str = "";
+                if(!arrPN.get(i).getMaPN().toLowerCase().contains(search.toLowerCase()) && 
+                        !arrPN.get(i).getMaNV().toLowerCase().contains(search.toLowerCase()))
+                {
+                    arrPN.remove(arrPN.get(i));
+                } else {
+                    i++;
+                }
+            }
+        }
+    }
+    public void FilterStatus() {
+        if(jcbboxFilter.getSelectedIndex() != 0) {
+            int intdex = jcbboxFilter.getSelectedIndex();
+            boolean trangThai = false;
+            if(intdex == 1) {
+                trangThai = true;
+            }
+            int i=0;
+            while(i<arrPN.size()) {
+                if(arrPN.get(i).isTinhTrang()!= trangThai)
+                {
+                    arrPN.remove(arrPN.get(i));
+                } else {
+                    i++;
+                }
+            }
+        }
+    }
     private void jbttnClastifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnClastifyActionPerformed
         jDialog2.setLocationRelativeTo(null);
         jDialog2.setVisible(true);
@@ -1275,6 +1351,17 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
             jbttnDelete.setEnabled(true);
             jbttnFix.setEnabled(true);
         }
+        int row = jtbPNH.getSelectedRow();
+        modelTableCTPN.setRowCount(0);
+        String maPN = (String)jtbPNH.getValueAt(row, 0);
+//        for(int i=0;i<arrCTPN.size();i++) {
+//            if(maPN.equalsIgnoreCase(arrCTPN.get(i).getMaPN())) {
+//                Object rowCTPN[] = {arrCTPN.get(i).getMaPN(),
+//                arrCTPN.get(i).getMaSP(),arrCTPN.get(i).getSoLuong(),chiTietList.get(i).getDonGia()};
+//                modelTableCTPN.addRow(rowCTPN);
+//            }
+//        }
+        jTable3.setModel(modelTableCTPN);
     }//GEN-LAST:event_jtbPNHMouseClicked
 
     private void jtbPNHKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtbPNHKeyReleased
@@ -1371,6 +1458,26 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn một loại hàng để sửa!");
         }
     }//GEN-LAST:event_jButton15ActionPerformed
+
+    private void jcbboxFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbboxFilterActionPerformed
+        FilterPN();
+    }//GEN-LAST:event_jcbboxFilterActionPerformed
+
+    private void jtfSearchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfSearchKeyPressed
+        
+    }//GEN-LAST:event_jtfSearchKeyPressed
+
+    private void jtfSearchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfSearchKeyTyped
+        
+    }//GEN-LAST:event_jtfSearchKeyTyped
+
+    private void jtfSearchInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jtfSearchInputMethodTextChanged
+        
+    }//GEN-LAST:event_jtfSearchInputMethodTextChanged
+
+    private void jtfSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfSearchKeyReleased
+        FilterPN();
+    }//GEN-LAST:event_jtfSearchKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
