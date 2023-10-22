@@ -1,1 +1,0 @@
-com.myproject.main.Main
