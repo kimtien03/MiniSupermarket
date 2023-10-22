@@ -1,6 +1,18 @@
 package com.myproject.GUI.Admin;
 
+import com.myproject.BUS.NhanVienBUS;
+import com.myproject.DAO.NhanVienDAO;
+import com.myproject.DTO.NhanVienDTO;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 public class AccountManag_JPanel extends javax.swing.JPanel {
+    private NhanVienDAO nhanVienDAO = new NhanVienDAO();
+    private NhanVienBUS nhanVienBUS = new NhanVienBUS();
+    // liên quan đến bảng
+    private DefaultTableModel tableModelStaff;
+    private int seclectRowStaffTable;
+    
     public AccountManag_JPanel() {
         initComponents();
     }
@@ -17,9 +29,9 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
         jTextField2 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        Staff_JTable = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        refeshJBTN = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(916, 650));
@@ -43,7 +55,7 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTextField2.setBorder(null);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        Staff_JTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -51,7 +63,7 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
                 "Mã nhân viên", "Họ tên", "Chức vụ ", "Mật khẩu", "Khóa TK"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(Staff_JTable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -69,10 +81,15 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
         jButton4.setText("Khóa tài khoản");
         jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/reload.png"))); // NOI18N
-        jButton3.setText("Làm mới");
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        refeshJBTN.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        refeshJBTN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/reload.png"))); // NOI18N
+        refeshJBTN.setText("Làm mới");
+        refeshJBTN.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        refeshJBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refeshJBTNActionPerformed(evt);
+            }
+        });
 
         jButton5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/unlock.png"))); // NOI18N
@@ -105,7 +122,7 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(refeshJBTN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -132,7 +149,7 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
-                    .addComponent(jButton3)
+                    .addComponent(refeshJBTN)
                     .addComponent(jButton5))
                 .addContainerGap())
         );
@@ -142,8 +159,12 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void refeshJBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refeshJBTNActionPerformed
+        
+    }//GEN-LAST:event_refeshJBTNActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton3;
+    private javax.swing.JTable Staff_JTable;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -152,8 +173,27 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JButton refeshJBTN;
     // End of variables declaration//GEN-END:variables
+
+    // PHƯƠNG THỨC
+    // đẩy dữ liệu lên trên table 
+    public void loadStaffInfoToRow(NhanVienDTO staff) {
+        Object[] row = new Object[] {
+            staff.getMaNV(), staff.getTenNV()
+        };
+    }
+    
+    public void loadDataStaffList() {
+        // khoi tao bang
+        tableModelStaff = (DefaultTableModel) Staff_JTable.getModel();
+        seclectRowStaffTable = -1;
+        tableModelStaff.setRowCount(0);
+        // đẩy dữ liệu lên bảng
+        for (NhanVienDTO staffItem : nhanVienBUS.getStaffList()) {
+            
+        }
+    }
 }
