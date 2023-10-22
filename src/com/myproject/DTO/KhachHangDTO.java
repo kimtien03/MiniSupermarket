@@ -1,13 +1,15 @@
 package com.myproject.DTO;
 
+import java.util.Date;
+
 public class KhachHangDTO {
     private String MaKH;
     private String HoTen;
     private String SDT;
     private int Diem;
-    private String NgSinh;
+    private Date NgSinh;
     private boolean TinhTrang;
-    public KhachHangDTO(String MaKH, String HoTen, String SDT, int Diem, String NgSinh, boolean TinhTrang) {
+    public KhachHangDTO(String MaKH, String HoTen, String SDT, int Diem, Date NgSinh, boolean TinhTrang) {
         this.MaKH = MaKH;
         this.HoTen = HoTen;
         this.SDT = SDT;
@@ -51,13 +53,15 @@ public class KhachHangDTO {
         this.Diem = Diem;
     }
 
-    public String getNgSinh() {
+    public Date getNgSinh() {
         return NgSinh;
     }
 
-    public void setNgSinh(String NgSinh) {
+    public void setNgSinh(Date NgSinh) {
         this.NgSinh = NgSinh;
     }
+
+    
     
     public boolean isTinhTrang() {
         return TinhTrang;

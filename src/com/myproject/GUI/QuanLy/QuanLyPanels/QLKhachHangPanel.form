@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.6" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <NonVisualComponents>
     <Container class="javax.swing.JDialog" name="jDialog1">
       <Properties>
@@ -314,7 +314,7 @@
                           <Component id="jPanel11" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnKh" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -328,7 +328,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jPanel11" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnKh" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -392,12 +392,12 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
-                                  <Component id="jTextField8" max="32767" attributes="0"/>
+                                  <Component id="TenKHtext" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="jTextField7" min="-2" pref="130" max="-2" attributes="0"/>
+                                  <Component id="MaKHText" min="-2" pref="130" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
@@ -407,8 +407,8 @@
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jTextField9" max="32767" attributes="0"/>
-                              <Component id="jDateChooser1" pref="130" max="32767" attributes="0"/>
+                              <Component id="SdtKhText" max="32767" attributes="0"/>
+                              <Component id="NgSChoose" pref="130" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -421,17 +421,17 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextField7" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextField9" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="MaKHText" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="SdtKhText" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                   <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jTextField8" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="TenKHtext" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jDateChooser1" min="-2" max="-2" attributes="0"/>
+                              <Component id="NgSChoose" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="24" max="32767" attributes="0"/>
                       </Group>
@@ -459,23 +459,23 @@
                     <Property name="text" type="java.lang.String" value="H&#x1ecd; T&#xea;n"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField7">
+                <Component class="javax.swing.JTextField" name="MaKHText">
                   <Properties>
                     <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField8">
+                <Component class="javax.swing.JTextField" name="TenKHtext">
                 </Component>
-                <Component class="javax.swing.JTextField" name="jTextField9">
+                <Component class="javax.swing.JTextField" name="SdtKhText">
                 </Component>
-                <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser1">
+                <Component class="com.toedter.calendar.JDateChooser" name="NgSChoose">
                   <Properties>
                     <Property name="dateFormatString" type="java.lang.String" value="dd-MM-yyyy"/>
                   </Properties>
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="btnKh">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/resources/images/plus.png"/>
@@ -485,6 +485,9 @@
                   <Color id="Hand Cursor"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnKhActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -837,28 +840,15 @@
             <Component class="javax.swing.JTable" name="jtbDHKH">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="3">
-                    <Column editable="false" title="M&#xe3; H&#xf3;a &#x110;&#x1a1;n" type="java.lang.String">
-                      <Data value="H&#x110;01"/>
-                      <Data value="H&#x110;02"/>
-                      <Data value="H&#x110;03"/>
-                    </Column>
-                    <Column editable="false" title="Ng&#xe0;y L&#x1ead;p" type="java.lang.String">
-                      <Data value="16-03-2023 12:03:00"/>
-                      <Data value="16-03-2023 12:03:00"/>
-                      <Data value="16-03-2023 12:03:00"/>
-                    </Column>
-                    <Column editable="false" title="Th&#xe0;nh Ti&#x1ec1;n" type="java.lang.Float">
-                      <Data value="10000.0"/>
-                      <Data value="10000.0"/>
-                      <Data value="10000.0"/>
-                    </Column>
-                    <Column editable="false" title="M&#xe3; Nh&#xe2;n Vi&#xea;n" type="java.lang.String">
-                      <Data value="NV03"/>
-                      <Data value="NV06"/>
-                      <Data value="NV02"/>
-                    </Column>
+                  <Table columnCount="4" rowCount="0">
+                    <Column editable="false" title="M&#xe3; H&#xf3;a &#x110;&#x1a1;n" type="java.lang.String"/>
+                    <Column editable="false" title="Ng&#xe0;y L&#x1ead;p" type="java.lang.String"/>
+                    <Column editable="false" title="Th&#xe0;nh Ti&#x1ec1;n" type="java.lang.Float"/>
+                    <Column editable="false" title="M&#xe3; Nh&#xe2;n Vi&#xea;n" type="java.lang.String"/>
                   </Table>
+                </Property>
+                <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+                  <JTableSelectionModel selectionMode="0"/>
                 </Property>
               </Properties>
               <Events>
@@ -905,24 +895,17 @@
             <Component class="javax.swing.JTable" name="jtbCustomer">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="6" rowCount="1">
-                    <Column editable="false" title="M&#xe3; Kh&#xe1;ch H&#xe0;ng" type="java.lang.String">
-                      <Data value="KH001"/>
-                    </Column>
-                    <Column editable="false" title="H&#x1ecd; T&#xea;n" type="java.lang.String">
-                      <Data value="Nguy&#x1ec5;n Ho&#xe0;ng Ti&#x1ebf;n"/>
-                    </Column>
-                    <Column editable="false" title="S&#x1ed1; &#x111;i&#x1ec7;n tho&#x1ea1;i" type="java.lang.String">
-                      <Data value="0763732400"/>
-                    </Column>
-                    <Column editable="false" title="Ng&#xe0;y Sinh" type="java.lang.String">
-                      <Data value="17-02-2003"/>
-                    </Column>
-                    <Column editable="false" title="&#x110;i&#x1ec3;m t&#xed;ch l&#x169;y" type="java.lang.Integer">
-                      <Data value="100"/>
-                    </Column>
+                  <Table columnCount="6" rowCount="0">
+                    <Column editable="false" title="M&#xe3; Kh&#xe1;ch H&#xe0;ng" type="java.lang.String"/>
+                    <Column editable="false" title="H&#x1ecd; T&#xea;n" type="java.lang.String"/>
+                    <Column editable="false" title="S&#x1ed1; &#x111;i&#x1ec7;n tho&#x1ea1;i" type="java.lang.String"/>
+                    <Column editable="false" title="Ng&#xe0;y Sinh" type="java.lang.String"/>
+                    <Column editable="false" title="&#x110;i&#x1ec3;m t&#xed;ch l&#x169;y" type="java.lang.Integer"/>
                     <Column editable="false" title="T&#xec;nh tr&#x1ea1;ng" type="java.lang.Boolean"/>
                   </Table>
+                </Property>
+                <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+                  <JTableSelectionModel selectionMode="0"/>
                 </Property>
               </Properties>
             </Component>
@@ -942,11 +925,11 @@
                           <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                           <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="jcbboxFilter" min="-2" max="-2" attributes="0"/>
+                          <Component id="FilterCbb" min="-2" max="-2" attributes="0"/>
                           <EmptySpace pref="370" max="32767" attributes="0"/>
                           <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="jcbboxArrange" min="-2" max="-2" attributes="0"/>
+                          <Component id="MathCbb" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="jLabel1" min="-2" pref="32" max="-2" attributes="0"/>
@@ -969,9 +952,9 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jcbboxArrange" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="MathCbb" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jcbboxFilter" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="FilterCbb" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -999,12 +982,13 @@
             <Property name="text" type="java.lang.String" value="S&#x1eaf;p X&#x1ebf;p"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="jcbboxArrange">
+        <Component class="javax.swing.JComboBox" name="MathCbb">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
-                <StringItem index="0" value="&#x110;i&#x1ec3;m t&#x103;ng d&#x1ea7;n"/>
-                <StringItem index="1" value="&#x110;i&#x1ec3;m gi&#x1ea3;m d&#x1ea7;n"/>
+              <StringArray count="3">
+                <StringItem index="0" value="Ch&#x1b0;a s&#x1eaf;p x&#x1ebf;p"/>
+                <StringItem index="1" value="&#x110;i&#x1ec3;m t&#x103;ng d&#x1ea7;n"/>
+                <StringItem index="2" value="&#x110;i&#x1ec3;m gi&#x1ea3;m d&#x1ea7;n"/>
               </StringArray>
             </Property>
           </Properties>
@@ -1017,7 +1001,7 @@
             <Property name="text" type="java.lang.String" value="L&#x1ecd;c"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="jcbboxFilter">
+        <Component class="javax.swing.JComboBox" name="FilterCbb">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">
@@ -1069,7 +1053,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="jbttnAdd">
+            <Component class="javax.swing.JButton" name="btnAddKh">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/resources/images/plus.png"/>
@@ -1083,12 +1067,12 @@
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbttnAddActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddKhActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JToolBar$Separator" name="jSeparator10">
             </Component>
-            <Component class="javax.swing.JButton" name="jbttnFix">
+            <Component class="javax.swing.JButton" name="btnFixKh">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/resources/images/fix.png"/>
@@ -1102,7 +1086,7 @@
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbttnFixActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFixKhActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JToolBar$Separator" name="jSeparator11">

@@ -99,7 +99,7 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
                 // Làm sạch dữ liệu trong bảng
                 tableModel.setRowCount(0);
                 if (selectedTrangThai.equals("Đang hoạt động")) {
-                    List<NhanVienDTO> nccList = NVBUS.getList();
+
                     for (NhanVienDTO nv : nvlist) {
                         if (nv.isTinhTrang()) { // Kiểm tra nếu tình trạng là 1 (đang hoạt động)
                             Object[] rowData = {nv.getMaNV(), nv.getTenNV(), nv.getNgSinh(), nv.getGioitinh(), nv.getSDT(), nv.getEmail(), nv.getChucVu(), nv.isTinhTrang()};
@@ -107,7 +107,6 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
                         }
                     }
                 } else if (selectedTrangThai.equals("Ngừng hoạt động")) {
-                    List<NhanVienDTO> nccList = NVBUS.getList();
                     for (NhanVienDTO nv : nvlist) {
                         if (!nv.isTinhTrang()) { // Kiểm tra nếu tình trạng là 0 (ngung đang hoạt động)
                             Object[] rowData = {nv.getMaNV(), nv.getTenNV(), nv.getNgSinh(), nv.getGioitinh(), nv.getSDT(), nv.getEmail(), nv.getChucVu(), nv.isTinhTrang()};
@@ -116,7 +115,6 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
                     }
                 } else {
                     // Hiển thị toàn bộ dữ liệu nếu chọn "Tất cả"
-                    List<NhanVienDTO> nccList = NVBUS.getList();
                     for (NhanVienDTO nv : nvlist) {
                         Object[] rowData = {nv.getMaNV(), nv.getTenNV(), nv.getNgSinh(), nv.getGioitinh(), nv.getSDT(), nv.getEmail(), nv.getChucVu(), nv.isTinhTrang()};
                         tableModel.addRow(rowData);
@@ -125,18 +123,17 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
             }
         });
     }
-
+    
     public boolean exportToExcel(JTable table, String filePath) {
         try {
             File excelFile = new File(filePath);
 
             Workbook workbook;
-            if (excelFile.exists()) {
+            if (excelFile.exists()){
                 // Nếu tệp Excel đã tồn tại, thử mở nó để kiểm tra xem sheet đã có chưa
                 FileInputStream inputStream = new FileInputStream(excelFile);
                 workbook = WorkbookFactory.create(inputStream);
                 inputStream.close();
-
                 // Kiểm tra xem sheet đã có trong tệp Excel chưa
                 String newSheetName = "NhanVien"; // Tên sheet mới
                 boolean sheetExists = false;
@@ -147,7 +144,6 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
                         break;
                     }
                 }
-
                 if (sheetExists) {
                     // Nếu sheet đã tồn tại, ghi đè lên sheet hiện có
                     workbook.removeSheetAt(workbook.getSheetIndex(newSheetName));
