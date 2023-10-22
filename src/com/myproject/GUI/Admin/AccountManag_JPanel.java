@@ -177,4 +177,8 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JButton refeshJBTN;
     // End of variables declaration//GEN-END:variables
+
+    public void loadDataToTable() {
+        
+    }
 }
