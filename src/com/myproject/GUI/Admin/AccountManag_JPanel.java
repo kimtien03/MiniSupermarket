@@ -177,23 +177,4 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JButton refeshJBTN;
     // End of variables declaration//GEN-END:variables
-
-    // PHƯƠNG THỨC
-    // đẩy dữ liệu lên trên table 
-    public void loadStaffInfoToRow(NhanVienDTO staff) {
-        Object[] row = new Object[] {
-            staff.getMaNV(), staff.getTenNV()
-        };
-    }
-    
-    public void loadDataStaffList() {
-        // khoi tao bang
-        tableModelStaff = (DefaultTableModel) Staff_JTable.getModel();
-        seclectRowStaffTable = -1;
-        tableModelStaff.setRowCount(0);
-        // đẩy dữ liệu lên bảng
-        for (NhanVienDTO staffItem : nhanVienBUS.getStaffList()) {
-            
-        }
-    }
 }
