@@ -12,8 +12,10 @@ public class NhanVienDTO {
     private Date NgSinh;
     private String MaQuyen;
     private boolean TinhTrang;
+    private String ChucVu;
+    private boolean KhoaTK;
 
-    public NhanVienDTO(String MaNV, String TenNV, String Gioitinh, String Email, String SDT, String Passwd, Date NgSinh, String MaQuyen, boolean TinhTrang) {
+    public NhanVienDTO(String MaNV, String TenNV, String Gioitinh, String Email, String SDT, String Passwd, Date NgSinh, String MaQuyen, boolean TinhTrang, String ChucVu, boolean KhoaTK) {
         this.MaNV = MaNV;
         this.TenNV = TenNV;
         this.Gioitinh = Gioitinh;
@@ -23,7 +25,28 @@ public class NhanVienDTO {
         this.NgSinh = NgSinh;
         this.MaQuyen = MaQuyen;
         this.TinhTrang = TinhTrang;
+        this.ChucVu = ChucVu;
+        this.KhoaTK = KhoaTK;
     }
+
+    public String getChucVu() {
+        return ChucVu;
+    }
+
+    public void setChucVu(String ChucVu) {
+        this.ChucVu = ChucVu;
+    }
+
+    public boolean isKhoaTK() {
+        return KhoaTK;
+    }
+
+    public void setKhoaTK(boolean KhoaTK) {
+        this.KhoaTK = KhoaTK;
+    }
+    
+
+    
     public NhanVienDTO(){
         
     }

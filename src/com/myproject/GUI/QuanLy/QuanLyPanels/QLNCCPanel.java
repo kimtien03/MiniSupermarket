@@ -11,7 +11,9 @@ import static java.awt.PageAttributes.MediaType.D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -19,6 +21,7 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -55,7 +58,6 @@ public class QLNCCPanel extends javax.swing.JPanel {
             Object[] rowData = {nhacc.getMaNCC(), nhacc.getTenNCC(), nhacc.getDiaChi(), nhacc.getEmail(), nhacc.getSDT(), nhacc.isTinhTrang()};
             table.addRow(rowData);
         }
-
     }
 
     public void SearchNcc() {
@@ -87,7 +89,6 @@ public class QLNCCPanel extends javax.swing.JPanel {
                 }
             }
         });
-
     }
 
     public void ComboboxNcc() {
@@ -130,23 +131,51 @@ public class QLNCCPanel extends javax.swing.JPanel {
 
     public boolean exportToExcel(JTable table, String filePath) {
         try {
-            Workbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet("NhaCungCap");
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            File excelFile = new File(filePath);
 
-            // Create the row for the title
+            Workbook workbook;
+            if (excelFile.exists()) {
+                // Nếu tệp Excel đã tồn tại, thử mở nó để kiểm tra xem sheet đã có chưa
+                FileInputStream inputStream = new FileInputStream(excelFile);
+                workbook = WorkbookFactory.create(inputStream);
+                inputStream.close();
+
+                // Kiểm tra xem sheet đã có trong tệp Excel chưa
+                String newSheetName = "NhaCungCap"; // Tên sheet mới
+                boolean sheetExists = false;
+                Iterator<Sheet> sheetIterator = workbook.sheetIterator();
+                while (sheetIterator.hasNext()) {
+                    if (sheetIterator.next().getSheetName().equals(newSheetName)) {
+                        sheetExists = true;
+                        break;
+                    }
+                }
+
+                if (sheetExists) {
+                    // Nếu sheet đã tồn tại, ghi đè lên sheet hiện có
+                    workbook.removeSheetAt(workbook.getSheetIndex(newSheetName));
+                }
+            } else {
+                workbook = new XSSFWorkbook();
+            }
+
+            // Tạo sheet mới
+            Sheet sheet = workbook.createSheet("NhaCungCap");
+
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            // Tạo dòng cho tiêu đề
             Row titleRow = sheet.createRow(0);
             Cell titleCell = titleRow.createCell(0);
-            titleCell.setCellValue("Danh Sách Nhà Cung Cấp");
+            titleCell.setCellValue("Danh Sách Nhà Cung Câp");
 
-            // Create a cell style for the title (optional)
+            // Tạo kiểu cell cho tiêu đề (tùy chọn)
             CellStyle titleCellStyle = workbook.createCellStyle();
             titleCellStyle.setAlignment(HorizontalAlignment.CENTER);
             titleCell.setCellStyle(titleCellStyle);
 
-            // Populate data rows
+            // Thêm dữ liệu vào các dòng
             for (int row = 0; row < model.getRowCount(); row++) {
-                Row dataRow = sheet.createRow(row + 1); // Start from the second row for data
+                Row dataRow = sheet.createRow(row + 1);
                 for (int col = 0; col < model.getColumnCount(); col++) {
                     Cell cell = dataRow.createCell(col);
                     cell.setCellValue(model.getValueAt(row, col).toString());
@@ -158,22 +187,21 @@ public class QLNCCPanel extends javax.swing.JPanel {
                 sheet.autoSizeColumn(col);
             }
 
-            // Save the Excel file
-            FileOutputStream output = new FileOutputStream(new File(filePath));
+            // Lưu tệp Excel
+            FileOutputStream output = new FileOutputStream(excelFile);
             workbook.write(output);
             output.close();
 
-            return true; // Trả về true nếu xuất thành công
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return false; // Trả về false nếu xuất thất bại
+            return false;
         }
     }
 
 // Hàm kiểm tra định dạng số điện thoại
     private boolean isValidPhoneNumber(String phoneNumber) {
-        // Sử dụng biểu thức chính quy để kiểm tra số điện thoại (ví dụ)
-        String phonePattern = "^(\\d{10}|\\d{11})$"; // Ví dụ kiểm tra 10 hoặc 11 chữ số
+        String phonePattern = "^[0-9]{10}$"; // Kiểm tra chuỗi có đúng 10 chữ số
         return phoneNumber.matches(phonePattern);
     }
 
@@ -235,7 +263,6 @@ public class QLNCCPanel extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JToolBar.Separator();
         jbttnFix = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
-        jSeparator2 = new javax.swing.JToolBar.Separator();
         jbttnExport = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -423,15 +450,16 @@ public class QLNCCPanel extends javax.swing.JPanel {
 
         MaNCCFix.setEnabled(false);
 
-        TenNCCFix.setMaximumSize(new java.awt.Dimension(210, 2147483647));
+        TenNCCFix.setPreferredSize(new java.awt.Dimension(30, 22));
 
         SdtNCCFix.setMaximumSize(new java.awt.Dimension(210, 2147483647));
 
         EmailNCCFix.setMaximumSize(new java.awt.Dimension(210, 2147483647));
+        EmailNCCFix.setPreferredSize(new java.awt.Dimension(30, 22));
 
         CbbNCCFix.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang hoạt động", "Ngừng hoạt động" }));
 
-        DChiNCCFix.setMaximumSize(new java.awt.Dimension(210, 2147483647));
+        DChiNCCFix.setPreferredSize(new java.awt.Dimension(30, 22));
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -578,7 +606,6 @@ public class QLNCCPanel extends javax.swing.JPanel {
         });
         jToolBar1.add(jbttnFix);
         jToolBar1.add(jSeparator3);
-        jToolBar1.add(jSeparator2);
 
         jbttnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/xls-file.png"))); // NOI18N
         jbttnExport.setText("Excel");
@@ -643,8 +670,8 @@ public class QLNCCPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(jcbboxFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39))
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -720,7 +747,6 @@ public class QLNCCPanel extends javax.swing.JPanel {
     private void jbttnFixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnFixActionPerformed
         if (jtbNCC.getSelectedRow() != -1) {
             int selectedRow = jtbNCC.getSelectedRow();
-
             // Lấy thông tin từ dòng đã chọn
             String maNCC = (String) jtbNCC.getValueAt(selectedRow, 0);
             String tenNCC = (String) jtbNCC.getValueAt(selectedRow, 1);
@@ -737,6 +763,7 @@ public class QLNCCPanel extends javax.swing.JPanel {
             MaNCCFix.setText(maNCC);
             TenNCCFix.setText(tenNCC);
             DChiNCCFix.setText(diaChi);
+            DChiNCCFix.setCaretPosition(0);
             EmailNCCFix.setText(email.trim());
             SdtNCCFix.setText(sdt);
 
@@ -810,27 +837,31 @@ public class QLNCCPanel extends javax.swing.JPanel {
                 isDataValid = false;
             }
             if (isDataValid) {
-                NhaCungCapDTO fixncc = new NhaCungCapDTO();
-                fixncc.setMaNCC(MaNCCFix.getText());
-                fixncc.setTenNCC(TenNCCFix.getText());
-                fixncc.setDiaChi(DChiNCCFix.getText());
-                fixncc.setSDT(SdtNCCFix.getText());
-                fixncc.setEmail(EmailNCCFix.getText());
-                String selectedTinhTrang = (String) CbbNCCFix.getSelectedItem();
-                if ("Đang hoạt động".equals(selectedTinhTrang)) {
-                    fixncc.setTinhTrang(true); // Hoặc đặt giá trị tương ứng nếu true/false là kiểu dữ liệu của TinhTrang
-                } else {
-                    fixncc.setTinhTrang(false);
-                }
-                if (NCCBUS.UpdateNccNew(fixncc)) {
-                    JOptionPane.showMessageDialog(null, "Sua Thành Công!");
-                    DefaultTableModel tablefilter = (DefaultTableModel) jtbNCC.getModel();
-                    tablefilter.setRowCount(0); // Clear the table
-                    nccList = NCCBUS.getList(); // Đảm bảo datancc là danh sách mới sau khi thêm
-                    loadNCC();
-                    jDialog2.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Sua Không Thành Công!");
+                // Hiển thị hộp thoại xác nhận
+                int choice = JOptionPane.showConfirmDialog(null, "Bạn có muốn sửa nhà cung cấp?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    NhaCungCapDTO fixncc = new NhaCungCapDTO();
+                    fixncc.setMaNCC(MaNCCFix.getText());
+                    fixncc.setTenNCC(TenNCCFix.getText());
+                    fixncc.setDiaChi(DChiNCCFix.getText());
+                    fixncc.setSDT(SdtNCCFix.getText());
+                    fixncc.setEmail(EmailNCCFix.getText());
+                    String selectedTinhTrang = (String) CbbNCCFix.getSelectedItem();
+                    if ("Đang hoạt động".equals(selectedTinhTrang)) {
+                        fixncc.setTinhTrang(true); // Hoặc đặt giá trị tương ứng nếu true/false là kiểu dữ liệu của TinhTrang
+                    } else {
+                        fixncc.setTinhTrang(false);
+                    }
+                    if (NCCBUS.UpdateNccNew(fixncc)) {
+                        JOptionPane.showMessageDialog(null, "Sửa Thành Công!");
+                        DefaultTableModel tablefilter = (DefaultTableModel) jtbNCC.getModel();
+                        tablefilter.setRowCount(0); // Clear the table
+                        nccList = NCCBUS.getList(); // Đảm bảo datancc là danh sách mới sau khi thêm
+                        loadNCC();
+                        jDialog2.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Sửa Không Thành Công!");
+                    }
                 }
             }
         }
@@ -838,14 +869,24 @@ public class QLNCCPanel extends javax.swing.JPanel {
 
     private void jbttnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnExportActionPerformed
         JFileChooser fileChooser = new JFileChooser();
+        File defaultDirectory = new File("D:\\OneDrive\\Tai Lieu\\CNPM\\ProJectSieuThi_CNPM\\src\\resources\\excel");
+        fileChooser.setCurrentDirectory(defaultDirectory);
 
-        // Thiết lập để hiển thị hộp thoại lưu
+        // Tạo một FileFilter để chỉ cho phép lựa chọn các tệp có đuôi .xls
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Files (.xlsx)", "xlsx");
+        fileChooser.setFileFilter(filter);
+
         int result = fileChooser.showSaveDialog(this);
 
         if (result == JFileChooser.APPROVE_OPTION) {
             // Lấy đường dẫn và tên file được chọn
             File selectedFile = fileChooser.getSelectedFile();
             String filePath = selectedFile.getAbsolutePath();
+
+            // Kiểm tra xem tên tệp đã có đuôi .xls chưa
+            if (!filePath.toLowerCase().endsWith(".xlsx")) {
+                filePath += ".xlsx"; // Nếu chưa có, thêm đuôi .xls
+            }
 
             if (exportToExcel(jtbNCC, filePath)) {
                 JOptionPane.showMessageDialog(null, "Xuất Excel thành công!");
@@ -897,7 +938,6 @@ public class QLNCCPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
-    private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton jbttnAdd;

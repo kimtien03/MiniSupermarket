@@ -11,9 +11,7 @@ import java.util.List;
 import org.apache.xmlbeans.PrePostExtension;
 
 public class NhaCungCapDAO extends conndb {
-
     conndb ConNCC = new conndb();
-
     public List<NhaCungCapDTO> getList() {
         List<NhaCungCapDTO> list = new ArrayList<>();
         try {
