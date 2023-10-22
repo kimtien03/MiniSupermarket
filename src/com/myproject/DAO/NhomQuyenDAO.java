@@ -16,8 +16,17 @@ public class NhomQuyenDAO extends conndb{
         
         if(openConnection()) {
             try {
-                String sql = "SELECT * FROM NHANVIEN WHERE TinhTrang = 1";
-            } catch (Exception e) {
+                String sql = "SELECT * FROM NHOMQUYEN";
+                ResultSet rs = con.createStatement().executeQuery(sql);
+                while(rs.next()) {
+                    String MaQuyen = rs.getString("MaQuyen");
+                    String TenQuyen = rs.getString("TenQuyen");
+                    String Mota = rs.getString("MoTa");
+                    
+                    NhomQuyenDTO permissionItem = new NhomQuyenDTO(MaQuyen, TenQuyen, Mota);
+                    permissionArrayList.add(permissionItem);
+                }
+            } catch (SQLException e) {
             }
         }
         
