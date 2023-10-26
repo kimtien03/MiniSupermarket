@@ -9,9 +9,21 @@ public class HangHoaDAO extends conndb{
         ArrayList<HH_CTHH_DTO> arr = new ArrayList<>();
         if(openConnection()) {
             try {
-                String sql = "select ct_hanghoa.mahh,tenhh,sum(soluong) as 'soluong' from ct_hanghoa,hanghoa\n" +
-                             "where hanghoa.tinhtrang = 1 and ct_hanghoa.tinhtrang = 1 and ct_hanghoa.mahh = hanghoa.mahh\n" +
-                             "group by ct_hanghoa.mahh,tenhh";
+                String sql = 
+                "SELECT hanghoa.mahh, hanghoa.tenhh, SUM(ct_hanghoa.soluong) AS 'soluong'\n" +
+                "FROM hanghoa\n" +
+                "INNER JOIN ct_hanghoa ON hanghoa.mahh = ct_hanghoa.mahh\n" +
+                "WHERE hanghoa.tinhtrang = 1 AND ct_hanghoa.tinhtrang = 1\n" +
+                "GROUP BY hanghoa.mahh, hanghoa.tenhh\n" +
+                "UNION ALL\n" +
+                "SELECT hanghoa.mahh, hanghoa.tenhh, 0 AS soluong\n" +
+                "FROM hanghoa\n" +
+                "WHERE hanghoa.tinhtrang = 1 and hanghoa.mahh NOT IN \n" +
+                "(SELECT hanghoa.mahh\n" +
+                "FROM hanghoa\n" +
+                "INNER JOIN ct_hanghoa ON hanghoa.mahh = ct_hanghoa.mahh\n" +
+                "WHERE hanghoa.tinhtrang = 1 AND ct_hanghoa.tinhtrang = 1\n" +
+                "GROUP BY hanghoa.mahh, hanghoa.tenhh) order by mahh";
                 Statement s = con.createStatement();
                 ResultSet rs = s.executeQuery(sql);
                 while(rs.next()) {

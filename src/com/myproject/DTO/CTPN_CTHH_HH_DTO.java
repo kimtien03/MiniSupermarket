@@ -1,6 +1,6 @@
 package com.myproject.DTO;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class CTPN_CTHH_HH_DTO {
     private String MaHH;
@@ -15,7 +15,7 @@ public class CTPN_CTHH_HH_DTO {
     public CTPN_CTHH_HH_DTO() {
     }
 
-    public CTPN_CTHH_HH_DTO(String MaHH, String MaCT_HH, String TenHH, Date NgaySX, Date HSD, String MaNCC, float SLNhap, float DonGiaNhap) {
+    public CTPN_CTHH_HH_DTO(String MaHH, String MaCT_HH, String TenHH, Date NgaySX, Date HSD, String MaNCC, float SLNhap, float DonGiaNhap, String MaPN) {
         this.MaHH = MaHH;
         this.MaCT_HH = MaCT_HH;
         this.TenHH = TenHH;
@@ -24,6 +24,7 @@ public class CTPN_CTHH_HH_DTO {
         this.MaNCC = MaNCC;
         this.SLNhap = SLNhap;
         this.DonGiaNhap = DonGiaNhap;
+        this.MaPN = MaPN;
     }
 
     public String getMaPN() {

@@ -1,6 +1,6 @@
 package com.myproject.DTO;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class CT_HangHoaDTO {
     private String MaCT_HH;

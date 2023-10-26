@@ -8,6 +8,7 @@ import static com.itextpdf.text.pdf.security.LtvTimestamp.timestamp;
 import com.myproject.BUS.HangHoaBUS;
 import com.myproject.BUS.HoaDonBanHangBUS;
 import com.myproject.BUS.LoaiHangBUS;
+import com.myproject.BUS.NhaCungCapBUS;
 import com.myproject.BUS.PhieuNhapBUS;
 import com.myproject.DAO.PhieuNhapDAO;
 import com.myproject.DTO.CTPN_CTHH_HH_DTO;
@@ -15,14 +16,20 @@ import com.myproject.DTO.CT_PhieuNhapDTO;
 import com.myproject.DTO.HH_CTHH_DTO;
 import com.myproject.DTO.HangHoaDTO;
 import com.myproject.DTO.LoaiHangDTO;
+import com.myproject.DTO.NhaCungCapDTO;
 import com.myproject.DTO.PhieuNhapDTO;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -67,7 +74,6 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
         jtfMaPNFormFixPN = new javax.swing.JTextField();
         jtfMaNVFormFixPN = new javax.swing.JTextField();
         jcbboxTinhTrangFormFixPN = new javax.swing.JComboBox<>();
-        jButton12 = new javax.swing.JButton();
         jtfNgLapFormFixPN = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
         jtfThanhTienFormFixPN = new javax.swing.JTextField();
@@ -76,9 +82,9 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
         jtbSanPhamNhap = new javax.swing.JTable();
         jScrollPane5 = new javax.swing.JScrollPane();
         jtbSanPham = new javax.swing.JTable();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jbttnDeleteSP = new javax.swing.JButton();
+        jbttnOpenFormAddSP = new javax.swing.JButton();
+        jbttnOpenFormFixSP = new javax.swing.JButton();
         jPanel12 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -110,27 +116,27 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
         jdlFixCTPN = new javax.swing.JDialog();
         jLabel2 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton13 = new javax.swing.JButton();
+        jtfDGFormFixCTPN = new javax.swing.JTextField();
+        jtfSLFormFixCTPN = new javax.swing.JTextField();
+        jbttnFixFormFixCTPN = new javax.swing.JButton();
         jLabel24 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        jcbboxNCCFormFixCTPN = new javax.swing.JComboBox<>();
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jdcNSXFormFixCTPN = new com.toedter.calendar.JDateChooser();
+        jdcHSDFormFixCTPN = new com.toedter.calendar.JDateChooser();
         jdlAddCTPN = new javax.swing.JDialog();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
-        jButton14 = new javax.swing.JButton();
+        jtfDGFormAddCTPN = new javax.swing.JTextField();
+        jtfSLFormAddCTPN = new javax.swing.JTextField();
+        jbttnAddFormAddPN = new javax.swing.JButton();
         jLabel25 = new javax.swing.JLabel();
-        jComboBox4 = new javax.swing.JComboBox<>();
+        jcbboxNCCFormAddCTPN = new javax.swing.JComboBox<>();
         jLabel29 = new javax.swing.JLabel();
-        jDateChooser3 = new com.toedter.calendar.JDateChooser();
         jLabel30 = new javax.swing.JLabel();
-        jDateChooser4 = new com.toedter.calendar.JDateChooser();
+        jdcNSXFormAddCTPN = new com.toedter.calendar.JDateChooser();
+        jdcHSDFormAddCTPN = new com.toedter.calendar.JDateChooser();
         jdlFixDM = new javax.swing.JDialog();
         jPanel17 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
@@ -163,6 +169,11 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
 
         jdlFixPN.setMinimumSize(new java.awt.Dimension(960, 770));
         jdlFixPN.setModal(true);
+        jdlFixPN.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                jdlFixPNWindowClosing(evt);
+            }
+        });
 
         jPanel1.setMinimumSize(new java.awt.Dimension(812, 708));
 
@@ -204,10 +215,6 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
         jcbboxTinhTrangFormFixPN.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đã Duyệt", "Chưa Duyệt" }));
         jcbboxTinhTrangFormFixPN.setEnabled(false);
 
-        jButton12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/checked.png"))); // NOI18N
-        jButton12.setText("Hoàn Thành");
-        jButton12.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
         jtfNgLapFormFixPN.setEnabled(false);
 
         jLabel26.setText("Thành Tiền");
@@ -222,55 +229,48 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel26))
+                    .addComponent(jLabel10))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jtfMaPNFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtfNgLapFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(53, 53, 53)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtfMaPNFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jtfNgLapFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(53, 53, 53)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(18, 18, 18)
-                                .addComponent(jtfMaNVFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(jcbboxTinhTrangFormFixPN, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton12)
-                        .addGap(51, 51, 51))
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(jtfMaNVFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jtfThanhTienFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jcbboxTinhTrangFormFixPN, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(46, 46, 46)
+                .addComponent(jLabel26)
+                .addGap(18, 18, 18)
+                .addComponent(jtfThanhTienFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7)
-                            .addComponent(jtfMaPNFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jtfMaNVFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel1)
-                                .addComponent(jcbboxTinhTrangFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jtfNgLapFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jButton12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(jLabel7)
+                        .addComponent(jtfMaPNFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jtfMaNVFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jtfThanhTienFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel26)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel26)
-                    .addComponent(jtfThanhTienFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel10)
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(jcbboxTinhTrangFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jtfNgLapFormFixPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Chi Tiết Phiếu Nhập Hàng"));
@@ -280,14 +280,14 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Mã Hàng Hóa", "Tên Hàng Hóa", "Ngày Sản Xuất", "Hạn Sử Dụng", "NCC", "Số Lượng", "Đơn Giá Nhập"
+                "Mã Hàng Hóa", "Mã CTHH", "Tên Hàng Hóa", "Ngày Sản Xuất", "Hạn Sử Dụng", "NCC", "Số Lượng", "Đơn Giá Nhập"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -325,30 +325,30 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
         });
         jScrollPane5.setViewportView(jtbSanPham);
 
-        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/remove.png"))); // NOI18N
-        jButton10.setText("Xóa");
-        jButton10.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        jbttnDeleteSP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/remove.png"))); // NOI18N
+        jbttnDeleteSP.setText("Xóa");
+        jbttnDeleteSP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jbttnDeleteSP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                jbttnDeleteSPActionPerformed(evt);
             }
         });
 
-        jButton11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/plus.png"))); // NOI18N
-        jButton11.setText("Thêm");
-        jButton11.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
+        jbttnOpenFormAddSP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/plus.png"))); // NOI18N
+        jbttnOpenFormAddSP.setText("Thêm");
+        jbttnOpenFormAddSP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jbttnOpenFormAddSP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
+                jbttnOpenFormAddSPActionPerformed(evt);
             }
         });
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/fix.png"))); // NOI18N
-        jButton1.setText("Sửa");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jbttnOpenFormFixSP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/fix.png"))); // NOI18N
+        jbttnOpenFormFixSP.setText("Sửa");
+        jbttnOpenFormFixSP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jbttnOpenFormFixSP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jbttnOpenFormFixSPActionPerformed(evt);
             }
         });
 
@@ -408,11 +408,11 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(jbttnOpenFormFixSP)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton10)
+                        .addComponent(jbttnDeleteSP)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton11))
+                        .addComponent(jbttnOpenFormAddSP))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane3)
@@ -427,16 +427,16 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton11)
-                    .addComponent(jButton10)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jbttnOpenFormAddSP)
+                    .addComponent(jbttnDeleteSP)
+                    .addComponent(jbttnOpenFormFixSP))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -738,25 +738,30 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
 
         jLabel19.setText("Đơn Giá Nhập");
 
-        jTextField3.setBorder(null);
+        jtfDGFormFixCTPN.setBorder(null);
 
-        jTextField4.setBorder(null);
+        jtfSLFormFixCTPN.setBorder(null);
 
-        jButton13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/fix.png"))); // NOI18N
-        jButton13.setText("Sửa");
+        jbttnFixFormFixCTPN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/fix.png"))); // NOI18N
+        jbttnFixFormFixCTPN.setText("Sửa");
+        jbttnFixFormFixCTPN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbttnFixFormFixCTPNActionPerformed(evt);
+            }
+        });
 
         jLabel24.setText("Nhà Cung Cấp");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NCC001", "NCC002", "NCC003" }));
-        jComboBox3.setBorder(null);
+        jcbboxNCCFormFixCTPN.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NCC001", "NCC002", "NCC003" }));
+        jcbboxNCCFormFixCTPN.setBorder(null);
 
         jLabel27.setText("Ngày Sản Xuất");
 
         jLabel28.setText("Hạn Sử Dụng");
 
-        jDateChooser1.setDateFormatString("dd-MM-yyyy");
+        jdcNSXFormFixCTPN.setDateFormatString("yyyy-MM-dd");
 
-        jDateChooser2.setDateFormatString("dd-MM-yyyy");
+        jdcHSDFormFixCTPN.setDateFormatString("yyyy-MM-dd");
 
         javax.swing.GroupLayout jdlFixCTPNLayout = new javax.swing.GroupLayout(jdlFixCTPN.getContentPane());
         jdlFixCTPN.getContentPane().setLayout(jdlFixCTPNLayout);
@@ -768,7 +773,7 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                     .addGroup(jdlFixCTPNLayout.createSequentialGroup()
                         .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jdcHSDFormFixCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jdlFixCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jdlFixCTPNLayout.createSequentialGroup()
                             .addGroup(jdlFixCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -776,18 +781,18 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel2))
                             .addGap(18, 18, 18)
                             .addGroup(jdlFixCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                                .addComponent(jTextField3)))
+                                .addComponent(jtfSLFormFixCTPN, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                .addComponent(jtfDGFormFixCTPN)))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jdlFixCTPNLayout.createSequentialGroup()
                             .addGroup(jdlFixCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel24)
                                 .addComponent(jLabel27))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addGroup(jdlFixCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBox3, 0, 132, Short.MAX_VALUE)))))
+                                .addComponent(jdcNSXFormFixCTPN, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                                .addComponent(jcbboxNCCFormFixCTPN, 0, 132, Short.MAX_VALUE)))))
                 .addGap(18, 18, 18)
-                .addComponent(jButton13)
+                .addComponent(jbttnFixFormFixCTPN)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jdlFixCTPNLayout.setVerticalGroup(
@@ -798,26 +803,26 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                         .addGap(14, 14, 14)
                         .addGroup(jdlFixCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jtfSLFormFixCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jdlFixCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel19)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jtfDGFormFixCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jdlFixCTPNLayout.createSequentialGroup()
                         .addGap(15, 15, 15)
-                        .addComponent(jButton13)))
+                        .addComponent(jbttnFixFormFixCTPN)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jdlFixCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel24)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jcbboxNCCFormFixCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jdlFixCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel27)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jdcNSXFormFixCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jdlFixCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel28)
-                    .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jdcHSDFormFixCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -828,26 +833,30 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
 
         jLabel21.setText("Đơn Giá Nhập");
 
-        jTextField7.setBorder(null);
+        jtfDGFormAddCTPN.setBorder(null);
 
-        jTextField8.setBorder(null);
+        jtfSLFormAddCTPN.setBorder(null);
 
-        jButton14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/plus.png"))); // NOI18N
-        jButton14.setText("Thêm");
-        jButton14.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jbttnAddFormAddPN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/plus.png"))); // NOI18N
+        jbttnAddFormAddPN.setText("Thêm");
+        jbttnAddFormAddPN.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jbttnAddFormAddPN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbttnAddFormAddPNActionPerformed(evt);
+            }
+        });
 
         jLabel25.setText("Nhà Cung Cấp");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NCC001", "NCC002", "NCC003" }));
-        jComboBox4.setBorder(null);
+        jcbboxNCCFormAddCTPN.setBorder(null);
 
         jLabel29.setText("Ngày Sản Xuất");
 
-        jDateChooser3.setDateFormatString("dd-MM-yyyy");
-
         jLabel30.setText("Hạn Sử Dụng");
 
-        jDateChooser4.setDateFormatString("dd-MM-yyyy");
+        jdcNSXFormAddCTPN.setDateFormatString("yyyy-MM-dd");
+
+        jdcHSDFormAddCTPN.setDateFormatString("yyyy-MM-dd");
 
         javax.swing.GroupLayout jdlAddCTPNLayout = new javax.swing.GroupLayout(jdlAddCTPN.getContentPane());
         jdlAddCTPN.getContentPane().setLayout(jdlAddCTPNLayout);
@@ -855,7 +864,7 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
             jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jdlAddCTPNLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jdlAddCTPNLayout.createSequentialGroup()
                         .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel25, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
@@ -863,22 +872,19 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                             .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jComboBox4, 0, 130, Short.MAX_VALUE)
-                            .addComponent(jTextField8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(33, 33, 33)
-                        .addComponent(jButton14))
+                            .addComponent(jcbboxNCCFormAddCTPN, 0, 130, Short.MAX_VALUE)
+                            .addComponent(jtfSLFormAddCTPN, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                            .addComponent(jtfDGFormAddCTPN, javax.swing.GroupLayout.Alignment.LEADING)))
                     .addGroup(jdlAddCTPNLayout.createSequentialGroup()
                         .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jdlAddCTPNLayout.createSequentialGroup()
-                                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                            .addGroup(jdlAddCTPNLayout.createSequentialGroup()
-                                .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(12, 12, 12)))
-                        .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jDateChooser4, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
-                            .addComponent(jDateChooser3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jdcNSXFormAddCTPN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jdcHSDFormAddCTPN, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))))
+                .addGap(33, 33, 33)
+                .addComponent(jbttnAddFormAddPN)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jdlAddCTPNLayout.setVerticalGroup(
@@ -889,27 +895,27 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel20)
-                            .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jtfSLFormAddCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel21)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jtfDGFormAddCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jdlAddCTPNLayout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addComponent(jButton14)))
+                        .addComponent(jbttnAddFormAddPN)))
                 .addGap(18, 18, 18)
                 .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25)
-                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jcbboxNCCFormAddCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel29)
-                    .addComponent(jDateChooser3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jdcNSXFormAddCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel29))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jdlAddCTPNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel30)
-                    .addComponent(jDateChooser4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jdcHSDFormAddCTPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel30))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         jdlFixDM.setMinimumSize(new java.awt.Dimension(377, 150));
@@ -1368,6 +1374,16 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
             }
         }
     }
+    public void UpdateThanhTien(String MaPN) {
+        float thanhTien = 0,soLuong,donGia;
+        for (int i=0;i<modelTableSPN.getRowCount();i++) {
+            soLuong = (float) modelTableSPN.getValueAt(i, 6);
+            donGia = (float) modelTableSPN.getValueAt(i, 7);
+            thanhTien += (soLuong*donGia);
+        }
+        jtfThanhTienFormFixPN.setText(Float.toString(thanhTien));
+        pn.updateThanhTien(MaPN,thanhTien);
+    }
     private void jbttnClastifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnClastifyActionPerformed
         loadAllLH();
         jtfSearchDM.setText("");
@@ -1391,7 +1407,7 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
 //          Load bảng sản phẩm nhập
             modelTableSPN.setRowCount(0);
             for (int i=0;i<modelTableCTPN.getRowCount();i++) {
-                Object [] rowSP = {modelTableCTPN.getValueAt(i, 0),modelTableCTPN.getValueAt(i, 2),
+                Object [] rowSP = {modelTableCTPN.getValueAt(i, 0),modelTableCTPN.getValueAt(i, 1),modelTableCTPN.getValueAt(i, 2),
                 modelTableCTPN.getValueAt(i, 3),modelTableCTPN.getValueAt(i, 4),modelTableCTPN.getValueAt(i, 5),
                 modelTableCTPN.getValueAt(i, 6),modelTableCTPN.getValueAt(i, 7)};
                 modelTableSPN.addRow(rowSP);
@@ -1405,21 +1421,48 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                 modelTableSP.addRow(rowHH);
             }
             jtbSanPham.setModel(modelTableSP);
+//          Load NCC cho combobox trong form thêm sản phẩm
+            NhaCungCapBUS ncc = new NhaCungCapBUS();
+            ArrayList<NhaCungCapDTO> arrNCC = ncc.getAllNCC();
+            DefaultComboBoxModel modelComboboxNCC = new DefaultComboBoxModel();
+            for (NhaCungCapDTO p : arrNCC) {
+                modelComboboxNCC.addElement(p.getMaNCC());
+            }
+            jcbboxNCCFormAddCTPN.setModel(modelComboboxNCC);
+            jcbboxNCCFormFixCTPN.setModel(modelComboboxNCC);
+            
+            
+            
             jdlFixPN.setLocationRelativeTo(null);
             jdlFixPN.setVisible(true);
+
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để sửa!");
         }
     }//GEN-LAST:event_jbttnSuaPNActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jbttnOpenFormFixSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnOpenFormFixSPActionPerformed
         if(jtbSanPhamNhap.getSelectedRow()!=-1) {
+            int row = jtbSanPhamNhap.getSelectedRow();
+            float soLuong = (float) jtbSanPhamNhap.getValueAt(row, 6);
+            jtfSLFormFixCTPN.setText(Float.toString(soLuong));
+            float donGia = (float) jtbSanPhamNhap.getValueAt(row, 7);
+            jtfDGFormFixCTPN.setText(Float.toString(donGia));
+            jcbboxNCCFormFixCTPN.setSelectedItem(jtbSanPhamNhap.getValueAt(row, 5));
+            JTextField dateTextField = (JTextField) jdcNSXFormFixCTPN.getDateEditor().getUiComponent();
+            dateTextField.setEditable(false);
+            String NSX = (String) jtbSanPhamNhap.getValueAt(row, 3);
+            dateTextField.setText(NSX);
+            dateTextField = (JTextField) jdcHSDFormFixCTPN.getDateEditor().getUiComponent();
+            dateTextField.setEditable(false);
+            String HSD = (String) jtbSanPhamNhap.getValueAt(row, 4);
+            dateTextField.setText(HSD);
             jdlFixCTPN.setLocationRelativeTo(null);
             jdlFixCTPN.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn một sản phẩm để sửa!");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jbttnOpenFormFixSPActionPerformed
 
     private void jtbPNHMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbPNHMouseClicked
         if ((boolean)jtbPNH.getValueAt(jtbPNH.getSelectedRow(), jtbPNH.getColumnCount() - 1)) {
@@ -1434,9 +1477,12 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
         modelTableCTPN.setRowCount(0);
         int row = jtbPNH.getSelectedRow();
         String maPN = (String)jtbPNH.getValueAt(row, 0);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for (CTPN_CTHH_HH_DTO p : arrCTPN) {
             if (p.getMaPN().equalsIgnoreCase(maPN)) {
-                Object[] rowCTPN = {p.getMaHH(),p.getMaCT_HH(),p.getTenHH(),p.getNgaySX(),p.getHSD(),p.getMaNCC(),p.getSLNhap(),p.getDonGiaNhap()};
+                String NSXString = dateFormat.format(p.getNgaySX());
+                String HSDString = dateFormat.format(p.getHSD());
+                Object[] rowCTPN = {p.getMaHH(),p.getMaCT_HH(),p.getTenHH(),NSXString,HSDString,p.getMaNCC(),p.getSLNhap(),p.getDonGiaNhap()};
                 modelTableCTPN.addRow(rowCTPN);
             }
         }
@@ -1542,22 +1588,45 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jbttnXoaPNActionPerformed
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+    private void jbttnOpenFormAddSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnOpenFormAddSPActionPerformed
         if(jtbSanPham.getSelectedRow()!=-1) {
+            // clean các field
+            jtfSLFormAddCTPN.setText("");
+            jtfDGFormAddCTPN.setText("");
+            jcbboxNCCFormAddCTPN.setSelectedIndex(0);
+            JTextField dateTextField = (JTextField) jdcNSXFormAddCTPN.getDateEditor().getUiComponent();
+            dateTextField.setEditable(false);
+            dateTextField.setText("");
+            dateTextField = (JTextField) jdcHSDFormAddCTPN.getDateEditor().getUiComponent();
+            dateTextField.setEditable(false);
+            dateTextField.setText("");
             jdlAddCTPN.setLocationRelativeTo(null);
             jdlAddCTPN.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn một sản phẩm để thêm!");
         }
-    }//GEN-LAST:event_jButton11ActionPerformed
+    }//GEN-LAST:event_jbttnOpenFormAddSPActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    private void jbttnDeleteSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnDeleteSPActionPerformed
         if(jtbSanPhamNhap.getSelectedRow()!=-1) {
-            JOptionPane.showMessageDialog(null, "Xóa Thành Công!");
+            int choose = JOptionPane.showConfirmDialog(null,"Bạn có chắc muốn xóa?","Xóa Phiếu Nhập", JOptionPane.OK_CANCEL_OPTION);
+            if (choose == JOptionPane.OK_OPTION) {
+                String MaPN = jtfMaPNFormFixPN.getText();
+                String MaCT_HH = (String) jtbSanPhamNhap.getValueAt(jtbSanPhamNhap.getSelectedRow(), 1);
+                boolean result = pn.XoaCTPN(MaPN,MaCT_HH);
+                if (result) {
+                    JOptionPane.showMessageDialog(null, "Xóa Thành Công!");
+                    modelTableSPN.removeRow(jtbSanPhamNhap.getSelectedRow());
+                    jtbPNH.setModel(modelTableSPN);
+                    UpdateThanhTien(MaPN);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Xóa thất bại!");
+                }
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn một sản phẩm để xóa!");
         }
-    }//GEN-LAST:event_jButton10ActionPerformed
+    }//GEN-LAST:event_jbttnDeleteSPActionPerformed
 
     private void jbtnOpenFormAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnOpenFormAddActionPerformed
         jtfMaLHFormAddDM.setText(atuoIncreasementMaLH());
@@ -1661,21 +1730,126 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập vào đúng định dạng!");
         }
     }//GEN-LAST:event_jbttnFixFormFixDMActionPerformed
+    public boolean ValidateFloat(String num) {
+        String regex = "^\\d+(\\.\\d+)?$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(num);
+        return matcher.matches() && Float.parseFloat(num) > 0;
+    }
+    public boolean ValidateNSX_HSD(String NSX,String HSD) {
+        boolean flag = true;
+        Date NSXDate = Date.valueOf(NSX);
+        Date HSDDate = Date.valueOf(HSD);
+        int comparison = NSXDate.compareTo(HSDDate);
+        if (comparison >= 0) {
+            flag = false;
+        }
+        return flag;
+    }
+    private void jbttnAddFormAddPNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnAddFormAddPNActionPerformed
+        // validate
+        JTextField dateTextField = (JTextField) jdcNSXFormAddCTPN.getDateEditor().getUiComponent();
+        String NSX = dateTextField.getText();
+        dateTextField = (JTextField) jdcHSDFormAddCTPN.getDateEditor().getUiComponent();
+        String HSD = dateTextField.getText();
+        if (!ValidateFloat(jtfSLFormAddCTPN.getText())) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập đúng định dạng số lượng!");
+            return;
+        }
+        if (!ValidateFloat(jtfDGFormAddCTPN.getText())) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập đúng định dạng đơn giá nhập!");
+            return;
+        }
+        if (NSX.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày sản xuất!");
+            return;
+        }
+        if (HSD.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập hạn sử dụng!");
+            return;
+        }
+        if (!ValidateNSX_HSD(NSX,HSD)) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày sản xuất nhỏ hơn hạn sử dụng!");
+            return;
+        }
+        // xử lý thêm ctpn,cthh mới cho pn chưa được duyệt
+        float soLuong = Float.parseFloat(jtfSLFormAddCTPN.getText());
+        float donGiaNhap = Float.parseFloat(jtfDGFormAddCTPN.getText());
+        String NCC = (String) jcbboxNCCFormAddCTPN.getSelectedItem();
+        int row = jtbSanPham.getSelectedRow();
+        String maHH = (String)jtbSanPham.getValueAt(row, 0);
+        String tenHH = (String)jtbSanPham.getValueAt(row, 1);
+        String maCT_HH = pn.getLastestNum();
+        Date ngaysanxuat = Date.valueOf(NSX);
+        Date hansudung = Date.valueOf(HSD);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dateNSX = dateFormat.format(ngaysanxuat);
+        String dateHSD = dateFormat.format(hansudung);
+        //1.thêm vào bảng "Sản Phẩm Nhập"
+        modelTableSPN.addRow(new Object[] {maHH,maCT_HH,tenHH,dateNSX,dateHSD,NCC,soLuong,donGiaNhap});
+        jtbSanPhamNhap.setModel(modelTableSPN);
+        //2.thêm ctpn,cthh mới vào csdl
+        String maPN = jtfMaPNFormFixPN.getText();
+        CTPN_CTHH_HH_DTO p = new CTPN_CTHH_HH_DTO(maHH,maCT_HH,tenHH,ngaysanxuat,hansudung,NCC,soLuong,donGiaNhap,maPN);
+        pn.addCTPN(p);
+        UpdateThanhTien(maPN);
+        jdlAddCTPN.dispose();
+    }//GEN-LAST:event_jbttnAddFormAddPNActionPerformed
+
+    private void jbttnFixFormFixCTPNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnFixFormFixCTPNActionPerformed
+        // validate
+        JTextField dateTextField = (JTextField) jdcNSXFormFixCTPN.getDateEditor().getUiComponent();
+        String NSX = dateTextField.getText();
+        dateTextField = (JTextField) jdcHSDFormFixCTPN.getDateEditor().getUiComponent();
+        String HSD = dateTextField.getText();
+        if (!ValidateFloat(jtfSLFormFixCTPN.getText())) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập đúng định dạng số lượng!");
+            return;
+        }
+        if (!ValidateFloat(jtfDGFormFixCTPN.getText())) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập đúng định dạng đơn giá nhập!");
+            return;
+        }
+        if (NSX.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày sản xuất!");
+            return;
+        }
+        if (HSD.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập hạn sử dụng!");
+            return;
+        }
+        if (!ValidateNSX_HSD(NSX,HSD)) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày sản xuất nhỏ hơn hạn sử dụng!");
+            return;
+        }
+        // xử lý sửa ctpn,cthh mới cho pn chưa được duyệt
+        float soLuong = Float.parseFloat(jtfSLFormFixCTPN.getText());
+        float donGiaNhap = Float.parseFloat(jtfDGFormFixCTPN.getText());
+        String NCC = (String) jcbboxNCCFormFixCTPN.getSelectedItem();
+        //1.sửa vào bảng "Sản Phẩm Nhập"
+        modelTableSPN.setValueAt(NSX,jtbSanPhamNhap.getSelectedRow() , 3);
+        modelTableSPN.setValueAt(HSD,jtbSanPhamNhap.getSelectedRow() , 4);
+        modelTableSPN.setValueAt(NCC,jtbSanPhamNhap.getSelectedRow() , 5);
+        modelTableSPN.setValueAt(soLuong,jtbSanPhamNhap.getSelectedRow() , 6);
+        modelTableSPN.setValueAt(donGiaNhap,jtbSanPhamNhap.getSelectedRow() , 7);
+        jtbSanPhamNhap.setModel(modelTableSPN);
+        //2.sửa ctpn,cthh mới vào csdl
+        String maPN = jtfMaPNFormFixPN.getText().trim();
+        String maCTHH = (String)jtbSanPhamNhap.getValueAt(jtbSanPhamNhap.getSelectedRow(), 1);
+        pn.fixCTPN(maPN,maCTHH,soLuong,donGiaNhap,NCC,NSX,HSD);
+        UpdateThanhTien(maPN);
+        jdlFixCTPN.dispose();
+    }//GEN-LAST:event_jbttnFixFormFixCTPNActionPerformed
+
+    private void jdlFixPNWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jdlFixPNWindowClosing
+        loadAllPN();
+        arrCTPN = pn.getAllCTPN();
+        modelTableCTPN.setRowCount(0);
+        jtbCTPN.setModel(modelTableCTPN);
+    }//GEN-LAST:event_jdlFixPNWindowClosing
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JComboBox<String> jComboBox4;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
-    private com.toedter.calendar.JDateChooser jDateChooser3;
-    private com.toedter.calendar.JDateChooser jDateChooser4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1731,23 +1905,30 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator5;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JButton jbtnOpenFormAdd;
     private javax.swing.JButton jbtnOpenFormFix;
+    private javax.swing.JButton jbttnAddFormAddPN;
     private javax.swing.JButton jbttnAddFormAdđM;
     private javax.swing.JButton jbttnClastify;
+    private javax.swing.JButton jbttnDeleteSP;
     private javax.swing.JButton jbttnDuyetPN;
+    private javax.swing.JButton jbttnFixFormFixCTPN;
     private javax.swing.JButton jbttnFixFormFixDM;
+    private javax.swing.JButton jbttnOpenFormAddSP;
+    private javax.swing.JButton jbttnOpenFormFixSP;
     private javax.swing.JButton jbttnSuaPN;
     private javax.swing.JButton jbttnXoaPN;
     private javax.swing.JComboBox<String> jcbboxFilter;
+    private javax.swing.JComboBox<String> jcbboxNCCFormAddCTPN;
+    private javax.swing.JComboBox<String> jcbboxNCCFormFixCTPN;
     private javax.swing.JComboBox<String> jcbboxTTFormFIxDM;
     private javax.swing.JComboBox<String> jcbboxTinhTrangFormFixPN;
+    private com.toedter.calendar.JDateChooser jdcHSDFormAddCTPN;
+    private com.toedter.calendar.JDateChooser jdcHSDFormFixCTPN;
+    private com.toedter.calendar.JDateChooser jdcNSXFormAddCTPN;
+    private com.toedter.calendar.JDateChooser jdcNSXFormFixCTPN;
     private javax.swing.JDialog jdlAddCTPN;
     private javax.swing.JDialog jdlAddDM;
     private javax.swing.JDialog jdlDM;
@@ -1759,11 +1940,15 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
     private javax.swing.JTable jtbPNH;
     private javax.swing.JTable jtbSanPham;
     private javax.swing.JTable jtbSanPhamNhap;
+    private javax.swing.JTextField jtfDGFormAddCTPN;
+    private javax.swing.JTextField jtfDGFormFixCTPN;
     private javax.swing.JTextField jtfMaLHFormAddDM;
     private javax.swing.JTextField jtfMaLHFormFixDM;
     private javax.swing.JTextField jtfMaNVFormFixPN;
     private javax.swing.JTextField jtfMaPNFormFixPN;
     private javax.swing.JTextField jtfNgLapFormFixPN;
+    private javax.swing.JTextField jtfSLFormAddCTPN;
+    private javax.swing.JTextField jtfSLFormFixCTPN;
     private javax.swing.JTextField jtfSearch;
     private javax.swing.JTextField jtfSearchDM;
     private javax.swing.JTextField jtfTenLHFormAddDM;
