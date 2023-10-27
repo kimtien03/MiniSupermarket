@@ -4,17 +4,58 @@
  */
 package com.myproject.GUI.NhanVienKho.InventoryPages;
 
+import com.myproject.BUS.CT_PhieuNhapBUS;
+import com.myproject.BUS.PhieuNhapBUS;
+import com.myproject.DTO.CT_PhieuNhapDTO;
+import com.myproject.DTO.ClassListPhieuNhap;
+import com.myproject.DTO.ClassList_CTPhieuNhap;
+import com.myproject.DTO.PhieuNhapDTO;
+import com.myproject.GUI.NhanVienKho.Sort.Sorting_Class_PhieuNhapPage;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ADMIN
  */
-public class Preview_Inventory extends javax.swing.JPanel {
+public class Preview_Inventory extends javax.swing.JPanel implements ActionListener {
+
+    //Khai bao BUS
+    private PhieuNhapBUS phieuNhapBUS;
+    private CT_PhieuNhapBUS CTPNhap_BUS;
+
+    //Khai bao classList
+    private ClassListPhieuNhap classListPhieuNhap;
+    private ClassList_CTPhieuNhap classList_CT_PhieuNhap;
+
+    //Khai bao table
+    private DefaultTableModel tableModel_PhieuNhap;
+    private int select_PhieuNhap;
+    private DefaultTableModel tableModel_CT_PhieuNhap;
+    private int CT_PhieuNhap;
+
+    //ListSort
+    private Sorting_Class_PhieuNhapPage sorting_class;
+    private ArrayList<PhieuNhapDTO> phieuNhap_listSort;
+    private ArrayList<CT_PhieuNhapDTO> CT_phieuNhap_listSort;
 
     /**
      * Creates new form preview_Inventory
      */
     public Preview_Inventory() {
         initComponents();
+        initArea();
+
+        loadDataFromSql();
+        loadDataToTable();
+        addActionListener();
+
+        handle_render_CTPN_row();
     }
 
     /**
@@ -26,35 +67,35 @@ public class Preview_Inventory extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        buttonGroup2 = new javax.swing.ButtonGroup();
+        btnGr_Finding = new javax.swing.ButtonGroup();
+        btnGr_sort = new javax.swing.ButtonGroup();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table_CTPN = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jPanel30 = new javax.swing.JPanel();
-        jTextField16 = new javax.swing.JTextField();
-        jTextField19 = new javax.swing.JTextField();
+        maSP_txt = new javax.swing.JTextField();
+        ngayYeuCau_txt = new javax.swing.JTextField();
         jLabel43 = new javax.swing.JLabel();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
+        maSP_RB = new javax.swing.JRadioButton();
+        ngayYeuCau_RB = new javax.swing.JRadioButton();
         jLabel46 = new javax.swing.JLabel();
         jLabel47 = new javax.swing.JLabel();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jTextField20 = new javax.swing.JTextField();
-        jRadioButton5 = new javax.swing.JRadioButton();
+        ma_NCC_RB = new javax.swing.JRadioButton();
+        maNCC_txt = new javax.swing.JTextField();
+        sortFarDate = new javax.swing.JRadioButton();
         jLabel48 = new javax.swing.JLabel();
-        jRadioButton6 = new javax.swing.JRadioButton();
+        sortRecentDate = new javax.swing.JRadioButton();
         jLabel49 = new javax.swing.JLabel();
-        jRadioButton7 = new javax.swing.JRadioButton();
+        checkBill_RB = new javax.swing.JRadioButton();
         jLabel50 = new javax.swing.JLabel();
-        jRadioButton8 = new javax.swing.JRadioButton();
+        unCheckBill_RB = new javax.swing.JRadioButton();
         jLabel51 = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        search_PN_btn = new javax.swing.JButton();
+        refreshBtn = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        table_PN = new javax.swing.JTable();
 
         setPreferredSize(new java.awt.Dimension(1200, 600));
 
@@ -63,8 +104,7 @@ public class Preview_Inventory extends javax.swing.JPanel {
         jPanel2.setForeground(new java.awt.Color(255, 255, 255));
         jPanel2.setPreferredSize(new java.awt.Dimension(621, 621));
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table_CTPN.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -94,8 +134,8 @@ public class Preview_Inventory extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setGridColor(new java.awt.Color(3, 169, 244));
-        jScrollPane1.setViewportView(jTable1);
+        table_CTPN.setGridColor(new java.awt.Color(3, 169, 244));
+        jScrollPane1.setViewportView(table_CTPN);
 
         jLabel1.setBackground(new java.awt.Color(3, 169, 244));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -106,11 +146,11 @@ public class Preview_Inventory extends javax.swing.JPanel {
         jLabel1.setOpaque(true);
 
         jPanel30.setBackground(new java.awt.Color(3, 169, 244));
-        jPanel30.setBorder(javax.swing.BorderFactory.createTitledBorder("Tìm Kiếm"));
+        jPanel30.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tìm Kiếm", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 24), new java.awt.Color(255, 255, 255))); // NOI18N
 
-        jTextField19.addActionListener(new java.awt.event.ActionListener() {
+        ngayYeuCau_txt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField19ActionPerformed(evt);
+                ngayYeuCau_txtActionPerformed(evt);
             }
         });
 
@@ -121,17 +161,17 @@ public class Preview_Inventory extends javax.swing.JPanel {
         jLabel43.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jLabel43.setOpaque(true);
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnGr_Finding.add(maSP_RB);
+        maSP_RB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
+                maSP_RBActionPerformed(evt);
             }
         });
 
-        buttonGroup1.add(jRadioButton3);
-        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnGr_Finding.add(ngayYeuCau_RB);
+        ngayYeuCau_RB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton3ActionPerformed(evt);
+                ngayYeuCau_RBActionPerformed(evt);
             }
         });
 
@@ -149,23 +189,22 @@ public class Preview_Inventory extends javax.swing.JPanel {
         jLabel47.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jLabel47.setOpaque(true);
 
-        buttonGroup1.add(jRadioButton4);
-        jRadioButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnGr_Finding.add(ma_NCC_RB);
+        ma_NCC_RB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton4ActionPerformed(evt);
+                ma_NCC_RBActionPerformed(evt);
             }
         });
 
-        jTextField20.addActionListener(new java.awt.event.ActionListener() {
+        maNCC_txt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField20ActionPerformed(evt);
+                maNCC_txtActionPerformed(evt);
             }
         });
 
-        buttonGroup2.add(jRadioButton5);
-        jRadioButton5.addActionListener(new java.awt.event.ActionListener() {
+        sortFarDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton5ActionPerformed(evt);
+                sortFarDateActionPerformed(evt);
             }
         });
 
@@ -176,24 +215,22 @@ public class Preview_Inventory extends javax.swing.JPanel {
         jLabel48.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jLabel48.setOpaque(true);
 
-        buttonGroup2.add(jRadioButton6);
-        jRadioButton6.addActionListener(new java.awt.event.ActionListener() {
+        sortRecentDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton6ActionPerformed(evt);
+                sortRecentDateActionPerformed(evt);
             }
         });
 
         jLabel49.setBackground(new java.awt.Color(3, 169, 244));
         jLabel49.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel49.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel49.setText("Theo Ngày Yêu Cấu Gần Nhất");
+        jLabel49.setText("Theo Ngày Yêu Cầu Gần Nhất");
         jLabel49.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jLabel49.setOpaque(true);
 
-        buttonGroup2.add(jRadioButton7);
-        jRadioButton7.addActionListener(new java.awt.event.ActionListener() {
+        checkBill_RB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton7ActionPerformed(evt);
+                checkBill_RBActionPerformed(evt);
             }
         });
 
@@ -204,10 +241,9 @@ public class Preview_Inventory extends javax.swing.JPanel {
         jLabel50.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jLabel50.setOpaque(true);
 
-        buttonGroup2.add(jRadioButton8);
-        jRadioButton8.addActionListener(new java.awt.event.ActionListener() {
+        unCheckBill_RB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton8ActionPerformed(evt);
+                unCheckBill_RBActionPerformed(evt);
             }
         });
 
@@ -218,19 +254,19 @@ public class Preview_Inventory extends javax.swing.JPanel {
         jLabel51.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jLabel51.setOpaque(true);
 
-        jButton6.setBackground(new java.awt.Color(0, 153, 51));
-        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(255, 255, 255));
-        jButton6.setText("Tìm Kiếm");
-        jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        search_PN_btn.setBackground(new java.awt.Color(0, 153, 51));
+        search_PN_btn.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
+        search_PN_btn.setForeground(new java.awt.Color(255, 255, 255));
+        search_PN_btn.setText("Tìm Kiếm");
+        search_PN_btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        search_PN_btn.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
-        jButton7.setBackground(new java.awt.Color(0, 153, 51));
-        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
-        jButton7.setForeground(new java.awt.Color(255, 255, 255));
-        jButton7.setText("Cập Nhật");
-        jButton7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        refreshBtn.setBackground(new java.awt.Color(0, 153, 51));
+        refreshBtn.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
+        refreshBtn.setForeground(new java.awt.Color(255, 255, 255));
+        refreshBtn.setText("Làm Mới");
+        refreshBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        refreshBtn.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         javax.swing.GroupLayout jPanel30Layout = new javax.swing.GroupLayout(jPanel30);
         jPanel30.setLayout(jPanel30Layout);
@@ -241,46 +277,46 @@ public class Preview_Inventory extends javax.swing.JPanel {
                 .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel30Layout.createSequentialGroup()
-                            .addComponent(jRadioButton7)
+                            .addComponent(checkBill_RB)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel30Layout.createSequentialGroup()
-                            .addComponent(jRadioButton8)
+                            .addComponent(unCheckBill_RB)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel51, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel30Layout.createSequentialGroup()
-                            .addComponent(jRadioButton6)
+                            .addComponent(sortRecentDate)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel49, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel30Layout.createSequentialGroup()
-                            .addComponent(jRadioButton5)
+                            .addComponent(sortFarDate)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(jPanel30Layout.createSequentialGroup()
                             .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel30Layout.createSequentialGroup()
-                                    .addComponent(jRadioButton2)
+                                    .addComponent(maSP_RB)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(jLabel43, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel30Layout.createSequentialGroup()
-                                    .addComponent(jRadioButton4)
+                                    .addComponent(ma_NCC_RB)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGap(18, 18, 18)
                             .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField16, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                                .addComponent(jTextField20)))
+                                .addComponent(maSP_txt, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                                .addComponent(maNCC_txt)))
                         .addGroup(jPanel30Layout.createSequentialGroup()
-                            .addComponent(jRadioButton3)
+                            .addComponent(ngayYeuCau_RB)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel46, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
-                            .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ngayYeuCau_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel30Layout.createSequentialGroup()
-                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(search_PN_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(refreshBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(65, 65, 65))
         );
         jPanel30Layout.setVerticalGroup(
@@ -288,39 +324,39 @@ public class Preview_Inventory extends javax.swing.JPanel {
             .addGroup(jPanel30Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maSP_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel43)
-                    .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(maSP_RB, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(44, 44, 44)
                 .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ngayYeuCau_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel46)
-                    .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ngayYeuCau_RB, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(44, 44, 44)
                 .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel47)
-                    .addComponent(jRadioButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ma_NCC_RB, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maNCC_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(59, 59, 59)
                 .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel48)
-                    .addComponent(jRadioButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sortFarDate, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel49)
-                    .addComponent(jRadioButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sortRecentDate, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel50)
-                    .addComponent(jRadioButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(checkBill_RB, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel51)
-                    .addComponent(jRadioButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
+                    .addComponent(unCheckBill_RB, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
                 .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
-                    .addComponent(jButton7))
+                    .addComponent(search_PN_btn)
+                    .addComponent(refreshBtn))
                 .addContainerGap())
         );
 
@@ -332,8 +368,7 @@ public class Preview_Inventory extends javax.swing.JPanel {
         jLabel2.setText("CHI TIẾT CÁC YÊU CẦU NHẬP HÀNG");
         jLabel2.setOpaque(true);
 
-        jTable2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        table_PN.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -349,7 +384,7 @@ public class Preview_Inventory extends javax.swing.JPanel {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
@@ -363,8 +398,8 @@ public class Preview_Inventory extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jTable2.setGridColor(new java.awt.Color(3, 169, 244));
-        jScrollPane2.setViewportView(jTable2);
+        table_PN.setGridColor(new java.awt.Color(3, 169, 244));
+        jScrollPane2.setViewportView(table_PN);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -418,48 +453,47 @@ public class Preview_Inventory extends javax.swing.JPanel {
         getAccessibleContext().setAccessibleName("");
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton8ActionPerformed
+    private void unCheckBill_RBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unCheckBill_RBActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton8ActionPerformed
+    }//GEN-LAST:event_unCheckBill_RBActionPerformed
 
-    private void jRadioButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton7ActionPerformed
+    private void checkBill_RBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBill_RBActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton7ActionPerformed
+    }//GEN-LAST:event_checkBill_RBActionPerformed
 
-    private void jRadioButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton6ActionPerformed
+    private void sortRecentDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortRecentDateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton6ActionPerformed
+    }//GEN-LAST:event_sortRecentDateActionPerformed
 
-    private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton5ActionPerformed
+    private void sortFarDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortFarDateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton5ActionPerformed
+    }//GEN-LAST:event_sortFarDateActionPerformed
 
-    private void jTextField20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField20ActionPerformed
+    private void maNCC_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maNCC_txtActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField20ActionPerformed
+    }//GEN-LAST:event_maNCC_txtActionPerformed
 
-    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
+    private void ma_NCC_RBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ma_NCC_RBActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton4ActionPerformed
+    }//GEN-LAST:event_ma_NCC_RBActionPerformed
 
-    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+    private void ngayYeuCau_RBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ngayYeuCau_RBActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton3ActionPerformed
+    }//GEN-LAST:event_ngayYeuCau_RBActionPerformed
 
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+    private void maSP_RBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maSP_RBActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
+    }//GEN-LAST:event_maSP_RBActionPerformed
 
-    private void jTextField19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField19ActionPerformed
+    private void ngayYeuCau_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ngayYeuCau_txtActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField19ActionPerformed
+    }//GEN-LAST:event_ngayYeuCau_txtActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
+    private javax.swing.ButtonGroup btnGr_Finding;
+    private javax.swing.ButtonGroup btnGr_sort;
+    private javax.swing.JRadioButton checkBill_RB;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel43;
@@ -471,19 +505,246 @@ public class Preview_Inventory extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel51;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel30;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JRadioButton jRadioButton5;
-    private javax.swing.JRadioButton jRadioButton6;
-    private javax.swing.JRadioButton jRadioButton7;
-    private javax.swing.JRadioButton jRadioButton8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField16;
-    private javax.swing.JTextField jTextField19;
-    private javax.swing.JTextField jTextField20;
+    private javax.swing.JTextField maNCC_txt;
+    private javax.swing.JRadioButton maSP_RB;
+    private javax.swing.JTextField maSP_txt;
+    private javax.swing.JRadioButton ma_NCC_RB;
+    private javax.swing.JRadioButton ngayYeuCau_RB;
+    private javax.swing.JTextField ngayYeuCau_txt;
+    private javax.swing.JButton refreshBtn;
+    private javax.swing.JButton search_PN_btn;
+    private javax.swing.JRadioButton sortFarDate;
+    private javax.swing.JRadioButton sortRecentDate;
+    private javax.swing.JTable table_CTPN;
+    private javax.swing.JTable table_PN;
+    private javax.swing.JRadioButton unCheckBill_RB;
     // End of variables declaration//GEN-END:variables
+
+    private void loadDataFromSql() {
+        read_PhieuNhapSQL();
+        read_CT_PhieuNhapSQL();
+    }
+
+    private void initArea() {
+        this.classListPhieuNhap = new ClassListPhieuNhap();
+        this.classList_CT_PhieuNhap = new ClassList_CTPhieuNhap();
+
+        this.phieuNhapBUS = new PhieuNhapBUS();
+        this.CTPNhap_BUS = new CT_PhieuNhapBUS();
+
+        tableModel_PhieuNhap = (DefaultTableModel) table_PN.getModel();
+        tableModel_CT_PhieuNhap = (DefaultTableModel) table_CTPN.getModel();
+
+        this.btnGr_Finding.add(maSP_RB);
+        this.btnGr_Finding.add(ngayYeuCau_RB);
+        this.btnGr_Finding.add(ma_NCC_RB);
+
+        this.btnGr_sort.add(sortFarDate);
+        this.btnGr_sort.add(sortRecentDate);
+        this.btnGr_sort.add(checkBill_RB);
+        this.btnGr_sort.add(unCheckBill_RB);
+
+        this.sorting_class = new Sorting_Class_PhieuNhapPage();
+    }
+
+    private void read_PhieuNhapSQL() {
+        ArrayList<PhieuNhapDTO> data_phieuNhaps = phieuNhapBUS.getAll_CTPhieuNhap();
+        this.classListPhieuNhap.setListPhieuNhap(data_phieuNhaps);
+//        for (var item: classListPhieuNhap.getListPhieuNhap()) {
+//            System.out.println("---");
+//            System.out.println(item.toString());
+//        }
+
+    }
+
+    private void loadDataToTable() {
+        this.phieuNhap_listSort = this.classListPhieuNhap.getListPhieuNhap();
+        load_PN_table(this.phieuNhap_listSort);
+    }
+
+    private void load_PN_table(ArrayList<PhieuNhapDTO> array) {
+        tableModel_PhieuNhap.setRowCount(0);
+        for (PhieuNhapDTO phieuNhapDTO : array) {
+            addRowPN_table(phieuNhapDTO);
+        }
+    }
+
+    private void addRowPN_table(PhieuNhapDTO phieuNhapDTO) {
+        Object[] row = new Object[]{
+            phieuNhapDTO.getMaPN(), phieuNhapDTO.getNgLapPhieu(),
+            phieuNhapDTO.getThanhTien(), phieuNhapDTO.isTinhTrang()
+        };
+        tableModel_PhieuNhap.addRow(row);
+    }
+
+    private void load_CTPN_table(ArrayList<CT_PhieuNhapDTO> list_PN_render) {
+        tableModel_CT_PhieuNhap.setRowCount(0);
+        for (CT_PhieuNhapDTO CT_phieuNhapDTO : list_PN_render) {
+            addRow_CTPN_table(CT_phieuNhapDTO);
+        }
+    }
+
+    private void addRow_CTPN_table(CT_PhieuNhapDTO CT_phieuNhapDTO) {
+        Object[] row = new Object[]{
+            CT_phieuNhapDTO.getCT_hangHoa().getHangHoaDTO().getMaHH(), CT_phieuNhapDTO.getCT_hangHoa().getHangHoaDTO().getTenHH(), CT_phieuNhapDTO.getCT_hangHoa().getNgaySX(),
+            CT_phieuNhapDTO.getCT_hangHoa().getHSD(), CT_phieuNhapDTO.getNCC().getTenNCC(), CT_phieuNhapDTO.getSLNhap(), CT_phieuNhapDTO.getDonGiaNhap()
+        };
+        tableModel_CT_PhieuNhap.addRow(row);
+    }
+
+    private void read_CT_PhieuNhapSQL() {
+        ArrayList<CT_PhieuNhapDTO> data_CTPNs = this.CTPNhap_BUS.getAll_CTPhieuNhap();
+        this.classList_CT_PhieuNhap.setList_CT_PhieuNhap(data_CTPNs);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object src = e.getSource();
+        if (src.equals(search_PN_btn)) {
+            this.searchFromOption();
+        } else if (src.equals(sortFarDate)) {
+            sorting_class.sort_far_ngayNhapPhieu(phieuNhap_listSort);
+            load_PN_table(phieuNhap_listSort);
+            this.clearCTPN_table();
+        } else if (src.equals(sortRecentDate)) {
+            sorting_class.sort_recent_ngayNhapPhieu(phieuNhap_listSort);
+            load_PN_table(phieuNhap_listSort);
+            this.clearCTPN_table();
+        } else if (src.equals(checkBill_RB)) {
+            this.phieuNhap_listSort = this.phieuNhapBUS.find_PhieuNhap_By_tinhTrang("1");
+            load_PN_table(phieuNhap_listSort);
+            this.clearCTPN_table();
+        } else if (src.equals(unCheckBill_RB)) {
+            this.phieuNhap_listSort = this.phieuNhapBUS.find_PhieuNhap_By_tinhTrang("0");
+            load_PN_table(phieuNhap_listSort);
+            this.clearCTPN_table();
+        } else if (src.equals(refreshBtn)) {
+            this.btnGr_Finding.clearSelection();
+            this.btnGr_sort.clearSelection();
+            this.clearCTPN_table();
+            clearInputTxt();
+            this.phieuNhap_listSort = this.phieuNhapBUS.getAll_CTPhieuNhap();
+            load_PN_table(phieuNhap_listSort);
+        } else if (src.equals(this.maSP_RB)) {
+            this.maSP_txt.setEnabled(true);
+            this.ngayYeuCau_txt.setEnabled(false);
+            this.maNCC_txt.setEnabled(false);
+        } else if (src.equals(this.ma_NCC_RB)) {
+            this.maSP_txt.setEnabled(false);
+            this.ngayYeuCau_txt.setEnabled(false);
+            this.maNCC_txt.setEnabled(true);
+        } else if (src.equals(this.ngayYeuCau_RB)) {
+            this.maSP_txt.setEnabled(false);
+            this.ngayYeuCau_txt.setEnabled(true);
+            this.maNCC_txt.setEnabled(false);
+        }
+    }
+
+    private void searchFromOption() {
+        if (maSP_RB.isSelected()) {
+            String input_maSP = maSP_txt.getText().trim();
+            if (!input_maSP.isEmpty()) {
+                this.phieuNhap_listSort = this.phieuNhapBUS.find_PhieuNhap_By_MaSP(input_maSP);
+                this.load_PN_table(phieuNhap_listSort);
+                this.maSP_txt.setText("");
+                if (this.phieuNhap_listSort.size() > 0) {
+                    this.btnGr_sort.clearSelection();
+                    JOptionPane.showMessageDialog(this, "LỌC THÀNH CÔNG!");
+                    clearCTPN_table();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Không tìm thấy dữ liệu!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "VUI LÒNG NHẬP TÊN CẦN TÌM KIẾM!");
+            }
+        } else if (ngayYeuCau_RB.isSelected()) {
+            String input_ngayYC = ngayYeuCau_txt.getText().trim();
+            if (!input_ngayYC.isEmpty()) {
+                this.phieuNhap_listSort = this.phieuNhapBUS.find_PhieuNhap_By_ngayYC(input_ngayYC);
+                if (this.phieuNhap_listSort.size() > 0) {
+                    this.load_PN_table(phieuNhap_listSort);
+                    this.ngayYeuCau_txt.setText("");
+                    if (this.phieuNhap_listSort.size() > 0) {
+                        this.btnGr_sort.clearSelection();
+                        JOptionPane.showMessageDialog(this, "LỌC THÀNH CÔNG!");
+                        clearCTPN_table();
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                "Không tìm thấy dữ liệu!");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Không tìm thấy dữ liệu!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "VUI LÒNG NHẬP TÊN CẦN TÌM KIẾM!");
+            }
+        } else if (ma_NCC_RB.isSelected()) {
+            String input_maNCC = maNCC_txt.getText().trim();
+            if (!input_maNCC.isEmpty()) {
+                this.phieuNhap_listSort = this.phieuNhapBUS.find_PhieuNhap_By_maNCC(input_maNCC);
+                this.load_PN_table(phieuNhap_listSort);
+                this.maNCC_txt.setText("");
+                if (this.phieuNhap_listSort.size() > 0) {
+                    this.btnGr_sort.clearSelection();
+                    JOptionPane.showMessageDialog(this, "LỌC THÀNH CÔNG!");
+                    clearCTPN_table();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Không tìm thấy dữ liệu!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "VUI LÒNG NHẬP TÊN CẦN TÌM KIẾM!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "VUI LÒNG CHỌN VÙNG MUỐN TÌM KIẾM!");
+        }
+    }
+
+    private void addActionListener() {
+        this.search_PN_btn.addActionListener(this);
+        this.sortFarDate.addActionListener(this);
+        this.sortRecentDate.addActionListener(this);
+        this.checkBill_RB.addActionListener(this);
+        this.unCheckBill_RB.addActionListener(this);
+        this.refreshBtn.addActionListener(this);
+        this.maSP_RB.addActionListener(this);
+        this.ma_NCC_RB.addActionListener(this);
+        this.ngayYeuCau_RB.addActionListener(this);
+    }
+
+    /**
+     * *
+     * this method will render correct CTPN list data whenever User click on the
+     * row of PN table
+     */
+    private void handle_render_CTPN_row() {
+        table_PN.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                if (table_PN.getSelectedRow() >= 0) {
+                    String maPN_rowSelected = table_PN.getValueAt(table_PN.getSelectedRow(), 0).toString();
+                    CT_phieuNhap_listSort = CTPNhap_BUS.find_CTPN_row(maPN_rowSelected);
+                    load_CTPN_table(CT_phieuNhap_listSort);
+                }
+            }
+        });
+    }
+    
+    private void clearCTPN_table() {
+        this.CT_phieuNhap_listSort = new ArrayList<>();
+        this.load_CTPN_table(CT_phieuNhap_listSort);
+    }
+
+    private void clearInputTxt() {
+        this.maSP_txt.setText("");
+        this.ngayYeuCau_txt.setText("");
+        this.maNCC_txt.setText("");
+    }
 }

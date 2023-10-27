@@ -25,6 +25,8 @@ public class MainInventory extends javax.swing.JFrame{
         this.setLocationRelativeTo(null);
         this.setDefaultPanel();
         this.BodyPN.setLayout(new BorderLayout());
+   
+        new Preview_Inventory();
     }
 
     /**

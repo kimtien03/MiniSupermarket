@@ -1,9 +1,0 @@
-GUI.InventoryPages.Import_Inventory$8
-GUI.InventoryPages.Import_Inventory$7
-GUI.InventoryPages.Import_Inventory$6
-GUI.InventoryPages.Import_Inventory$5
-GUI.InventoryPages.Import_Inventory$4
-GUI.InventoryPages.Import_Inventory$3
-GUI.InventoryPages.Import_Inventory$2
-GUI.InventoryPages.Import_Inventory$1
-GUI.InventoryPages.Import_Inventory

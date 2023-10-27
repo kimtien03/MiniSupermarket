@@ -1,13 +1,17 @@
 package com.myproject.DTO;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
+
 public class PhieuNhapDTO {
     private String MaPN;
-    private String NgLapPhieu;
+    private Timestamp NgLapPhieu;
     private String MaNV;
     private float ThanhTien;
     private boolean TinhTrang;
 
-    public PhieuNhapDTO(String MaPN, String NgLapPhieu, String MaNV, float ThanhTien, boolean TinhTrang) {
+    public PhieuNhapDTO(String MaPN, Timestamp NgLapPhieu, String MaNV, float ThanhTien, boolean TinhTrang) {
         this.MaPN = MaPN;
         this.NgLapPhieu = NgLapPhieu;
         this.MaNV = MaNV;
@@ -25,11 +29,11 @@ public class PhieuNhapDTO {
         this.MaPN = MaPN;
     }
 
-    public String getNgLapPhieu() {
+    public Timestamp getNgLapPhieu() {
         return NgLapPhieu;
     }
 
-    public void setNgLapPhieu(String NgLapPhieu) {
+    public void setNgLapPhieu(Timestamp NgLapPhieu) {
         this.NgLapPhieu = NgLapPhieu;
     }
 
@@ -56,4 +60,11 @@ public class PhieuNhapDTO {
     public void setTinhTrang(boolean TinhTrang) {
         this.TinhTrang = TinhTrang;
     }
+
+    @Override
+    public String toString() {
+        return "PhieuNhapDTO{" + "MaPN=" + MaPN + ", NgLapPhieu=" + NgLapPhieu + ", MaNV=" + MaNV + ", ThanhTien=" + ThanhTien + ", TinhTrang=" + TinhTrang + '}';
+    }
+    
+    
 }

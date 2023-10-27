@@ -1,6 +1,6 @@
 package com.myproject.DTO;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 public class CT_HangHoaDTO {
     private String MaCT_HH;
@@ -9,8 +9,10 @@ public class CT_HangHoaDTO {
     private Timestamp HSD;
     private float SoLuong;
     private boolean TinhTrang;
-
+    private HangHoaDTO hangHoaDTO;
+    
     public CT_HangHoaDTO() {
+        this.hangHoaDTO = new HangHoaDTO();
     }
 
     public CT_HangHoaDTO(String MaCT_HH, String MaHH, Timestamp NgaySX, Timestamp HSD, float SoLuong, boolean TinhTrang) {
@@ -69,5 +71,14 @@ public class CT_HangHoaDTO {
     public void setTinhTrang(boolean TinhTrang) {
         this.TinhTrang = TinhTrang;
     }
+
+    public HangHoaDTO getHangHoaDTO() {
+        return hangHoaDTO;
+    }
+
+    public void setHangHoaDTO(HangHoaDTO hangHoaDTO) {
+        this.hangHoaDTO = hangHoaDTO;
+    }
+    
     
 }
