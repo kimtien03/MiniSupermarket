@@ -10,11 +10,19 @@ import java.awt.Font;
 import static java.awt.PageAttributes.MediaType.D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -82,11 +90,13 @@ public class QLNCCPanel extends javax.swing.JPanel {
                 DefaultTableModel tableModel = (DefaultTableModel) jtbNCC.getModel();
                 TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(tableModel);
                 jtbNCC.setRowSorter(rowSorter);
-                if (text.trim().length() == 0) {
-                    rowSorter.setRowFilter(null); // Xóa bộ lọc nếu không có từ khóa tìm kiếm
-                } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text)); // Áp dụng bộ lọc tìm kiếm dựa trên từ khóa
-                }
+                List<RowFilter<Object, Object>> filters = new ArrayList<>();
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 0)); // Tìm kiếm trên cột 0
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 1)); // Tìm kiếm trên cột 1
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 3)); // Tìm kiếm trên cột 2
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 4));
+                RowFilter<Object, Object> combinedFilter = RowFilter.orFilter(filters);
+                rowSorter.setRowFilter(combinedFilter);
             }
         });
     }
@@ -132,7 +142,6 @@ public class QLNCCPanel extends javax.swing.JPanel {
     public boolean exportToExcel(JTable table, String filePath) {
         try {
             File excelFile = new File(filePath);
-
             Workbook workbook;
             if (excelFile.exists()) {
                 // Nếu tệp Excel đã tồn tại, thử mở nó để kiểm tra xem sheet đã có chưa
@@ -161,13 +170,22 @@ public class QLNCCPanel extends javax.swing.JPanel {
 
             // Tạo sheet mới
             Sheet sheet = workbook.createSheet("NhaCungCap");
-
+            if (isExcelFileInUse(new File(filePath))) {
+                JOptionPane.showMessageDialog(null, "Tệp Excel đang mở. Hãy đóng tệp Excel trước khi xuất.");
+                return false;
+            }
             DefaultTableModel model = (DefaultTableModel) table.getModel();
             // Tạo dòng cho tiêu đề
             Row titleRow = sheet.createRow(0);
             Cell titleCell = titleRow.createCell(0);
             titleCell.setCellValue("Danh Sách Nhà Cung Câp");
-
+            
+            Row headerRow = sheet.createRow(1);
+            String[] columnHeaders = {"Mã Nhà Cung Câp", "Tên Nhà Cung Câp", "Ðia Chi", "Email", "SDT","Tinh Trang"};
+            for (int i = 0; i < columnHeaders.length; i++) {
+                Cell headerCell = headerRow.createCell(i);
+                headerCell.setCellValue(columnHeaders[i]);
+            }
             // Tạo kiểu cell cho tiêu đề (tùy chọn)
             CellStyle titleCellStyle = workbook.createCellStyle();
             titleCellStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -175,7 +193,7 @@ public class QLNCCPanel extends javax.swing.JPanel {
 
             // Thêm dữ liệu vào các dòng
             for (int row = 0; row < model.getRowCount(); row++) {
-                Row dataRow = sheet.createRow(row + 1);
+                Row dataRow = sheet.createRow(row + 2);
                 for (int col = 0; col < model.getColumnCount(); col++) {
                     Cell cell = dataRow.createCell(col);
                     cell.setCellValue(model.getValueAt(row, col).toString());
@@ -217,6 +235,17 @@ public class QLNCCPanel extends javax.swing.JPanel {
         int rowCount = jtbNCC.getRowCount();
         int newSequence = rowCount + 1;
         return "NCC" + String.format("%02d", newSequence);
+    }
+
+    public boolean isExcelFileInUse(File file) {
+        boolean isFileLocked = true;
+        try ( RandomAccessFile raf = new RandomAccessFile(file, "rw");  FileChannel channel = raf.getChannel()) {
+            FileLock lock = channel.tryLock();
+            isFileLocked = lock == null;
+        } catch (IOException e) {
+            // Xử lý ngoại lệ
+        }
+        return isFileLocked;
     }
 
     @SuppressWarnings("unchecked")
@@ -712,6 +741,11 @@ public class QLNCCPanel extends javax.swing.JPanel {
             }
         });
         jtbNCC.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jtbNCC.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtbNCCMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtbNCC);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -871,23 +905,18 @@ public class QLNCCPanel extends javax.swing.JPanel {
         JFileChooser fileChooser = new JFileChooser();
         File defaultDirectory = new File("D:\\OneDrive\\Tai Lieu\\CNPM\\ProJectSieuThi_CNPM\\src\\resources\\excel");
         fileChooser.setCurrentDirectory(defaultDirectory);
-
         // Tạo một FileFilter để chỉ cho phép lựa chọn các tệp có đuôi .xls
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Files (.xlsx)", "xlsx");
         fileChooser.setFileFilter(filter);
-
         int result = fileChooser.showSaveDialog(this);
-
         if (result == JFileChooser.APPROVE_OPTION) {
             // Lấy đường dẫn và tên file được chọn
             File selectedFile = fileChooser.getSelectedFile();
             String filePath = selectedFile.getAbsolutePath();
-
             // Kiểm tra xem tên tệp đã có đuôi .xls chưa
             if (!filePath.toLowerCase().endsWith(".xlsx")) {
                 filePath += ".xlsx"; // Nếu chưa có, thêm đuôi .xls
             }
-
             if (exportToExcel(jtbNCC, filePath)) {
                 JOptionPane.showMessageDialog(null, "Xuất Excel thành công!");
             } else {
@@ -895,6 +924,20 @@ public class QLNCCPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_jbttnExportActionPerformed
+
+    private void jtbNCCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbNCCMouseClicked
+        // TODO add your handling code here:
+        jtbNCC.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = jtbNCC.getSelectedRow();
+                if (e.getClickCount() == 2 && row != -1) {
+                    // Đã thực hiện hai lần click, hủy chọn
+                    jtbNCC.clearSelection();
+                }
+            }
+        });
+    }//GEN-LAST:event_jtbNCCMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

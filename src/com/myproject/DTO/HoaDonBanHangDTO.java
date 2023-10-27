@@ -35,10 +35,6 @@ public class HoaDonBanHangDTO {
         this.NgLap = NgLap;
     }
 
-    
-
-    
-
     public float getThanhTien() {
         return ThanhTien;
     }

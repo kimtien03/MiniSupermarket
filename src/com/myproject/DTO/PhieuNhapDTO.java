@@ -1,13 +1,15 @@
 package com.myproject.DTO;
 
+import java.sql.Timestamp;
+
 public class PhieuNhapDTO {
     private String MaPN;
-    private String NgLapPhieu;
+    private Timestamp NgLapPhieu;
     private String MaNV;
     private float ThanhTien;
     private boolean TinhTrang;
 
-    public PhieuNhapDTO(String MaPN, String NgLapPhieu, String MaNV, float ThanhTien, boolean TinhTrang) {
+    public PhieuNhapDTO(String MaPN, Timestamp NgLapPhieu, String MaNV, float ThanhTien, boolean TinhTrang) {
         this.MaPN = MaPN;
         this.NgLapPhieu = NgLapPhieu;
         this.MaNV = MaNV;
@@ -25,11 +27,11 @@ public class PhieuNhapDTO {
         this.MaPN = MaPN;
     }
 
-    public String getNgLapPhieu() {
+    public Timestamp getNgLapPhieu() {
         return NgLapPhieu;
     }
 
-    public void setNgLapPhieu(String NgLapPhieu) {
+    public void setNgLapPhieu(Timestamp NgLapPhieu) {
         this.NgLapPhieu = NgLapPhieu;
     }
 

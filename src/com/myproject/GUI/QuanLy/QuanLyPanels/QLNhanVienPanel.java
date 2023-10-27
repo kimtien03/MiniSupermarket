@@ -9,14 +9,23 @@ import com.myproject.DTO.NhaCungCapDTO;
 import com.myproject.DTO.NhanVienDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -26,6 +35,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import static org.apache.poi.hssf.usermodel.HeaderFooter.file;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -81,11 +91,15 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
                 DefaultTableModel tableModel = (DefaultTableModel) jtbStaff.getModel();
                 TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(tableModel);
                 jtbStaff.setRowSorter(rowSorter);
-                if (text.trim().length() == 0) {
-                    rowSorter.setRowFilter(null); // Xóa bộ lọc nếu không có từ khóa tìm kiếm
-                } else {
-                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text)); // Áp dụng bộ lọc tìm kiếm dựa trên từ khóa
-                }
+                List<RowFilter<Object, Object>> filters = new ArrayList<>();
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 0)); // Tìm kiếm trên cột 0
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 1)); // Tìm kiếm trên cột 1
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 2)); // Tìm kiếm trên cột 2
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 4));
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 5)); // Tìm kiếm trên cột 2
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 6));
+                RowFilter<Object, Object> combinedFilter = RowFilter.orFilter(filters);
+                rowSorter.setRowFilter(combinedFilter);
             }
         });
     }
@@ -123,19 +137,16 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
             }
         });
     }
-    
+
     public boolean exportToExcel(JTable table, String filePath) {
         try {
             File excelFile = new File(filePath);
-
             Workbook workbook;
-            if (excelFile.exists()){
-                // Nếu tệp Excel đã tồn tại, thử mở nó để kiểm tra xem sheet đã có chưa
+            if (excelFile.exists()) {
                 FileInputStream inputStream = new FileInputStream(excelFile);
                 workbook = WorkbookFactory.create(inputStream);
                 inputStream.close();
-                // Kiểm tra xem sheet đã có trong tệp Excel chưa
-                String newSheetName = "NhanVien"; // Tên sheet mới
+                String newSheetName = "NhanVien";
                 boolean sheetExists = false;
                 Iterator<Sheet> sheetIterator = workbook.sheetIterator();
                 while (sheetIterator.hasNext()) {
@@ -145,46 +156,44 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
                     }
                 }
                 if (sheetExists) {
-                    // Nếu sheet đã tồn tại, ghi đè lên sheet hiện có
                     workbook.removeSheetAt(workbook.getSheetIndex(newSheetName));
                 }
             } else {
                 workbook = new XSSFWorkbook();
             }
 
-            // Tạo sheet mới
             Sheet sheet = workbook.createSheet("NhanVien");
-
+            if (isExcelFileInUse(new File(filePath))) {
+                JOptionPane.showMessageDialog(null, "Tệp Excel đang mở. Hãy đóng tệp Excel trước khi xuất.");
+                return false;
+            }
             DefaultTableModel model = (DefaultTableModel) table.getModel();
-            // Tạo dòng cho tiêu đề
             Row titleRow = sheet.createRow(0);
             Cell titleCell = titleRow.createCell(0);
             titleCell.setCellValue("Danh Sách Nhân Viên");
-
-            // Tạo kiểu cell cho tiêu đề (tùy chọn)
+            Row headerRow = sheet.createRow(1);
+            String[] columnHeaders = {"Mã Nhân Viên", "Tên Nhân Viên", "Ngày Sinh", "Gioi Tính", "STD","Email","Chuc Vu","Tinh Trang"};
+            for (int i = 0; i < columnHeaders.length; i++) {
+                Cell headerCell = headerRow.createCell(i);
+                headerCell.setCellValue(columnHeaders[i]);
+            }
             CellStyle titleCellStyle = workbook.createCellStyle();
             titleCellStyle.setAlignment(HorizontalAlignment.CENTER);
             titleCell.setCellStyle(titleCellStyle);
-
-            // Thêm dữ liệu vào các dòng
             for (int row = 0; row < model.getRowCount(); row++) {
-                Row dataRow = sheet.createRow(row + 1);
+                Row dataRow = sheet.createRow(row + 2);
                 for (int col = 0; col < model.getColumnCount(); col++) {
                     Cell cell = dataRow.createCell(col);
                     cell.setCellValue(model.getValueAt(row, col).toString());
                 }
             }
-
-            // Tự động điều chỉnh độ rộng của các cột
             for (int col = 0; col < model.getColumnCount(); col++) {
                 sheet.autoSizeColumn(col);
             }
 
-            // Lưu tệp Excel
             FileOutputStream output = new FileOutputStream(excelFile);
             workbook.write(output);
             output.close();
-
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,6 +219,17 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
         int rowCount = jtbStaff.getRowCount();
         int newSequence = rowCount + 1;
         return "NV" + String.format("%02d", newSequence);
+    }
+
+    public boolean isExcelFileInUse(File file) {
+        boolean isFileLocked = true;
+        try ( RandomAccessFile raf = new RandomAccessFile(file, "rw");  FileChannel channel = raf.getChannel()) {
+            FileLock lock = channel.tryLock();
+            isFileLocked = lock == null;
+        } catch (IOException e) {
+            // Xử lý ngoại lệ
+        }
+        return isFileLocked;
     }
 
     @SuppressWarnings("unchecked")
@@ -749,6 +769,11 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
             }
         });
         jtbStaff.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jtbStaff.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtbStaffMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtbStaff);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -766,7 +791,7 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -806,7 +831,6 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
             } else if ("Nu".equals(Gioitinh.trim())) {
                 GTNvFix.setSelectedItem("Nu");
             }
-
             if ("Quản Lý".equals(chucvu)) {
                 CvNvFix.setSelectedItem("Quản Lý");
             } else if ("Nhân Viên Kho".equals(chucvu)) {
@@ -857,10 +881,9 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
                 } else {
                     int namHienTai = calHienTai.get(Calendar.YEAR);
                     int namNgaySinh = calNgaySinh.get(Calendar.YEAR);
-
                     // Kiểm tra xem ngày sinh có hợp lệ (lớn hơn 10 năm)
-                    if (namHienTai - namNgaySinh < 10) {
-                        JOptionPane.showMessageDialog(null, "Kiểm tra lại ngày sinh vì nhỏ hơn 10 tuổi!");
+                    if (namHienTai - namNgaySinh < 18) {
+                        JOptionPane.showMessageDialog(null, "Kiểm tra lại ngày sinh vì nhỏ hơn 18 tuổi!");
                         isDataValid = false;
                     }
                 }
@@ -925,6 +948,7 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
                 isDataValid = false;
             }
             Date ngaySinh = NgSNvFix.getDate();
+//            System.out.println(ngaySinh);
             if (ngaySinh != null) {
                 Calendar calNgaySinh = Calendar.getInstance();
                 calNgaySinh.setTime(ngaySinh);
@@ -1000,23 +1024,19 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
         JFileChooser fileChooser = new JFileChooser();
         File defaultDirectory = new File("D:\\OneDrive\\Tai Lieu\\CNPM\\ProJectSieuThi_CNPM\\src\\resources\\excel");
         fileChooser.setCurrentDirectory(defaultDirectory);
-
         // Tạo một FileFilter để chỉ cho phép lựa chọn các tệp có đuôi .xls
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Files (.xlsx)", "xlsx");
         fileChooser.setFileFilter(filter);
-
         int result = fileChooser.showSaveDialog(this);
-
         if (result == JFileChooser.APPROVE_OPTION) {
             // Lấy đường dẫn và tên file được chọn
             File selectedFile = fileChooser.getSelectedFile();
             String filePath = selectedFile.getAbsolutePath();
-
             // Kiểm tra xem tên tệp đã có đuôi .xls chưa
             if (!filePath.toLowerCase().endsWith(".xlsx")) {
                 filePath += ".xlsx"; // Nếu chưa có, thêm đuôi .xlsx
             }
-
+            // Thực hiện xuất tệp Excel
             if (exportToExcel(jtbStaff, filePath)) {
                 JOptionPane.showMessageDialog(null, "Xuất Excel thành công!");
             } else {
@@ -1028,6 +1048,20 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
     private void TTNvFixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TTNvFixActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TTNvFixActionPerformed
+
+    private void jtbStaffMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbStaffMouseClicked
+        // TODO add your handling code here:
+        jtbStaff.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = jtbStaff.getSelectedRow();
+                if (e.getClickCount() == 2 && row != -1) {
+                    // Đã thực hiện hai lần click, hủy chọn
+                    jtbStaff.clearSelection();
+                }
+            }
+        });
+    }//GEN-LAST:event_jtbStaffMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
