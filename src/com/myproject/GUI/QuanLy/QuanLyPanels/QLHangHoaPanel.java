@@ -4,11 +4,29 @@
  */
 package com.myproject.GUI.QuanLy.QuanLyPanels;
 
+import com.myproject.BUS.HangHoaBUS;
+import com.myproject.BUS.KhuyenMaiBUS;
+import com.myproject.DAO.HangHoaDAO;
+import com.myproject.DTO.HangHoaTongDTO;
+import com.myproject.DTO.KhuyenMaiDTO;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -16,11 +34,200 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class QLHangHoaPanel extends javax.swing.JPanel {
 
+    HangHoaBUS HHGUI = new HangHoaBUS();
+    List<HangHoaTongDTO> hangHoaList = HHGUI.getAllHangHoa();
+    KhuyenMaiBUS KMGUI = new KhuyenMaiBUS();
+    List<KhuyenMaiDTO> khuyenMaiList = KMGUI.getAllKhuyenMai();
+
     /**
      * Creates new form QLHangHoaPanel
      */
     public QLHangHoaPanel() {
         initComponents();
+        loadHH();
+        jtfSearch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchHH();
+            }
+        });
+        ComboboxUnit();
+        ComboboxLH();
+        ComboboxTT();
+        jtbProduct.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                if (!event.getValueIsAdjusting()) { // Đảm bảo sự kiện chỉ xảy ra khi người dùng kết thúc việc chọn
+                    DisplaySelectedRowData();
+                }
+            }
+        });
+
+    }
+
+    public void loadHH() {
+        DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
+        float giaKM = 0;
+        for (HangHoaTongDTO hh : hangHoaList) {
+            for (KhuyenMaiDTO km : khuyenMaiList) {
+                if (hh.getMaKM() == null || km.isTinhTrang() == false) {
+                    giaKM = 0;
+                } else if (hh.getMaKM().contains(km.getMaKM()) && km.isTinhTrang() == true) {
+                    // Lấy giá khuyến mãi từ đối tượng KhuyenMaiDTO (giả sử bạn có đối tượng này)
+                    float TL = km.getTiLeGiam();
+                    float DG = hh.getDonGiaBan();
+                    giaKM = DG * TL;
+                }
+
+            }
+            Object[] rowData = {hh.getMaHH(), hh.getMaCT_HH(), hh.getTenHH(), hh.getNgaySX(), hh.getHSD(),
+                hh.getDonGiaBan(), giaKM, hh.getDonVi(), hh.getTenLH(), hh.getSoLuong(), hh.isTinhTrang()};
+            table.addRow(rowData);
+        }
+    }
+
+    public void ComboboxUnit() {
+        jcbboxUnit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedUnit = (String) jcbboxUnit.getSelectedItem();
+                DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
+
+                // Làm sạch dữ liệu trong bảng
+                table.setRowCount(0);
+
+                for (HangHoaTongDTO hh : hangHoaList) {
+                    if (selectedUnit.trim().equals(hh.getDonVi().trim())) {
+                        addRowToTable(hh, table);
+                    }
+                }
+            }
+        });
+    }
+
+    public void ComboboxLH() {
+        jcbboxLH.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedLH = ((String) jcbboxLH.getSelectedItem()); // Chuyển thành chữ thường
+
+                DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
+
+                // Làm sạch dữ liệu trong bảng
+                table.setRowCount(0);
+
+                for (HangHoaTongDTO hh : hangHoaList) {
+                    if (selectedLH.trim().equals(hh.getTenLH().trim())) {
+                        addRowToTable(hh, table);
+                    }
+                }
+
+            }
+        });
+    }
+
+    public void ComboboxTT() {
+        jcbboxStatus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedTT = (String) jcbboxStatus.getSelectedItem(); // Lấy giá trị từ JComboBox
+
+                DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
+
+                // Làm sạch dữ liệu trong bảng
+                table.setRowCount(0);
+
+                for (HangHoaTongDTO hh : hangHoaList) {
+                    boolean tinhTrang = hh.isTinhTrang(); // Lấy giá trị Tình Trạng từ đối tượng hh
+
+                    if ("Tất cả".equals(selectedTT) || ("Đang bán".equals(selectedTT) && tinhTrang) || ("Tồn kho".equals(selectedTT) && !tinhTrang)) {
+                        addRowToTable(hh, table);
+                    }
+                }
+            }
+        });
+    }
+
+    private void addRowToTable(HangHoaTongDTO hh, DefaultTableModel table) {
+        float giaKM = 0;
+        for (KhuyenMaiDTO km : khuyenMaiList) {
+            if (hh.getMaKM() != null && km.isTinhTrang() == true && hh.getMaKM().contains(km.getMaKM())) {
+                float TL = km.getTiLeGiam();
+                float DG = hh.getDonGiaBan();
+                giaKM = DG * TL;
+            }
+        }
+
+        Object[] rowData = {
+            hh.getMaHH(), hh.getMaCT_HH(), hh.getTenHH(), hh.getNgaySX(), hh.getHSD(),
+            hh.getDonGiaBan(), giaKM, hh.getDonVi(), hh.getTenLH(), hh.getSoLuong(), hh.isTinhTrang()
+        };
+
+        table.addRow(rowData);
+    }
+
+    public void searchHH() {
+        DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
+        table.setRowCount(0); // Xóa tất cả các hàng khỏi bảng
+        String searchText = jtfSearch.getText().trim().toLowerCase();
+
+        for (HangHoaTongDTO hh : hangHoaList) {
+
+            // Kiểm tra nếu thông tin sản phẩm khớp với dữ liệu tìm kiếm
+            if (hh.getMaCT_HH().toLowerCase().contains(searchText)
+                    || hh.getMaHH().toLowerCase().contains(searchText)) {
+                // Tìm thấy kết quả phù hợp, thêm vào bảng
+                float giaKM = 0;
+
+                for (KhuyenMaiDTO km : khuyenMaiList) {
+                    if (hh.getMaKM() != null && km.isTinhTrang() == true && hh.getMaKM().contains(km.getMaKM())) {
+                        float TL = km.getTiLeGiam();
+                        float DG = hh.getDonGiaBan();
+                        giaKM = DG * TL;
+                    }
+                }
+
+                Object[] rowData = {
+                    hh.getMaHH(), hh.getMaCT_HH(), hh.getTenHH(), hh.getNgaySX(), hh.getHSD(),
+                    hh.getDonGiaBan(), giaKM, hh.getDonVi(), hh.getTenLH(), hh.getSoLuong(), hh.isTinhTrang()
+                };
+
+                table.addRow(rowData);
+            }
+        }
+    }
+
+    public void DisplaySelectedRowData() {
+        int selectedRow = jtbProduct.getSelectedRow();
+
+        if (selectedRow != -1) {
+            String maHH = (String) jtbProduct.getValueAt(selectedRow, 0);
+            String maCTHH = (String) jtbProduct.getValueAt(selectedRow, 1);
+            String tenHH = (String) jtbProduct.getValueAt(selectedRow, 2);
+            Timestamp ngSanXuat = (Timestamp) jtbProduct.getValueAt(selectedRow, 3);
+            Timestamp hsd = (Timestamp) jtbProduct.getValueAt(selectedRow, 4);
+            Float donGia = (Float) jtbProduct.getValueAt(selectedRow, 5);
+            Float giaKM = (Float) jtbProduct.getValueAt(selectedRow, 6);
+            String donVi = (String) jtbProduct.getValueAt(selectedRow, 7);
+            String loaiHang = (String) jtbProduct.getValueAt(selectedRow, 8);
+            Float soLuong = (Float) jtbProduct.getValueAt(selectedRow, 9);
+            Boolean tinhTrang = (Boolean) jtbProduct.getValueAt(selectedRow, 10);
+
+            jtfMaHH.setText(maHH);
+            jtfTenHH1.setText(maCTHH);
+            jtfTenHH.setText(tenHH);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            jtfNSX.setText(dateFormat.format(ngSanXuat)); // Chuyển đổi và đặt ngày sản xuất
+            jtfHSD.setText(dateFormat.format(hsd)); // Chuyển đổi và đặt hạn sử dụng
+
+            jtfPrice.setText(Float.toString(donGia));
+            jtfGiaKM.setText(Float.toString(giaKM));
+            jtfUnit.setText(donVi);
+            jtfQuantity.setText(Float.toString(soLuong));
+
+            jcbboxTTLH.setSelectedItem(loaiHang); // Đặt giá trị cho JComboBox LoaiHang
+            jcbboxTTStatus.setSelectedItem(tinhTrang ? "Đang bán" : "Tồn kho"); // Đặt giá trị cho JComboBox TinhTrang
+        }
     }
 
     /**
@@ -63,7 +270,6 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
         jToolBar1 = new javax.swing.JToolBar();
         jbttnChange = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
-        jbttnRefresh = new javax.swing.JButton();
         jSeparator4 = new javax.swing.JToolBar.Separator();
         jbttnExport = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -93,7 +299,7 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
 
         jtfNSX.setBorder(null);
 
-        jcbboxTTLH.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbboxTTLH.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nước Ngọt", "Thịt, cá", "Mì,Phở,Hủ Tiếu gói", "Bánh Kẹo", "Trái Cây" }));
         jcbboxTTLH.setBorder(null);
 
         jLabel6.setText("Hạn sử dụng");
@@ -140,7 +346,7 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
                     .addComponent(jtfMaHH, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
                     .addComponent(jtfTenHH, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jtfTenHH1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -149,7 +355,7 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jcbboxTTLH, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jtfNSX, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                    .addComponent(jtfNSX)
                     .addComponent(jtfHSD, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(18, 18, 18)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,14 +430,14 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
 
         jpnAct.setBorder(javax.swing.BorderFactory.createTitledBorder("Thao tác"));
 
-        jcbboxLH.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbboxLH.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nước Ngọt", "Thịt, cá", "Mì,Phở,Hủ Tiếu gói", "Bánh Kẹo", "Trái Cây" }));
         jcbboxLH.setBorder(null);
 
         jLabel10.setText("Loại hàng");
 
         jLabel11.setText("Đơn vị");
 
-        jcbboxUnit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbboxUnit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "chai", "lon", "Kg", "gói" }));
         jcbboxUnit.setBorder(null);
 
         jToolBar1.setRollover(true);
@@ -249,13 +455,6 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
         });
         jToolBar1.add(jbttnChange);
         jToolBar1.add(jSeparator1);
-
-        jbttnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/reload.png"))); // NOI18N
-        jbttnRefresh.setText("Mới");
-        jbttnRefresh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jbttnRefresh.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jbttnRefresh.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jbttnRefresh);
         jToolBar1.add(jSeparator4);
 
         jbttnExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/xls-file.png"))); // NOI18N
@@ -264,6 +463,11 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
         jbttnExport.setFocusable(false);
         jbttnExport.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jbttnExport.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jbttnExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbttnExportActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jbttnExport);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/search.png"))); // NOI18N
@@ -318,7 +522,7 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
                         .addComponent(jcbboxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(158, 158, 158))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 227, Short.MAX_VALUE)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -395,12 +599,92 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbttnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnChangeActionPerformed
-        if(jtbProduct.getSelectedRow()!=-1) {
+        DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
+        int selectedRow = jtbProduct.getSelectedRow();
+        if (selectedRow != -1) {
+            boolean currentStatus = (boolean) table.getValueAt(selectedRow, 10);
+            boolean newStatus = !currentStatus;
+            table.setValueAt(newStatus, selectedRow, 10); // Cập nhật "Tình Trạng" cho hàng đã chọn
+
+            // Cập nhật JComboBox
+            if (newStatus) {
+                jcbboxTTStatus.setSelectedItem("Đang bán");
+            } else {
+                jcbboxTTStatus.setSelectedItem("Tồn kho");
+            }
+
+            // Lấy mã sản phẩm (MaHH) của sản phẩm đã chọn
+            String maHH = (String) table.getValueAt(selectedRow, 0);
+
+            // Cập nhật trạng thái trong cơ sở dữ liệu
+            HangHoaDAO hangHoaDAO = new HangHoaDAO(); // Tạo một đối tượng DAO
+            hangHoaDAO.updateTinhTrangHangHoa(maHH, newStatus); // Gọi phương thức updateTinhTrangHangHoa
+
             JOptionPane.showMessageDialog(null, "Đổi trạng thái thành công!");
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn một sản phẩm để đổi trạng thái!");
         }
     }//GEN-LAST:event_jbttnChangeActionPerformed
+
+    private void jbttnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnExportActionPerformed
+        Workbook workbook = new XSSFWorkbook();
+
+        // Tạo một bảng (sheet) trong Workbook
+        Sheet sheet = workbook.createSheet("Danh sách hàng hóa");
+
+        // Lấy dữ liệu từ JTable và điền vào bảng
+        DefaultTableModel tableModel = (DefaultTableModel) jtbProduct.getModel();
+        int rowCount = tableModel.getRowCount();
+        int columnCount = tableModel.getColumnCount();
+
+        for (int row = 0; row < rowCount; row++) {
+            Row excelRow = sheet.createRow(row);
+
+            for (int col = 0; col < columnCount; col++) {
+                Cell cell = excelRow.createCell(col);
+                Object cellValue = tableModel.getValueAt(row, col);
+
+                // Đặt giá trị của ô dựa trên kiểu dữ liệu trong JTable
+                if (cellValue instanceof String) {
+                    cell.setCellValue((String) cellValue);
+                } else if (cellValue instanceof Timestamp) {
+                    cell.setCellValue((Timestamp) cellValue);
+                } else if (cellValue instanceof Float) {
+                    cell.setCellValue((Float) cellValue);
+                } else if (cellValue instanceof Boolean) {
+                    cell.setCellValue((Boolean) cellValue);
+                } else {
+                    // Nếu kiểu dữ liệu khác, bạn có thể xử lý tùy theo yêu cầu
+                }
+            }
+        }
+
+        try {
+            // Chọn nơi lưu tệp Excel
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showSaveDialog(this);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+
+                // Đảm bảo tên tệp kết thúc bằng ".xlsx"
+                String filePath = file.getPath();
+                if (!filePath.endsWith(".xlsx")) {
+                    filePath += ".xlsx";
+                }
+
+                // Ghi Workbook vào tệp
+                try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                    workbook.write(fileOut);
+                    fileOut.flush();
+                    JOptionPane.showMessageDialog(this, "Dữ liệu đã được xuất ra tệp Excel.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi xuất dữ liệu ra tệp Excel.");
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jbttnExportActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -426,7 +710,6 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton jbttnChange;
     private javax.swing.JButton jbttnExport;
-    private javax.swing.JButton jbttnRefresh;
     private javax.swing.JComboBox<String> jcbboxLH;
     private javax.swing.JComboBox<String> jcbboxStatus;
     private javax.swing.JComboBox<String> jcbboxTTLH;

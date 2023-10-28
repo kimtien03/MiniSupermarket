@@ -1,12 +1,13 @@
 package com.myproject.DTO;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 public class HoaDonBanHangDTO {
-    private String MaHD;
+    public String MaHD;
     private Timestamp NgLap;
     private float ThanhTien; 
     private String MaKH;
     private String MaNV;
+    
     public HoaDonBanHangDTO(String MaHD, Timestamp NgLap, float ThanhTien, String MaKH, String MaNV) {
         this.MaHD = MaHD;
         this.NgLap = NgLap;

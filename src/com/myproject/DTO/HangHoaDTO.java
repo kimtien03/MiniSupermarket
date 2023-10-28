@@ -4,25 +4,29 @@ import java.security.Timestamp;
 public class HangHoaDTO {
     private String MaHH;
     private String TenHH;
-    private Timestamp NgaySX;
-    private Timestamp HSD;
     private String MaLH;
     private float DonGiaBan;
-    private float SoLuong;
+    private String MaKM;
     private String DonVi;
     private boolean TinhTrang;
     
 
-    public HangHoaDTO(String MaHH, String TenHH, Timestamp NgaySX, Timestamp HSD, String MaLH, float DonGiaBan, float SoLuong, String DonVi, boolean TinhTrang) {
+    public HangHoaDTO(String MaHH, String TenHH, Timestamp NgaySX, Timestamp HSD, String MaLH, float DonGiaBan, String MaKM, String DonVi, boolean TinhTrang) {
         this.MaHH = MaHH;
         this.TenHH = TenHH;
-        this.NgaySX = NgaySX;
-        this.HSD = HSD;
         this.MaLH = MaLH;
         this.DonGiaBan = DonGiaBan;
-        this.SoLuong = SoLuong;
+        this.MaKM=MaKM;
         this.DonVi = DonVi;
         this.TinhTrang = TinhTrang;
+    }
+
+    public String getMaKM() {
+        return MaKM;
+    }
+
+    public void setMaKM(String MaKM) {
+        this.MaKM = MaKM;
     }
 
     
@@ -46,21 +50,7 @@ public class HangHoaDTO {
         this.TenHH = TenHH;
     }
 
-    public Timestamp getNgaySX() {
-        return NgaySX;
-    }
-
-    public void setNgaySX(Timestamp NgaySX) {
-        this.NgaySX = NgaySX;
-    }
-
-    public Timestamp getHSD() {
-        return HSD;
-    }
-
-    public void setHSD(Timestamp HSD) {
-        this.HSD = HSD;
-    }
+    
 
     public String getMaLH() {
         return MaLH;
@@ -76,14 +66,6 @@ public class HangHoaDTO {
 
     public void setDonGiaBan(float DonGiaBan) {
         this.DonGiaBan = DonGiaBan;
-    }
-
-    public float getSoLuong() {
-        return SoLuong;
-    }
-
-    public void setSoLuong(float SoLuong) {
-        this.SoLuong = SoLuong;
     }
 
     public String getDonVi() {

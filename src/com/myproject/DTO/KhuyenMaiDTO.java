@@ -1,5 +1,7 @@
 package com.myproject.DTO;
-import java.security.Timestamp;
+
+import java.sql.Timestamp;
+
 
 public class KhuyenMaiDTO {
     private String MaKM;
@@ -17,6 +19,8 @@ public class KhuyenMaiDTO {
         this.MoTa = MoTa;
         this.TinhTrang = TinhTrang;
     }
+
+  
 
     public KhuyenMaiDTO() {
     }
@@ -52,7 +56,7 @@ public class KhuyenMaiDTO {
     public void setNgKT(Timestamp NgKT) {
         this.NgKT = NgKT;
     }
-    
+
     public String getMoTa() {
         return MoTa;
     }
@@ -68,4 +72,6 @@ public class KhuyenMaiDTO {
     public void setTinhTrang(boolean TinhTrang) {
         this.TinhTrang = TinhTrang;
     }
+
 }
+
