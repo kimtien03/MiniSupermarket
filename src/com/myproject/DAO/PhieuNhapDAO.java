@@ -178,6 +178,8 @@ public class PhieuNhapDAO extends conndb{
                 }
             } catch (Exception e) {
                 System.out.println(e);
+            } finally {
+                closeConnection();
             }
         }
         return maCT_HH;

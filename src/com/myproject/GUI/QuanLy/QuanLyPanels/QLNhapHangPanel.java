@@ -1,30 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.myproject.GUI.QuanLy.QuanLyPanels;
 
-import static com.itextpdf.text.pdf.security.LtvTimestamp.timestamp;
 import com.myproject.BUS.HangHoaBUS;
-import com.myproject.BUS.HoaDonBanHangBUS;
 import com.myproject.BUS.LoaiHangBUS;
 import com.myproject.BUS.NhaCungCapBUS;
 import com.myproject.BUS.PhieuNhapBUS;
-import com.myproject.DAO.PhieuNhapDAO;
 import com.myproject.DTO.CTPN_CTHH_HH_DTO;
-import com.myproject.DTO.CT_PhieuNhapDTO;
 import com.myproject.DTO.HH_CTHH_DTO;
-import com.myproject.DTO.HangHoaDTO;
 import com.myproject.DTO.LoaiHangDTO;
 import com.myproject.DTO.NhaCungCapDTO;
 import com.myproject.DTO.PhieuNhapDTO;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.sql.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
@@ -32,10 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Admin
- */
 public class QLNhapHangPanel extends javax.swing.JPanel {
     DefaultTableModel modelTablePN;
     DefaultTableModel modelTableCTPN;
