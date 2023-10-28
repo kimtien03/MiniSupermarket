@@ -28,6 +28,25 @@ public class NhanVienDTO {
         this.ChucVu = ChucVu;
         this.KhoaTK = KhoaTK;
     }
+
+    public String getChucVu() {
+        return ChucVu;
+    }
+
+    public void setChucVu(String ChucVu) {
+        this.ChucVu = ChucVu;
+    }
+
+    public boolean isKhoaTK() {
+        return KhoaTK;
+    }
+
+    public void setKhoaTK(boolean KhoaTK) {
+        this.KhoaTK = KhoaTK;
+    }
+    
+
+    
     public NhanVienDTO(){
         
     }
@@ -104,19 +123,4 @@ public class NhanVienDTO {
         this.TinhTrang = TinhTrang;
     }
     
-    public String getChucVu() {
-        return this.ChucVu;
-    }
-    
-    public void setChucVu(String ChucVu) {
-        this.ChucVu = ChucVu;
-    }
-    
-    public boolean getKhoaTK() {
-        return this.KhoaTK;
-    }
-    
-    public void setKhoaTK(boolean KhoaTK) {
-        this.KhoaTK = KhoaTK;
-    }
 }

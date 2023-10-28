@@ -60,6 +60,8 @@ public class KhachHangDTO {
     public void setNgSinh(Date NgSinh) {
         this.NgSinh = NgSinh;
     }
+
+    
     
     public boolean isTinhTrang() {
         return TinhTrang;

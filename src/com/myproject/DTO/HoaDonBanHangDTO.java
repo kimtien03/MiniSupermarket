@@ -1,5 +1,6 @@
 package com.myproject.DTO;
-import java.security.Timestamp;
+import java.sql.Timestamp;
+import java.util.Date;
 
 public class HoaDonBanHangDTO {
     private String MaHD;

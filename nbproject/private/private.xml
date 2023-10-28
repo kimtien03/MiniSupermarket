@@ -2,30 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/ADMIN/OneDrive/Máy%20tính/All%20Projects/QuanLySieuThiMini/ProJectSieuThi_CNPM/src/com/myproject/DAO/NhanVienDAO.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Máy%20tính/All%20Projects/QuanLySieuThiMini/ProJectSieuThi_CNPM/src/com/myproject/DAO/NhomQuyenDAO.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Máy%20tính/All%20Projects/QuanLySieuThiMini/ProJectSieuThi_CNPM/src/com/myproject/GUI/Admin/AccountManag_JPanel.java</file>
-            <file>file:/C:/Users/ADMIN/OneDrive/Máy%20tính/All%20Projects/QuanLySieuThiMini/ProJectSieuThi_CNPM/src/com/myproject/DTO/NhomQuyenDTO.java</file>
-=======
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/CTHD_BanHangDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/NhomQuyenDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/NhaCungCapDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/KhuyenMaiDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/LoaiHangDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/NhanVienDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/HH_LH_DTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/HH_CTHH_DTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/KhachHangDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/CT_HangHoaDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/CT_PhieuNhapDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/CTPN_CTHH_HH_DTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/PhieuNhapDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/HangHoaDTO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/QuanLy/QuanLyPanels/KhuyenMaiPanel.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/HoaDonBanHangDTO.java</file>
->>>>>>> QuanLy_Tien
-        </group>
+        <group/>
     </open-files>
 </project-private>

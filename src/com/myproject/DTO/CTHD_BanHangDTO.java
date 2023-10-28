@@ -5,6 +5,7 @@ public class CTHD_BanHangDTO {
     private String MaCT_HH;
     private float SLBan;
     private float DonGia;
+
     public CTHD_BanHangDTO() {
     }
 
@@ -14,7 +15,7 @@ public class CTHD_BanHangDTO {
         this.SLBan = SLBan;
         this.DonGia = DonGia;
     }
-    
+
     public String getMaHD() {
         return MaHD;
     }

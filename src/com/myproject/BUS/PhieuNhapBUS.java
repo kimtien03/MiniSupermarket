@@ -1,6 +1,8 @@
 package com.myproject.BUS;
 
 import com.myproject.DAO.PhieuNhapDAO;
+import com.myproject.DTO.PhieuNhapDTO;
+import java.util.List;
 import com.myproject.DTO.CTPN_CTHH_HH_DTO;
 import com.myproject.DTO.PhieuNhapDTO;
 import java.util.ArrayList;
@@ -52,4 +54,9 @@ public class PhieuNhapBUS {
         pn = new PhieuNhapDAO();
         pn.updateThanhTien(MaPN,thanhTien);
     }
+    public List<PhieuNhapDTO> getList() {
+        pn = new PhieuNhapDAO();
+        return pn.getList();
+    }
 }
+

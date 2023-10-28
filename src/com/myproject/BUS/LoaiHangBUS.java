@@ -2,6 +2,7 @@ package com.myproject.BUS;
 
 import com.myproject.DAO.LoaiHangDAO;
 import com.myproject.DTO.LoaiHangDTO;
+import java.util.List;
 import java.util.ArrayList;
 
 public class LoaiHangBUS {
@@ -19,5 +20,10 @@ public class LoaiHangBUS {
     public boolean fixLH(String MaLH, String TenLH, boolean TinhTrang) {
         lh = new LoaiHangDAO();
         return lh.fixLH(MaLH,TenLH,TinhTrang);
+    }
+    public List<LoaiHangDTO> getList() {
+        lh = new LoaiHangDAO();
+        return lh.getList();
+
     }
 }
