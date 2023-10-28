@@ -22,8 +22,8 @@ public class CT_HangHoaDAO extends conndb {
                 CT_HangHoaDTO cthh = new CT_HangHoaDTO();
                 cthh.setMaCT_HH(rs.getString("MaCT_HH"));
                 cthh.setSoLuong(rs.getFloat("SoLuong"));
-                cthh.setNgaySX(rs.getTimestamp("NgSanXuat"));
-                cthh.setHSD(rs.getTimestamp("HanSuDung"));
+                cthh.setNgaySX(rs.getDate("NgSanXuat"));
+                cthh.setHSD(rs.getDate("HanSuDung"));
                 cthh.setMaHH(rs.getString("MaHH"));
                 cthh.setTinhTrang(rs.getBoolean("TinhTrang"));
                 list.add(cthh);

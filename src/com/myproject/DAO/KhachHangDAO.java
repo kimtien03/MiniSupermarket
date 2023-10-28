@@ -65,7 +65,7 @@ public class KhachHangDAO extends conndb {
             Connection cons = ConKH.getConnection();
             String sql = "UPDATE KHACHHANG SET HoTen=?, Diem=?, SDT=?, NgSinh=?,TinhTrang=? where MaKH=?";
             PreparedStatement ps = cons.prepareStatement(sql);
-            ps.setString(8, Fixkh.getMaKH());
+            ps.setString(6, Fixkh.getMaKH());
             ps.setString(1, Fixkh.getHoTen());
             java.sql.Date ngaySinhSQL = new java.sql.Date(Fixkh.getNgSinh().getTime());
             ps.setInt(2, Fixkh.getDiem());

@@ -68,6 +68,37 @@ public class QLNCCPanel extends javax.swing.JPanel {
         }
     }
 
+    public void resetFix() {
+        String selectedTrangThai = (String) jcbboxFilter.getSelectedItem();
+        DefaultTableModel tableModel = (DefaultTableModel) jtbNCC.getModel();
+        // Làm sạch dữ liệu trong bảng
+        tableModel.setRowCount(0);
+        if (selectedTrangThai.equals("Đang hoạt động")) {
+            List<NhaCungCapDTO> nccList = NCCBUS.getList();
+            for (NhaCungCapDTO nhacc : nccList) {
+                if (nhacc.isTinhTrang()) { // Kiểm tra nếu tình trạng là 1 (đang hoạt động)
+                    Object[] rowData = {nhacc.getMaNCC(), nhacc.getTenNCC(), nhacc.getDiaChi(), nhacc.getEmail(), nhacc.getSDT(), nhacc.isTinhTrang()};
+                    tableModel.addRow(rowData);
+                }
+            }
+        } else if (selectedTrangThai.equals("Ngừng hoạt động")) {
+            List<NhaCungCapDTO> nccList = NCCBUS.getList();
+            for (NhaCungCapDTO nhacc : nccList) {
+                if (!nhacc.isTinhTrang()) { // Kiểm tra nếu tình trạng là 0 (ngừng hoạt động)
+                    Object[] rowData = {nhacc.getMaNCC(), nhacc.getTenNCC(), nhacc.getDiaChi(), nhacc.getEmail(), nhacc.getSDT(), nhacc.isTinhTrang()};
+                    tableModel.addRow(rowData);
+                }
+            }
+        } else {
+            // Hiển thị toàn bộ dữ liệu nếu chọn "Tất cả"
+            List<NhaCungCapDTO> nccList = NCCBUS.getList();
+            for (NhaCungCapDTO nhacc : nccList) {
+                Object[] rowData = {nhacc.getMaNCC(), nhacc.getTenNCC(), nhacc.getDiaChi(), nhacc.getEmail(), nhacc.getSDT(), nhacc.isTinhTrang()};
+                tableModel.addRow(rowData);
+            }
+        }
+    }
+
     public void SearchNcc() {
         jtfSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -107,10 +138,8 @@ public class QLNCCPanel extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent e) {
                 String selectedTrangThai = (String) jcbboxFilter.getSelectedItem();
                 DefaultTableModel tableModel = (DefaultTableModel) jtbNCC.getModel();
-
                 // Làm sạch dữ liệu trong bảng
                 tableModel.setRowCount(0);
-
                 if (selectedTrangThai.equals("Đang hoạt động")) {
                     List<NhaCungCapDTO> nccList = NCCBUS.getList();
                     for (NhaCungCapDTO nhacc : nccList) {
@@ -159,7 +188,6 @@ public class QLNCCPanel extends javax.swing.JPanel {
                         break;
                     }
                 }
-
                 if (sheetExists) {
                     // Nếu sheet đã tồn tại, ghi đè lên sheet hiện có
                     workbook.removeSheetAt(workbook.getSheetIndex(newSheetName));
@@ -179,9 +207,9 @@ public class QLNCCPanel extends javax.swing.JPanel {
             Row titleRow = sheet.createRow(0);
             Cell titleCell = titleRow.createCell(0);
             titleCell.setCellValue("Danh Sách Nhà Cung Câp");
-            
+
             Row headerRow = sheet.createRow(1);
-            String[] columnHeaders = {"Mã Nhà Cung Câp", "Tên Nhà Cung Câp", "Ðia Chi", "Email", "SDT","Tinh Trang"};
+            String[] columnHeaders = {"Mã Nhà Cung Câp", "Tên Nhà Cung Câp", "Ðia Chi", "Email", "SDT", "Tinh Trang"};
             for (int i = 0; i < columnHeaders.length; i++) {
                 Cell headerCell = headerRow.createCell(i);
                 headerCell.setCellValue(columnHeaders[i]);
@@ -190,7 +218,6 @@ public class QLNCCPanel extends javax.swing.JPanel {
             CellStyle titleCellStyle = workbook.createCellStyle();
             titleCellStyle.setAlignment(HorizontalAlignment.CENTER);
             titleCell.setCellStyle(titleCellStyle);
-
             // Thêm dữ liệu vào các dòng
             for (int row = 0; row < model.getRowCount(); row++) {
                 Row dataRow = sheet.createRow(row + 2);
@@ -232,7 +259,7 @@ public class QLNCCPanel extends javax.swing.JPanel {
 
     //hàm tang ma
     private String generateNewMaNCC() {
-        int rowCount = jtbNCC.getRowCount();
+        int rowCount = nccList.size();
         int newSequence = rowCount + 1;
         return "NCC" + String.format("%02d", newSequence);
     }
@@ -773,7 +800,10 @@ public class QLNCCPanel extends javax.swing.JPanel {
     private void jbttnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnAddActionPerformed
         String newMaNCC = generateNewMaNCC();
         MaNCCText.setText(newMaNCC);
-
+        TenNCCText.setText("");
+        SdtNCCText.setText("");
+        EmailNCCText.setText("");
+        DChiNCCText.setText("");
         jDialog1.setLocationRelativeTo(this);
         jDialog1.setVisible(true);
     }//GEN-LAST:event_jbttnAddActionPerformed
@@ -839,6 +869,7 @@ public class QLNCCPanel extends javax.swing.JPanel {
                 newncc.setEmail(EmailNCCText.getText());
                 newncc.setTinhTrang(true);
                 if (NCCBUS.AddNccNew(newncc)) {
+                    jcbboxFilter.setSelectedIndex(0);
                     JOptionPane.showMessageDialog(null, "Thêm Thành Công!");
                     // Xóa toàn bộ dữ liệu từ bảng
                     DefaultTableModel tablefilter = (DefaultTableModel) jtbNCC.getModel();
@@ -887,11 +918,13 @@ public class QLNCCPanel extends javax.swing.JPanel {
                         fixncc.setTinhTrang(false);
                     }
                     if (NCCBUS.UpdateNccNew(fixncc)) {
+//                        jcbboxFilter.setSelectedIndex(0);
                         JOptionPane.showMessageDialog(null, "Sửa Thành Công!");
                         DefaultTableModel tablefilter = (DefaultTableModel) jtbNCC.getModel();
                         tablefilter.setRowCount(0); // Clear the table
                         nccList = NCCBUS.getList(); // Đảm bảo datancc là danh sách mới sau khi thêm
-                        loadNCC();
+                        resetFix();
+//                        loadNCC();
                         jDialog2.dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Sửa Không Thành Công!");

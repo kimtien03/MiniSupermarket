@@ -70,6 +70,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import javax.swing.JTextField;
 import javax.swing.table.TableModel;
 // Import các thư viện cần thiết
 
@@ -117,20 +118,19 @@ public class ThongKePanel extends javax.swing.JPanel {
         int soLuongHoaDon = listhdbh.size();
         jlbDH.setText(soLuongHoaDon + "  Đơn Hàng");
         int soLuongKhachHang = 0;
+        float TongDoanhThu = 0;
         Set<String> uniqueCustomerIds = new HashSet<>();
         for (HoaDonBanHangDTO hdbh : listhdbh) {
             String maKH = hdbh.getMaKH();
             if (!maKH.equals("KH000")) {
                 uniqueCustomerIds.add(maKH);
             }
+            TongDoanhThu = TongDoanhThu + hdbh.getThanhTien();
         }
         soLuongKhachHang = uniqueCustomerIds.size();
         jlbCustomer.setText(soLuongKhachHang + "  Khách Hàng");
-        float TongDoanhThu = 0;
+        
         float TongKhoangChi = 0;
-        for (CTHD_BanHangDTO cthd : cthdbhlist) {
-            TongDoanhThu = TongDoanhThu + cthd.getSLBan() * cthd.getDonGia();
-        }
         jlbDT.setText(TongDoanhThu + " VNÐ");
         for (PhieuNhapDTO pn : listpn) {
             if (pn.isTinhTrang() == true) {
@@ -726,6 +726,7 @@ public class ThongKePanel extends javax.swing.JPanel {
             } else {
                 // Ngày bắt đầu lớn hơn hoặc bằng ngày kết thúc, xử lý lỗi hoặc hiển thị thông báo
                 JOptionPane.showMessageDialog(null, "Ngày bắt đầu lớn hơn ngày kết thúc. Vui lòng chọn lại!");
+                jdcEnd.setDate(null);
             }
         } else if (startDate != null) {
             // Chỉ có giá trị ngày bắt đầu, lọc dữ liệu theo ngày bắt đầu
@@ -1718,6 +1719,10 @@ public class ThongKePanel extends javax.swing.JPanel {
             cardLayout.show(jpnSetTime, "Theo Thang");
         } else {
             cardLayout.show(jpnSetTime, "Theo Ngay");
+            JTextField dateTextField = (JTextField) jdcStart.getDateEditor().getUiComponent();
+            dateTextField.setEditable(false);
+            JTextField dateTextField1 = (JTextField) jdcEnd.getDateEditor().getUiComponent();
+            dateTextField1.setEditable(false);
         }
     }//GEN-LAST:event_jcbboxTimeLineActionPerformed
 
@@ -1761,7 +1766,7 @@ public class ThongKePanel extends javax.swing.JPanel {
                 filePath += ".xlsx";
             }
             // Thực hiện xuất tệp Excel
-            if (exportToExcel(jtbKhoangChi, rowSorterKC, filePath, "Danh Sách Khoản Chi")) {
+            if (exportToExcel(jtbKhoangChi, rowSorterKC, filePath, "Danh Sách Khoảng Chi")) {
                 if (isExcelFileInUse(new File(filePath))) {
                     JOptionPane.showMessageDialog(null, "Tệp Excel đang mở. Hãy đóng tệp Excel trước khi xuất.");
                 } else {

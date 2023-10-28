@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -104,6 +105,35 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
         });
     }
 
+    public void resetFix() {
+        String selectedTrangThai = (String) jcbboxFilter.getSelectedItem();
+        DefaultTableModel tableModel = (DefaultTableModel) jtbStaff.getModel();
+        // Làm sạch dữ liệu trong bảng
+        tableModel.setRowCount(0);
+        if (selectedTrangThai.equals("Đang hoạt động")) {
+
+            for (NhanVienDTO nv : nvlist) {
+                if (nv.isTinhTrang()) { // Kiểm tra nếu tình trạng là 1 (đang hoạt động)
+                    Object[] rowData = {nv.getMaNV(), nv.getTenNV(), nv.getNgSinh(), nv.getGioitinh(), nv.getSDT(), nv.getEmail(), nv.getChucVu(), nv.isTinhTrang()};
+                    tableModel.addRow(rowData);
+                }
+            }
+        } else if (selectedTrangThai.equals("Ngừng hoạt động")) {
+            for (NhanVienDTO nv : nvlist) {
+                if (!nv.isTinhTrang()) { // Kiểm tra nếu tình trạng là 0 (ngung đang hoạt động)
+                    Object[] rowData = {nv.getMaNV(), nv.getTenNV(), nv.getNgSinh(), nv.getGioitinh(), nv.getSDT(), nv.getEmail(), nv.getChucVu(), nv.isTinhTrang()};
+                    tableModel.addRow(rowData);
+                }
+            }
+        } else {
+            // Hiển thị toàn bộ dữ liệu nếu chọn "Tất cả"
+            for (NhanVienDTO nv : nvlist) {
+                Object[] rowData = {nv.getMaNV(), nv.getTenNV(), nv.getNgSinh(), nv.getGioitinh(), nv.getSDT(), nv.getEmail(), nv.getChucVu(), nv.isTinhTrang()};
+                tableModel.addRow(rowData);
+            }
+        }
+    }
+
     public void ComboboxNv() {
         jcbboxFilter.addActionListener(new ActionListener() {
             @Override
@@ -172,7 +202,7 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
             Cell titleCell = titleRow.createCell(0);
             titleCell.setCellValue("Danh Sách Nhân Viên");
             Row headerRow = sheet.createRow(1);
-            String[] columnHeaders = {"Mã Nhân Viên", "Tên Nhân Viên", "Ngày Sinh", "Gioi Tính", "STD","Email","Chuc Vu","Tinh Trang"};
+            String[] columnHeaders = {"Mã Nhân Viên", "Tên Nhân Viên", "Ngày Sinh", "Gioi Tính", "STD", "Email", "Chuc Vu", "Tinh Trang"};
             for (int i = 0; i < columnHeaders.length; i++) {
                 Cell headerCell = headerRow.createCell(i);
                 headerCell.setCellValue(columnHeaders[i]);
@@ -216,7 +246,7 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
 
     //hàm tang ma
     private String generateNewMaNV() {
-        int rowCount = jtbStaff.getRowCount();
+        int rowCount = nvlist.size();
         int newSequence = rowCount + 1;
         return "NV" + String.format("%02d", newSequence);
     }
@@ -801,6 +831,14 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
     private void jbttnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnAddActionPerformed
         String newMaNV = generateNewMaNV();
         MaNvText.setText(newMaNV);
+        JTextField dateTextField = (JTextField) NgSinhNvChoose.getDateEditor().getUiComponent();
+        dateTextField.setEditable(false);
+        dateTextField.setText("");
+        TenNvText.setText("");
+        EmailNvText.setText("");
+        SdtNvText.setText("");
+        CVNvCbb.setSelectedIndex(0);
+        GtNvCbb.setSelectedIndex(0);
         jDialog1.setLocationRelativeTo(null);
         jDialog1.setVisible(true);
     }//GEN-LAST:event_jbttnAddActionPerformed
@@ -822,6 +860,8 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
             } else {
                 TTNvFix.setSelectedItem("Ngừng hoạt động");
             }
+            JTextField dateTextField = (JTextField) NgSNvFix.getDateEditor().getUiComponent();
+            dateTextField.setEditable(false);
             // Điền thông tin vào các trường trên jDialog2
             MaNvFix.setText(maNV);
             TenNvFix.setText(tenNV);
@@ -1008,7 +1048,8 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
                         tablefilter.setRowCount(0);
                         // Cập nhật dữ liệu trong datanv (nếu cần)
                         nvlist = NVBUS.getList(); // Đảm bảo datanv là danh sách mới sau khi thêm
-                        loadNV(); // Load lại dữ liệu vào bảng
+//                        loadNV(); // Load lại dữ liệu vào bảng
+                        resetFix();
                         jDialog2.dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Sửa Không Thành Công!");

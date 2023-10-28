@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -126,7 +127,6 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
                 filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 0)); // Tìm kiếm trên cột 0
                 filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 1)); // Tìm kiếm trên cột 1
                 filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 2)); // Tìm kiếm trên cột 2
-                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text), 3));
                 RowFilter<Object, Object> combinedFilter = RowFilter.orFilter(filters);
                 rowSorter.setRowFilter(combinedFilter);
             }
@@ -136,6 +136,12 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
     // Biến lưu trạng thái tình trạng và điểm được chọn
     private String selectedTrangThai = "";
     private String selectedDiem = "";
+
+    public void resetFix() {
+        selectedTrangThai = (String) FilterCbb.getSelectedItem();
+        selectedDiem = (String) MathCbb.getSelectedItem();
+        filterAndSortData();
+    }
 
     public void ComboboxKh() {
         FilterCbb.addActionListener(new ActionListener() {
@@ -167,14 +173,12 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
         } else if (selectedTrangThai.equals("Ngừng hoạt động")) {
             filteredList.removeIf(Kh -> Kh.isTinhTrang());
         }
-
         // Áp dụng sắp xếp dựa trên điểm
         if (selectedDiem.equals("Điểm tăng dần")) {
             Collections.sort(filteredList, Comparator.comparingDouble(KhachHangDTO::getDiem));
         } else if (selectedDiem.equals("Điểm giảm dần")) {
             Collections.sort(filteredList, Comparator.comparingDouble(KhachHangDTO::getDiem).reversed());
         }
-
         // Hiển thị dữ liệu đã lọc và sắp xếp
         for (KhachHangDTO kh : filteredList) {
             Object[] rowdata = {kh.getMaKH(), kh.getHoTen(), kh.getSDT(), kh.getNgSinh(), kh.getDiem(), kh.isTinhTrang()};
@@ -183,7 +187,7 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
     }
 
     private String generateNewMaKH() {
-        int rowCount = jtbCustomer.getRowCount();
+        int rowCount = khlist.size();
         int newSequence = rowCount + 1;
         return "KH" + String.format("%03d", newSequence);
     }
@@ -275,6 +279,8 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
         btnFixKh = new javax.swing.JButton();
         jSeparator11 = new javax.swing.JToolBar.Separator();
         jbttnDetail = new javax.swing.JButton();
+        jSeparator12 = new javax.swing.JToolBar.Separator();
+        jbttnRefresh = new javax.swing.JButton();
 
         jDialog1.setMinimumSize(new java.awt.Dimension(792, 577));
         jDialog1.setModal(true);
@@ -944,15 +950,30 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
             }
         });
         jToolBar3.add(jbttnDetail);
+        jToolBar3.add(jSeparator12);
+
+        jbttnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/reload.png"))); // NOI18N
+        jbttnRefresh.setText("Mới");
+        jbttnRefresh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jbttnRefresh.setFocusable(false);
+        jbttnRefresh.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jbttnRefresh.setPreferredSize(new java.awt.Dimension(42, 60));
+        jbttnRefresh.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jbttnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbttnRefreshActionPerformed(evt);
+            }
+        });
+        jToolBar3.add(jbttnRefresh);
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                .addContainerGap(38, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31))
+                .addContainerGap())
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1014,6 +1035,11 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
     private void btnAddKhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddKhActionPerformed
         String newMaNV = generateNewMaKH();
         MaKHText.setText(newMaNV);
+        SdtKhText.setText("");
+        TenKHtext.setText("");
+        JTextField dateTextField = (JTextField) NgSChoose.getDateEditor().getUiComponent();
+        dateTextField.setEditable(false);
+        dateTextField.setText("");
         jDialog4.setLocationRelativeTo(null);
         jDialog4.setVisible(true);
 
@@ -1039,6 +1065,8 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
             SdtKhFix.setText(sdt);
             NgSFix.setDate(Ngsinh);
             MathKhFix.setText(String.valueOf(diem));
+            JTextField dateTextField = (JTextField) NgSFix.getDateEditor().getUiComponent();
+            dateTextField.setEditable(false);
             jDialog5.setLocationRelativeTo(null);
             jDialog5.setVisible(true);
         } else {
@@ -1059,7 +1087,7 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
                 String manv = (String) jtbDHKH.getValueAt(selectedRow, 3);
                 String makh = (String) jtbCustomer.getValueAt(selectedRowKh, 0);
                 String NgLap = (String) jtbDHKH.getValueAt(selectedRow, 1);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 //                String formattedDate = dateFormat.format(NgLap);
                 float ThanhTien = (float) jtbDHKH.getValueAt(selectedRow, 2);
                 String formattedThanhTien = String.format("%.2f", ThanhTien);
@@ -1121,7 +1149,6 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
                 newkh.setNgSinh(ngaySinh);
                 newkh.setDiem(0);
                 newkh.setTinhTrang(true);
-                System.out.println(ngaySinh);
                 if (KHBUS.AddKhNew(newkh)) {
                     JOptionPane.showMessageDialog(null, "Thêm Thành Công!");
                     // Xóa toàn bộ dữ liệu từ bảng
@@ -1129,7 +1156,10 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
                     tablefilter.setRowCount(0);
                     khlist = KHBUS.getList(); // Đảm bảo datanv là danh sách mới sau khi thêm
                     loadKH(); // Load lại dữ liệu vào bảng
-                    jDialog1.dispose();
+                    MathCbb.setSelectedIndex(0);
+                    FilterCbb.setSelectedIndex(0);
+                    jtfSearch.setText("");
+                    jDialog4.dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Thêm Không Thành Công!");
                 }
@@ -1151,7 +1181,6 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
                 isDataValid = false;
             }
             Date ngaySinhfix = NgSFix.getDate();
-//            System.out.println(ngaySinh);
             if (ngaySinhfix != null) {
                 Calendar calNgaySinh = Calendar.getInstance();
                 calNgaySinh.setTime(ngaySinhfix);
@@ -1186,7 +1215,8 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
                         tablefilter.setRowCount(0);
                         // Cập nhật dữ liệu trong datanv (nếu cần)
                         khlist = KHBUS.getList(); // Đảm bảo datanv là danh sách mới sau khi thêm
-                        loadKH(); // Load lại dữ liệu vào bảng
+//                        loadKH(); // Load lại dữ liệu vào bảng
+                        resetFix();
                         jDialog5.dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Sửa Không Thành Công!");
@@ -1224,6 +1254,14 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
 
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfSearchFocusLost
+
+    private void jbttnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnRefreshActionPerformed
+        jtfSearch.setText("");
+        FilterCbb.setSelectedIndex(0);
+        MathCbb.setSelectedIndex(0);
+        jbttnDetail.setEnabled(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbttnRefreshActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1291,9 +1329,11 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JToolBar.Separator jSeparator10;
     private javax.swing.JToolBar.Separator jSeparator11;
+    private javax.swing.JToolBar.Separator jSeparator12;
     private javax.swing.JTable jTable3;
     private javax.swing.JToolBar jToolBar3;
     private javax.swing.JButton jbttnDetail;
+    private javax.swing.JButton jbttnRefresh;
     private javax.swing.JTable jtbCustomer;
     private javax.swing.JTable jtbDHKH;
     private javax.swing.JTextField jtfSearch;
