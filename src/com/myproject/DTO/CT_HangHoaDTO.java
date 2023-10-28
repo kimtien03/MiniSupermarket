@@ -1,19 +1,19 @@
 package com.myproject.DTO;
 
-import java.security.Timestamp;
+import java.sql.Date;
 
 public class CT_HangHoaDTO {
     private String MaCT_HH;
     private String MaHH;
-    private Timestamp NgaySX;
-    private Timestamp HSD;
+    private Date NgaySX;
+    private Date HSD;
     private float SoLuong;
     private boolean TinhTrang;
 
     public CT_HangHoaDTO() {
     }
 
-    public CT_HangHoaDTO(String MaCT_HH, String MaHH, Timestamp NgaySX, Timestamp HSD, float SoLuong, boolean TinhTrang) {
+    public CT_HangHoaDTO(String MaCT_HH, String MaHH, Date NgaySX, Date HSD, float SoLuong, boolean TinhTrang) {
         this.MaCT_HH = MaCT_HH;
         this.MaHH = MaHH;
         this.NgaySX = NgaySX;
@@ -38,19 +38,19 @@ public class CT_HangHoaDTO {
         this.MaHH = MaHH;
     }
 
-    public Timestamp getNgaySX() {
+    public Date getNgaySX() {
         return NgaySX;
     }
 
-    public void setNgaySX(Timestamp NgaySX) {
+    public void setNgaySX(Date NgaySX) {
         this.NgaySX = NgaySX;
     }
 
-    public Timestamp getHSD() {
+    public Date getHSD() {
         return HSD;
     }
 
-    public void setHSD(Timestamp HSD) {
+    public void setHSD(Date HSD) {
         this.HSD = HSD;
     }
 
