@@ -11,28 +11,27 @@ import java.sql.ResultSet;
 
 
 public class CTHD_BanHangDAO extends conndb{
-    conndb ConCTHD = new conndb();
     public List<CTHD_BanHangDTO> getList() {
         List<CTHD_BanHangDTO> list = new ArrayList<>();
-        try {
-            ConCTHD.openConnection();
-            Connection cons = ConCTHD.getConnection();
-            String sql = "SELECT*FROM CTHD_BANHANG";
-            PreparedStatement ps = cons.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                CTHD_BanHangDTO cthd = new CTHD_BanHangDTO();
-                cthd.setMaHD(rs.getString("MaHD"));
-                cthd.setMaCT_HH(rs.getString("MaCT_HH"));
-                cthd.setSLBan(rs.getFloat("SoLuongBan"));
-                cthd.setDonGia(rs.getFloat("DonGia"));
-                list.add(cthd);
+        if (openConnection()) {
+            try {
+                String sql = "SELECT*FROM CTHD_BANHANG";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    CTHD_BanHangDTO cthd = new CTHD_BanHangDTO();
+                    cthd.setMaHD(rs.getString("MaHD"));
+                    cthd.setMaCT_HH(rs.getString("MaCT_HH"));
+                    cthd.setSLBan(rs.getFloat("SoLuongBan"));
+                    cthd.setDonGia(rs.getFloat("DonGia"));
+                    list.add(cthd);
+                }
+                ps.close();
+                rs.close();
+                return list;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            ps.close();
-            rs.close();
-            return list;
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }

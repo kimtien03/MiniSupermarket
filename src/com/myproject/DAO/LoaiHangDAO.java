@@ -1,12 +1,10 @@
 package com.myproject.DAO;
 
-import com.myproject.BUS.*;
 import com.myproject.DTO.LoaiHangDTO;
 import java.util.ArrayList;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
-import java.util.List;
 public class LoaiHangDAO extends conndb{
     public ArrayList<LoaiHangDTO> getAllLH() {
        ArrayList<LoaiHangDTO> arr = new ArrayList<>();
@@ -73,28 +71,5 @@ public class LoaiHangDAO extends conndb{
             }
         }
         return result;
-    }
-    public List<LoaiHangDTO> getList() {
-        List<LoaiHangDTO> list = new ArrayList<>();
-        if (openConnection()) {
-            try {
-                String sql = "SELECT*FROM LOAIHANG";
-                PreparedStatement ps = con.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()) {
-                    LoaiHangDTO loaihang = new LoaiHangDTO();
-                    loaihang.setMaLH(rs.getString("MaLH"));
-                    loaihang.setTenLH(rs.getString("TenLH"));
-                    loaihang.setTinhTrang(rs.getBoolean("TinhTrang"));
-                    list.add(loaihang);
-                }
-                ps.close();
-                rs.close();
-                return list;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 }

@@ -21,9 +21,4 @@ public class LoaiHangBUS {
         lh = new LoaiHangDAO();
         return lh.fixLH(MaLH,TenLH,TinhTrang);
     }
-    public List<LoaiHangDTO> getList() {
-        lh = new LoaiHangDAO();
-        return lh.getList();
-
-    }
 }

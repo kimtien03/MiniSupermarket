@@ -77,7 +77,7 @@ import javax.swing.table.TableModel;
 public class ThongKePanel extends javax.swing.JPanel {
 
     PhieuNhapBUS PNBUS = new PhieuNhapBUS();
-    List<PhieuNhapDTO> listpn = PNBUS.getList();
+    List<PhieuNhapDTO> listpn = PNBUS.getAllPN();
     HoaDonBanHangBUS HDBHBUS = new HoaDonBanHangBUS();
     List<HoaDonBanHangDTO> listhdbh = HDBHBUS.getList();
     KhachHangBUS KHBUS = new KhachHangBUS();
@@ -93,7 +93,7 @@ public class ThongKePanel extends javax.swing.JPanel {
     CT_PhieuNhapBUS CTPNBUS = new CT_PhieuNhapBUS();
     List<CT_PhieuNhapDTO> ctpnlist = CTPNBUS.getList();
     LoaiHangBUS LHBUS = new LoaiHangBUS();
-    List<LoaiHangDTO> lhlist = LHBUS.getList();
+    List<LoaiHangDTO> lhlist = LHBUS.getALLLH();
 
     public ThongKePanel() {
         initComponents();

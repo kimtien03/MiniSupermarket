@@ -54,9 +54,5 @@ public class PhieuNhapBUS {
         pn = new PhieuNhapDAO();
         pn.updateThanhTien(MaPN,thanhTien);
     }
-    public List<PhieuNhapDTO> getList() {
-        pn = new PhieuNhapDAO();
-        return pn.getList();
-    }
 }
 

@@ -33,34 +33,8 @@ public class NhaCungCapDAO extends conndb{
             }
         }
         return arr;
-     }
-    public List<NhaCungCapDTO> getList() {
-        List<NhaCungCapDTO> list = new ArrayList<>();
-        if (openConnection()) {
-            try {
-                String sql = "SELECT*FROM NHACUNGCAP";
-                PreparedStatement ps = con.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()) {
-                    NhaCungCapDTO nhacc = new NhaCungCapDTO();
-                    nhacc.setMaNCC(rs.getString("MaNCC"));
-                    nhacc.setTenNCC(rs.getString("TenNCC"));
-                    nhacc.setDiaChi(rs.getString("DiaChi"));
-                    nhacc.setEmail(rs.getString("Email"));
-                    nhacc.setSDT(rs.getString("SDT"));
-                    nhacc.setTinhTrang(rs.getBoolean("TinhTrang"));
-                    list.add(nhacc);
-                }
-                ps.close();
-                rs.close();
-                return list;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
-
+    
     public int AddNccNew(NhaCungCapDTO NewNcc) {
         int rs = 0;
         if (openConnection()) {
@@ -99,5 +73,31 @@ public class NhaCungCapDAO extends conndb{
             }
         }
         return rs;
+    }
+    public List<NhaCungCapDTO> getList() {
+        List<NhaCungCapDTO> list = new ArrayList<>();
+        if (openConnection()) {
+            try {
+                String sql = "SELECT*FROM NHACUNGCAP";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    NhaCungCapDTO nhacc = new NhaCungCapDTO();
+                    nhacc.setMaNCC(rs.getString("MaNCC"));
+                    nhacc.setTenNCC(rs.getString("TenNCC"));
+                    nhacc.setDiaChi(rs.getString("DiaChi"));
+                    nhacc.setEmail(rs.getString("Email"));
+                    nhacc.setSDT(rs.getString("SDT"));
+                    nhacc.setTinhTrang(rs.getBoolean("TinhTrang"));
+                    list.add(nhacc);
+                }
+                ps.close();
+                rs.close();
+                return list;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

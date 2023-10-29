@@ -15,7 +15,6 @@ public class NhaCungCapBUS {
         ncc = new NhaCungCapDAO();
         return ncc.getList();
     }
-
     public boolean AddNccNew(NhaCungCapDTO NewNcc) {
         ncc = new NhaCungCapDAO();
         int rowsAffected = ncc.AddNccNew(NewNcc);
