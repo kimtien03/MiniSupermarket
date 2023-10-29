@@ -11,7 +11,7 @@ public class conndb {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String dbUrl = "jdbc:sqlserver://localhost:1433;databaseName=SIEUTHIMINI;encrypt=true;trustServerCertificate=true";
             String username = "sa";
-            String password = "123456789";
+            String password = "123456";
             con = DriverManager.getConnection(dbUrl,username,password);
             return true;
         } catch (Exception e) {
