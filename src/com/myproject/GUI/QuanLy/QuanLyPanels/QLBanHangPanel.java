@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
+
 package com.myproject.GUI.QuanLy.QuanLyPanels;
 
 import com.myproject.BUS.CTHD_BanHangBUS;
@@ -21,20 +18,17 @@ import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Admin
- */
+
 public class QLBanHangPanel extends javax.swing.JPanel {
 
     HoaDonBanHangBUS HDGUI = new HoaDonBanHangBUS();
-    List<HoaDonBanHangDTO> hoaDonList = HDGUI.getAllHoaDon();
+    List<HoaDonBanHangDTO> hoaDonList = HDGUI.getList();
     CTHD_BanHangBUS CTHDGUI = new CTHD_BanHangBUS();
-    List<CTHD_BanHangDTO> ct_hoaDonList = CTHDGUI.getAllCT_HoaDon();
+    List<CTHD_BanHangDTO> ct_hoaDonList = CTHDGUI.getList();
     KhuyenMaiBUS KMGUI = new KhuyenMaiBUS();
-    List<KhuyenMaiDTO> khuyenMaiList = KMGUI.getAllKM();
     HangHoaBUS HHGUI = new HangHoaBUS();
     List<HangHoaTongDTO> hangHoaList = HHGUI.getAllHangHoa();
 
@@ -67,17 +61,10 @@ public class QLBanHangPanel extends javax.swing.JPanel {
         DefaultTableModel table = (DefaultTableModel) jtbHD.getModel();
         table.setRowCount(0); // Xóa tất cả các dòng hiện tại trong bảng Chi Tiết Hóa Đơn
         for (HoaDonBanHangDTO hd : hoaDonList) {
-            String maHD = hd.getMaHD();
-            float thanhTien = 0;
-
-            for (CTHD_BanHangDTO cthd : ct_hoaDonList) {
-                if (cthd.getMaHD().trim().equals(maHD.trim())) {
-                    thanhTien += cthd.getDonGia() * cthd.getSLBan();
-                }
-            }
-            Object[] rowData = {hd.getMaHD(), hd.getNgLap(), thanhTien, hd.getMaKH(), hd.getMaNV()};
+            Object[] rowData = {hd.getMaHD(), hd.getNgLap(), hd.getThanhTien(),hd.getMaKH(), hd.getMaNV()};
             table.addRow(rowData);
         }
+        jtbHD.setModel(table);
     }
 
     private void setupHDTableClickListener() {
@@ -85,7 +72,7 @@ public class QLBanHangPanel extends javax.swing.JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int selectedRow = jtbHD.getSelectedRow();
-                if (e.getClickCount() ==2 && selectedRow != -1) {
+                if (e.getClickCount() == 2 && selectedRow != -1) {
                     String maHD = (String) jtbHD.getValueAt(selectedRow, 0);
                     loadCTHD(maHD);
                     jtbHD.clearSelection();
@@ -108,32 +95,20 @@ public class QLBanHangPanel extends javax.swing.JPanel {
                 }
             }
         }
+        jtbCTHD.setModel(table);
     }
 
     public void searchHD() {
         DefaultTableModel table = (DefaultTableModel) jtbHD.getModel();
         table.setRowCount(0); // Xóa tất cả các hàng khỏi bảng
         String searchText = jtfSearch.getText().trim().toLowerCase();
-
         for (HoaDonBanHangDTO hd : hoaDonList) {
             if (hd.getMaHD().toLowerCase().contains(searchText)) {
-                // Tìm thấy kết quả phù hợp, thêm vào bảng
-                String maHD = hd.getMaHD();
-                float thanhTien = 0.0f;
-                for (CTHD_BanHangDTO cthd : ct_hoaDonList) {
-                    if (cthd.getMaHD() != null && cthd.getMaHD().equals(maHD)) {
-                        thanhTien += cthd.getSLBan() * cthd.getDonGia();
-                    }
-                }
-
-                // Dựa vào danh sách gốc để lấy giá trị "ThanhTien"
-                Object[] rowData = {
-                    hd.getMaHD(), hd.getNgLap(), thanhTien, hd.getMaKH(), hd.getMaNV()
-                };
-
+                Object[] rowData = {hd.getMaHD(), hd.getNgLap(), hd.getThanhTien(),hd.getMaKH(), hd.getMaNV()};
                 table.addRow(rowData);
             }
         }
+        jtbHD.setModel(table);
     }
 
     public void ComboboxStaff() {
@@ -157,16 +132,7 @@ public class QLBanHangPanel extends javax.swing.JPanel {
     }
 
     private void addRowToTable(HoaDonBanHangDTO hd, DefaultTableModel table) {
-        String maHD = hd.getMaHD();
-        float thanhTien = 0.0f;
-
-        for (CTHD_BanHangDTO cthd : ct_hoaDonList) {
-            if (cthd.getMaHD() != null && cthd.getMaHD().equals(maHD)) {
-                thanhTien += cthd.getSLBan() * cthd.getDonGia();
-            }
-        }
-
-        Object[] rowData = {hd.getMaHD(), hd.getNgLap(), thanhTien, hd.getMaKH(), hd.getMaNV()};
+        Object[] rowData = {hd.getMaHD(), hd.getNgLap(), hd.getThanhTien(), hd.getMaKH(), hd.getMaNV()};
         table.addRow(rowData);
     }
 
@@ -357,7 +323,7 @@ public class QLBanHangPanel extends javax.swing.JPanel {
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(jcbboxStaff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jdcDateFounded, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)

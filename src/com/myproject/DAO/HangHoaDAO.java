@@ -52,8 +52,8 @@ public class HangHoaDAO extends conndb{
         if (openConnection()) {
             try {
                 String sql1 = "SELECT *"
-                        + "FROM CT_HANGHOA "
-                        + "INNER JOIN HANGHOA ON CT_HANGHOA.MaHH = HANGHOA.MaHH "
+                        + "FROM HANGHOA "
+                        + "INNER JOIN CT_HANGHOA ON HANGHOA.MaHH = CT_HANGHOA.MaHH "
                         + "INNER JOIN LOAIHANG ON HANGHOA.MaLH = LOAIHANG.MaLH;";
                 PreparedStatement stmt = con.prepareStatement(sql1);
                 ResultSet resultSet = stmt.executeQuery();

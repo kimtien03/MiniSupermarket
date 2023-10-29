@@ -35,29 +35,5 @@ public class CTHD_BanHangDAO extends conndb{
         }
         return null;
     }
-    public List<CTHD_BanHangDTO> getAllCT_HoaDon() {
-        List<CTHD_BanHangDTO> list = new ArrayList<>();
-        if (openConnection()) {
-            try {
-                String sql = "SELECT*FROM CTHD_BANHANG";
-                PreparedStatement ps = con.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()) {
-                    CTHD_BanHangDTO cthd = new CTHD_BanHangDTO();
-                    cthd.setMaHD(rs.getString("MaHD"));
-                    cthd.setMaCT_HH(rs.getString("MaCT_HH"));
-                    cthd.setSLBan(rs.getFloat("SoLuongBan"));
-                    cthd.setDonGia(rs.getFloat("DonGia"));
-                    list.add(cthd);
-                }
-                ps.close();
-                rs.close();
-                return list;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 }
 

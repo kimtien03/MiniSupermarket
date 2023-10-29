@@ -50,7 +50,24 @@ public class LoaiHangDAO extends conndb{
         }
         return result;
     }
-
+    private boolean fixTTHH(String MaLH, boolean TinhTrang) {
+        boolean result = false;
+        if (openConnection()) {
+            try {
+                String sql = "UPDATE HANGHOA SET TINHTRANG = ? WHERE MALH = ?";
+                PreparedStatement prest = con.prepareStatement(sql);
+                prest = con.prepareStatement(sql);
+                prest.setBoolean(1, TinhTrang);
+                prest.setString(2, MaLH);
+                if (prest.executeUpdate() >= 1) {
+                    result = true;
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+        return result;
+    }
     public boolean fixLH(String MaLH, String TenLH, boolean TinhTrang) {
         boolean result = false;
         if (openConnection()) {
@@ -61,7 +78,7 @@ public class LoaiHangDAO extends conndb{
                 prest.setString(1, TenLH);
                 prest.setBoolean(2, TinhTrang);
                 prest.setString(3, MaLH);
-                if (prest.executeUpdate() >= 1) {
+                if (prest.executeUpdate() >= 1 && fixTTHH(MaLH, TinhTrang)) {
                     result = true;
                 }
             } catch (Exception e) {
@@ -72,4 +89,6 @@ public class LoaiHangDAO extends conndb{
         }
         return result;
     }
+
+
 }

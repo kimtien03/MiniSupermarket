@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -192,12 +193,19 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
         return "KH" + String.format("%03d", newSequence);
     }
     // Hàm kiểm tra định dạng số điện thoại
-
-    private boolean isValidPhoneNumber(String phoneNumber) {
-        String phonePattern = "^[0-9]{10}$"; // Kiểm tra chuỗi có đúng 10 chữ số
-        return phoneNumber.matches(phonePattern);
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        String regex = "^0[97]\\d{8}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
     }
-
+    // Hàm kiểm tra định dạng họ tên
+    public boolean validateName(String name) {
+        String regex = "^[\\p{L} .'-]+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(name);
+        return name.length() <= 30 && matcher.matches();
+    }
 // Hàm kiểm tra định dạng email
     private boolean isValidEmail(String email) {
         // Sử dụng biểu thức chính quy để kiểm tra email (ví dụ)
@@ -1121,7 +1129,13 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập đủ thông tin!");
         } else {
             String sdt = SdtKhText.getText();
+            String hoten = TenKHtext.getText();
             boolean isDataValid = true;
+            // Kiểm tra định dạng họ tên
+            if (!validateName(hoten)) {
+                JOptionPane.showMessageDialog(null, "Họ tên không hợp lệ!");
+                isDataValid = false;
+            }
             // Kiểm tra định dạng số điện thoại
             if (!isValidPhoneNumber(sdt)) {
                 JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!");
@@ -1174,7 +1188,13 @@ public class QLKhachHangPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập đủ thông tin!");
         } else {
             String sdt = SdtKhFix.getText();
+            String hoten = TenKhFix.getText();
             boolean isDataValid = true;
+            // Kiểm tra định dạng họ tên
+            if (!validateName(hoten)) {
+                JOptionPane.showMessageDialog(null, "Họ tên không hợp lệ!");
+                isDataValid = false;
+            }
             // Kiểm tra định dạng số điện thoại
             if (!isValidPhoneNumber(sdt)) {
                 JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!");

@@ -22,6 +22,7 @@ import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -243,11 +244,19 @@ public class QLNCCPanel extends javax.swing.JPanel {
             return false;
         }
     }
-
+    // Hàm kiểm tra định dạng tên
+    public boolean validateName(String name) {
+        String regex = "^[\\p{L} .'-]+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(name);
+        return name.length() <= 30 && matcher.matches();
+    }
 // Hàm kiểm tra định dạng số điện thoại
-    private boolean isValidPhoneNumber(String phoneNumber) {
-        String phonePattern = "^[0-9]{10}$"; // Kiểm tra chuỗi có đúng 10 chữ số
-        return phoneNumber.matches(phonePattern);
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        String regex = "^0[97]\\d{8}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
     }
 
 // Hàm kiểm tra định dạng email
@@ -848,7 +857,13 @@ public class QLNCCPanel extends javax.swing.JPanel {
         } else {
             String sdt = SdtNCCText.getText();
             String email = EmailNCCText.getText();
+            String hoten = TenNCCText.getText();
             boolean isDataValid = true;
+            // Kiểm tra định dạng tên
+            if (!validateName(hoten)) {
+                JOptionPane.showMessageDialog(null, "Họ tên không hợp lệ!");
+                isDataValid = false;
+            }
             // Kiểm tra định dạng số điện thoại
             if (!isValidPhoneNumber(sdt)) {
                 JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!");
@@ -892,7 +907,12 @@ public class QLNCCPanel extends javax.swing.JPanel {
         } else {
             String sdt = SdtNCCFix.getText();
             String email = EmailNCCFix.getText();
+            String hoten = TenNCCFix.getText();
             boolean isDataValid = true;
+            if (!validateName(hoten)) {
+                JOptionPane.showMessageDialog(null, "Họ tên không hợp lệ!");
+                isDataValid = false;
+            }
             if (!isValidPhoneNumber(sdt)) {
                 JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!");
                 isDataValid = false;

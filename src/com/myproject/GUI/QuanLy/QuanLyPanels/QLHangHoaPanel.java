@@ -6,16 +6,20 @@ package com.myproject.GUI.QuanLy.QuanLyPanels;
 
 import com.myproject.BUS.HangHoaBUS;
 import com.myproject.BUS.KhuyenMaiBUS;
+import com.myproject.BUS.LoaiHangBUS;
 import com.myproject.DAO.HangHoaDAO;
 import com.myproject.DTO.HangHoaTongDTO;
 import com.myproject.DTO.KhuyenMaiDTO;
+import com.myproject.DTO.LoaiHangDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -35,170 +39,173 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class QLHangHoaPanel extends javax.swing.JPanel {
 
     HangHoaBUS HHGUI = new HangHoaBUS();
-    List<HangHoaTongDTO> hangHoaList = HHGUI.getAllHangHoa();
+    List<HangHoaTongDTO> hangHoaList;
     KhuyenMaiBUS KMGUI = new KhuyenMaiBUS();
     List<KhuyenMaiDTO> khuyenMaiList = KMGUI.getAllKM();
-
+    LoaiHangBUS LHGUI = new LoaiHangBUS();
+    ArrayList<LoaiHangDTO> loaiHangList;
+    DefaultTableModel modelTableProduct;
     /**
      * Creates new form QLHangHoaPanel
      */
     public QLHangHoaPanel() {
         initComponents();
+        modelTableProduct = (DefaultTableModel) jtbProduct.getModel();
+        loadLH();
+        loadDV();
         loadHH();
-        jtfSearch.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                searchHH();
-            }
-        });
-        ComboboxUnit();
-        ComboboxLH();
-        ComboboxTT();
-        jtbProduct.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent event) {
-                if (!event.getValueIsAdjusting()) { // Đảm bảo sự kiện chỉ xảy ra khi người dùng kết thúc việc chọn
-                    DisplaySelectedRowData();
-                }
-            }
-        });
-
     }
-
     public void loadHH() {
-        DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
+        hangHoaList = HHGUI.getAllHangHoa();
+        modelTableProduct.setRowCount(0);
         float giaKM = 0;
         for (HangHoaTongDTO hh : hangHoaList) {
-            for (KhuyenMaiDTO km : khuyenMaiList) {
-                if (hh.getMaKM() == null || km.isTinhTrang() == false) {
-                    giaKM = 0;
-                } else if (hh.getMaKM().contains(km.getMaKM()) && km.isTinhTrang() == true) {
-                    // Lấy giá khuyến mãi từ đối tượng KhuyenMaiDTO (giả sử bạn có đối tượng này)
-                    float TL = km.getTiLeGiam();
-                    float DG = hh.getDonGiaBan();
-                    giaKM = DG * TL;
-                }
-
-            }
-            Object[] rowData = {hh.getMaHH(), hh.getMaCT_HH(), hh.getTenHH(), hh.getNgaySX(), hh.getHSD(),
-                hh.getDonGiaBan(), giaKM, hh.getDonVi(), hh.getTenLH(), hh.getSoLuong(), hh.isTinhTrang()};
-            table.addRow(rowData);
-        }
-    }
-
-    public void ComboboxUnit() {
-        jcbboxUnit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedUnit = (String) jcbboxUnit.getSelectedItem();
-                DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
-
-                // Làm sạch dữ liệu trong bảng
-                table.setRowCount(0);
-
-                for (HangHoaTongDTO hh : hangHoaList) {
-                    if (selectedUnit.trim().equals(hh.getDonVi().trim())) {
-                        addRowToTable(hh, table);
-                    }
-                }
-            }
-        });
-    }
-
-    public void ComboboxLH() {
-        jcbboxLH.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedLH = ((String) jcbboxLH.getSelectedItem()); // Chuyển thành chữ thường
-
-                DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
-
-                // Làm sạch dữ liệu trong bảng
-                table.setRowCount(0);
-
-                for (HangHoaTongDTO hh : hangHoaList) {
-                    if (selectedLH.trim().equals(hh.getTenLH().trim())) {
-                        addRowToTable(hh, table);
-                    }
-                }
-
-            }
-        });
-    }
-
-    public void ComboboxTT() {
-        jcbboxStatus.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedTT = (String) jcbboxStatus.getSelectedItem(); // Lấy giá trị từ JComboBox
-
-                DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
-
-                // Làm sạch dữ liệu trong bảng
-                table.setRowCount(0);
-
-                for (HangHoaTongDTO hh : hangHoaList) {
-                    boolean tinhTrang = hh.isTinhTrang(); // Lấy giá trị Tình Trạng từ đối tượng hh
-
-                    if ("Tất cả".equals(selectedTT) || ("Đang bán".equals(selectedTT) && tinhTrang) || ("Tồn kho".equals(selectedTT) && !tinhTrang)) {
-                        addRowToTable(hh, table);
-                    }
-                }
-            }
-        });
-    }
-
-    private void addRowToTable(HangHoaTongDTO hh, DefaultTableModel table) {
-        float giaKM = 0;
-        for (KhuyenMaiDTO km : khuyenMaiList) {
-            if (hh.getMaKM() != null && km.isTinhTrang() == true && hh.getMaKM().contains(km.getMaKM())) {
-                float TL = km.getTiLeGiam();
-                float DG = hh.getDonGiaBan();
-                giaKM = DG * TL;
-            }
-        }
-
-        Object[] rowData = {
-            hh.getMaHH(), hh.getMaCT_HH(), hh.getTenHH(), hh.getNgaySX(), hh.getHSD(),
-            hh.getDonGiaBan(), giaKM, hh.getDonVi(), hh.getTenLH(), hh.getSoLuong(), hh.isTinhTrang()
-        };
-
-        table.addRow(rowData);
-    }
-
-    public void searchHH() {
-        DefaultTableModel table = (DefaultTableModel) jtbProduct.getModel();
-        table.setRowCount(0); // Xóa tất cả các hàng khỏi bảng
-        String searchText = jtfSearch.getText().trim().toLowerCase();
-
-        for (HangHoaTongDTO hh : hangHoaList) {
-
-            // Kiểm tra nếu thông tin sản phẩm khớp với dữ liệu tìm kiếm
-            if (hh.getMaCT_HH().toLowerCase().contains(searchText)
-                    || hh.getMaHH().toLowerCase().contains(searchText)) {
-                // Tìm thấy kết quả phù hợp, thêm vào bảng
-                float giaKM = 0;
-
+            if (hh.getMaKM() == null) {
+                giaKM = 0;
+            } 
+            else {
                 for (KhuyenMaiDTO km : khuyenMaiList) {
-                    if (hh.getMaKM() != null && km.isTinhTrang() == true && hh.getMaKM().contains(km.getMaKM())) {
+                    if (hh.getMaKM().equalsIgnoreCase(km.getMaKM())) {
                         float TL = km.getTiLeGiam();
                         float DG = hh.getDonGiaBan();
                         giaKM = DG * TL;
+                        giaKM = hh.getDonGiaBan() - giaKM;
+                        break;
                     }
                 }
-
-                Object[] rowData = {
-                    hh.getMaHH(), hh.getMaCT_HH(), hh.getTenHH(), hh.getNgaySX(), hh.getHSD(),
-                    hh.getDonGiaBan(), giaKM, hh.getDonVi(), hh.getTenLH(), hh.getSoLuong(), hh.isTinhTrang()
-                };
-
-                table.addRow(rowData);
+            }
+            Object[] rowData = {hh.getMaHH(), hh.getMaCT_HH(), hh.getTenHH(), hh.getNgaySX(), hh.getHSD(),
+                hh.getDonGiaBan(), giaKM, hh.getDonVi(), hh.getTenLH(), hh.getSoLuong(), hh.isTinhTrang()};
+            modelTableProduct.addRow(rowData);
+        }
+        jtbProduct.setModel(modelTableProduct);
+    }
+    public void loadLH() {
+        loaiHangList = LHGUI.getALLLH();
+        DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) jcbboxLH.getModel();
+        comboBoxModel.addElement("Tất Cả");
+        for (LoaiHangDTO lh : loaiHangList) {
+            comboBoxModel.addElement(lh.getTenLH().trim());
+        }
+        jcbboxLH.setModel(comboBoxModel);
+    }
+    public void loadDV() {
+        DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) jcbboxUnit.getModel();
+        comboBoxModel.addElement("Tất Cả");
+        for (HangHoaTongDTO hh : hangHoaList) {
+            boolean flag = true;
+            for (int i=1;i<comboBoxModel.getSize();i++) {
+                String donVi = (String) comboBoxModel.getElementAt(i);
+                if (hh.getDonVi().trim().equalsIgnoreCase(donVi.trim())) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                comboBoxModel.addElement(hh.getDonVi().trim()); 
+        }
+        jcbboxUnit.setModel(comboBoxModel);
+    }
+    public void FilterHH() {
+        hangHoaList = HHGUI.getAllHangHoa();
+        modelTableProduct.setRowCount(0);
+        FilterStatus();
+        FilterLH();
+        FilterDV();
+        FilterSearch();
+        float giaKM = 0;
+        if(hangHoaList.size() !=0) {
+            for (HangHoaTongDTO hh : hangHoaList) {
+                if (hh.getMaKM() == null) {
+                    giaKM = 0;
+                } 
+                else {
+                    for (KhuyenMaiDTO km : khuyenMaiList) {
+                        if (hh.getMaKM().equalsIgnoreCase(km.getMaKM())) {
+                            float TL = km.getTiLeGiam();
+                            float DG = hh.getDonGiaBan();
+                            giaKM = DG * TL;
+                            giaKM = hh.getDonGiaBan() - giaKM;
+                            break;
+                        }
+                    }
+                }
+                Object[] rowData = {hh.getMaHH(), hh.getMaCT_HH(), hh.getTenHH(), hh.getNgaySX(), hh.getHSD(),
+                    hh.getDonGiaBan(), giaKM, hh.getDonVi(), hh.getTenLH(), hh.getSoLuong(), hh.isTinhTrang()};
+                modelTableProduct.addRow(rowData);
+            }
+        }
+        jtbProduct.setModel(modelTableProduct);
+    }
+    public void FilterSearch(){
+        String search = jtfSearch.getText();
+        if(!search.trim().equalsIgnoreCase("")) {
+            int i=0;
+            while(i<hangHoaList.size()) {
+                String str = "";
+                if(!hangHoaList.get(i).getMaHH().toLowerCase().contains(search.toLowerCase()) && 
+                        !hangHoaList.get(i).getMaCT_HH().toLowerCase().contains(search.toLowerCase()))
+                {
+                    hangHoaList.remove(hangHoaList.get(i));
+                } else {
+                    i++;
+                }
             }
         }
     }
-
+    public void FilterStatus() {
+        if(jcbboxStatus.getSelectedIndex() != 0) {
+            int intdex = jcbboxStatus.getSelectedIndex();
+            boolean trangThai = false;
+            if(intdex == 1) {
+                trangThai = true;
+            }
+            int i=0;
+            while(i<hangHoaList.size()) {
+                if(hangHoaList.get(i).isTinhTrang()!= trangThai)
+                {
+                    hangHoaList.remove(hangHoaList.get(i));
+                } else {
+                    i++;
+                }
+            }
+        }
+    }
+    public void FilterLH() {
+        if(jcbboxLH.getSelectedIndex() != 0) {
+            String loaiSP = jcbboxLH.getSelectedItem().toString();
+            System.out.println(loaiSP);
+            int i=0;
+            while(i<hangHoaList.size()) {
+                System.out.println(loaiSP);
+                System.out.println(hangHoaList.get(i).getTenLH());
+                if(!loaiSP.equalsIgnoreCase(hangHoaList.get(i).getTenLH()))
+                {
+                    hangHoaList.remove(hangHoaList.get(i));
+                } else {
+                    i++;
+                }
+            }
+        }
+    }
+    public void FilterDV() {
+        if(jcbboxUnit.getSelectedIndex() != 0) {
+            if(jcbboxUnit.getSelectedIndex() != -1) {
+                String dvTinh = (String) jcbboxUnit.getSelectedItem();
+                int i=0;
+                while(i<hangHoaList.size()) {
+                    if(!dvTinh.equalsIgnoreCase(hangHoaList.get(i).getDonVi()))
+                    {
+                        hangHoaList.remove(hangHoaList.get(i));
+                    } else {
+                        i++;
+                    }
+                }
+            }
+        }
+    }
     public void DisplaySelectedRowData() {
         int selectedRow = jtbProduct.getSelectedRow();
-
         if (selectedRow != -1) {
             String maHH = (String) jtbProduct.getValueAt(selectedRow, 0);
             String maCTHH = (String) jtbProduct.getValueAt(selectedRow, 1);
@@ -225,7 +232,7 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
             jtfUnit.setText(donVi);
             jtfQuantity.setText(Float.toString(soLuong));
 
-            jcbboxTTLH.setSelectedItem(loaiHang); // Đặt giá trị cho JComboBox LoaiHang
+            jtfTTLH.setText(loaiHang);
             jcbboxTTStatus.setSelectedItem(tinhTrang ? "Đang bán" : "Tồn kho"); // Đặt giá trị cho JComboBox TinhTrang
         }
     }
@@ -247,7 +254,6 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jtfNSX = new javax.swing.JTextField();
-        jcbboxTTLH = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jtfHSD = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -262,6 +268,7 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
         jtfGiaKM = new javax.swing.JTextField();
         jtfTenHH1 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
+        jtfTTLH = new javax.swing.JTextField();
         jpnAct = new javax.swing.JPanel();
         jcbboxLH = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
@@ -298,9 +305,6 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
 
         jtfNSX.setBorder(null);
 
-        jcbboxTTLH.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nước Ngọt", "Thịt, cá", "Mì,Phở,Hủ Tiếu gói", "Bánh Kẹo", "Trái Cây" }));
-        jcbboxTTLH.setBorder(null);
-
         jLabel6.setText("Hạn sử dụng");
 
         jtfHSD.setBorder(null);
@@ -330,6 +334,8 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
 
         jLabel9.setText("Mã CTHH");
 
+        jtfTTLH.setBorder(null);
+
         javax.swing.GroupLayout jpnInfoLayout = new javax.swing.GroupLayout(jpnInfo);
         jpnInfo.setLayout(jpnInfoLayout);
         jpnInfoLayout.setHorizontalGroup(
@@ -353,9 +359,9 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jcbboxTTLH, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jtfNSX)
-                    .addComponent(jtfHSD, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jtfNSX, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                    .addComponent(jtfHSD, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jtfTTLH, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(18, 18, 18)
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel18)
@@ -416,10 +422,10 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
                 .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpnInfoLayout.createSequentialGroup()
                         .addGap(3, 3, 3)
-                        .addComponent(jLabel4))
-                    .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jcbboxTTLH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel16))
+                        .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jtfTTLH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel16)
                     .addGroup(jpnInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel9)
                         .addComponent(jtfTenHH1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -429,15 +435,23 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
 
         jpnAct.setBorder(javax.swing.BorderFactory.createTitledBorder("Thao tác"));
 
-        jcbboxLH.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nước Ngọt", "Thịt, cá", "Mì,Phở,Hủ Tiếu gói", "Bánh Kẹo", "Trái Cây" }));
         jcbboxLH.setBorder(null);
+        jcbboxLH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbboxLHActionPerformed(evt);
+            }
+        });
 
         jLabel10.setText("Loại hàng");
 
         jLabel11.setText("Đơn vị");
 
-        jcbboxUnit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "chai", "lon", "Kg", "gói" }));
         jcbboxUnit.setBorder(null);
+        jcbboxUnit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbboxUnitActionPerformed(evt);
+            }
+        });
 
         jToolBar1.setRollover(true);
 
@@ -473,6 +487,23 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
         jtfSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jtfSearch.setToolTipText("Search here...");
         jtfSearch.setBorder(null);
+        jtfSearch.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                jtfSearchInputMethodTextChanged(evt);
+            }
+        });
+        jtfSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtfSearchActionPerformed(evt);
+            }
+        });
+        jtfSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfSearchKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -499,6 +530,11 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
 
         jcbboxStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Đang bán", "Tồn kho" }));
         jcbboxStatus.setBorder(null);
+        jcbboxStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbboxStatusActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jpnActLayout = new javax.swing.GroupLayout(jpnAct);
         jpnAct.setLayout(jpnActLayout);
@@ -512,18 +548,18 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jcbboxUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(29, 29, 29)
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jcbboxLH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(101, 101, 101)
                         .addComponent(jLabel17)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jcbboxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(21, 21, 21))
         );
         jpnActLayout.setVerticalGroup(
             jpnActLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -543,7 +579,7 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
                                 .addComponent(jLabel17)
                                 .addComponent(jcbboxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpnActLayout.createSequentialGroup()
+                    .addGroup(jpnActLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -572,6 +608,16 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtbProduct.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtbProductMouseClicked(evt);
+            }
+        });
+        jtbProduct.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jtbProductKeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtbProduct);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -581,9 +627,11 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jpnInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jpnAct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jpnInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 968, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -605,8 +653,14 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             boolean currentStatus = (boolean) table.getValueAt(selectedRow, 10);
             boolean newStatus = !currentStatus;
-            table.setValueAt(newStatus, selectedRow, 10); // Cập nhật "Tình Trạng" cho hàng đã chọn
-
+            String maHH1 = (String) jtbProduct.getValueAt(selectedRow, 0);
+            for (int i=0;i<table.getRowCount();i++) {
+                String maHH2 = (String) table.getValueAt(i, 0);
+                if (maHH2.equalsIgnoreCase(maHH1)) {
+                    table.setValueAt(newStatus, i, 10); // Cập nhật "Tình Trạng" cho hàng đã chọn
+                }
+            }
+            
             // Cập nhật JComboBox
             if (newStatus) {
                 jcbboxTTStatus.setSelectedItem("Đang bán");
@@ -687,6 +741,38 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_jbttnExportActionPerformed
 
+    private void jtfSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtfSearchActionPerformed
+
+    }//GEN-LAST:event_jtfSearchActionPerformed
+
+    private void jcbboxUnitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbboxUnitActionPerformed
+        FilterHH();
+    }//GEN-LAST:event_jcbboxUnitActionPerformed
+
+    private void jcbboxLHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbboxLHActionPerformed
+        FilterHH();
+    }//GEN-LAST:event_jcbboxLHActionPerformed
+
+    private void jcbboxStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbboxStatusActionPerformed
+        FilterHH();
+    }//GEN-LAST:event_jcbboxStatusActionPerformed
+
+    private void jtfSearchInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jtfSearchInputMethodTextChanged
+
+    }//GEN-LAST:event_jtfSearchInputMethodTextChanged
+
+    private void jtbProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbProductMouseClicked
+        DisplaySelectedRowData();
+    }//GEN-LAST:event_jtbProductMouseClicked
+
+    private void jtbProductKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtbProductKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtbProductKeyPressed
+
+    private void jtfSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfSearchKeyReleased
+        FilterHH();
+    }//GEN-LAST:event_jtfSearchKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -712,7 +798,6 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
     private javax.swing.JButton jbttnExport;
     private javax.swing.JComboBox<String> jcbboxLH;
     private javax.swing.JComboBox<String> jcbboxStatus;
-    private javax.swing.JComboBox<String> jcbboxTTLH;
     private javax.swing.JComboBox<String> jcbboxTTStatus;
     private javax.swing.JComboBox<String> jcbboxUnit;
     private javax.swing.JPanel jpnAct;
@@ -725,6 +810,7 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jtfPrice;
     private javax.swing.JTextField jtfQuantity;
     private javax.swing.JTextField jtfSearch;
+    private javax.swing.JTextField jtfTTLH;
     private javax.swing.JTextField jtfTenHH;
     private javax.swing.JTextField jtfTenHH1;
     private javax.swing.JTextField jtfUnit;
