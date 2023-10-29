@@ -10,5 +10,7 @@ public class HoaDonBanHangBUS {
     public List<HoaDonBanHangDTO> getList() {
         return HDBHDAO.getList();
     }
-
+    public List<HoaDonBanHangDTO> getAllHoaDon() {
+        return HDBHDAO.getAllHoaDon();
+    }
 }

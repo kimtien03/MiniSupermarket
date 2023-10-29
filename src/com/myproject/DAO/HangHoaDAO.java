@@ -110,4 +110,21 @@ public class HangHoaDAO extends conndb{
         }
         return null;
     }
+
+    public boolean updateTinhTrangHangHoa(String MaHH, boolean TinhTrang) {
+        if (openConnection()) {
+            try {
+                String sql = "UPDATE HANGHOA SET TinhTrang = ? WHERE MaHH = ?";
+                try (PreparedStatement stmt = con.prepareStatement(sql);) {
+                    stmt.setBoolean(1, TinhTrang);
+                    stmt.setString(2, MaHH);
+                    int rowsUpdated = stmt.executeUpdate();
+                    return rowsUpdated > 0; // Trả về true nếu có ít nhất một hàng đã được cập nhật
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 }

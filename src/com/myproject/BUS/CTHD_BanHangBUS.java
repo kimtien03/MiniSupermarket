@@ -9,4 +9,7 @@ public class CTHD_BanHangBUS {
     public List<CTHD_BanHangDTO> getList() {
         return CTDAO.getList();
     }
+    public List<CTHD_BanHangDTO> getAllCT_HoaDon() {
+        return CTDAO.getAllCT_HoaDon();
+    }
 }

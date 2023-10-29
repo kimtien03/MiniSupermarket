@@ -5,6 +5,7 @@ import com.myproject.DTO.HH_LH_DTO;
 import com.myproject.DTO.KhuyenMaiDTO;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.List;
 
 public class KhuyenMaiBUS {
     KhuyenMaiDAO km;

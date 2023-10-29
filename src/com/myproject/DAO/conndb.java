@@ -11,6 +11,7 @@ public class conndb {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String dbUrl = "jdbc:sqlserver://localhost:1433;databaseName=SieuThiMiNi;encrypt=true;trustServerCertificate=true";
+
             String username = "sa";
             String password = "123456";
             con = DriverManager.getConnection(dbUrl, username, password);
@@ -34,4 +35,12 @@ public class conndb {
     public Connection getConnection() {
         return con;
     }
+
+    boolean isClosed() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    
 }
+
+

@@ -21,5 +21,8 @@ public class HangHoaBUS {
         hh = new HangHoaDAO();
         return hh.getList();
     }
+    public boolean updateTinhTrangHangHoa(String maHH, boolean newTinhTrang) {
+        hh = new HangHoaDAO();
+        return hh.updateTinhTrangHangHoa(maHH, newTinhTrang);
+    }
 }
-

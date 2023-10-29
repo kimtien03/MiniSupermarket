@@ -1,7 +1,6 @@
 package com.myproject.DAO;
 
 import com.myproject.DTO.CT_HangHoaDTO;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
