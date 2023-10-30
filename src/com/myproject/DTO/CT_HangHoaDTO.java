@@ -9,8 +9,9 @@ public class CT_HangHoaDTO {
     private Date HSD;
     private float SoLuong;
     private boolean TinhTrang;
-
+    private HangHoaDTO hangHoaDTO;
     public CT_HangHoaDTO() {
+        this.hangHoaDTO = new HangHoaDTO();
     }
 
     public CT_HangHoaDTO(String MaCT_HH, String MaHH, Date NgaySX, Date HSD, float SoLuong, boolean TinhTrang) {
@@ -69,5 +70,11 @@ public class CT_HangHoaDTO {
     public void setTinhTrang(boolean TinhTrang) {
         this.TinhTrang = TinhTrang;
     }
-    
+    public HangHoaDTO getHangHoaDTO() {
+        return hangHoaDTO;
+    }
+
+    public void setHangHoaDTO(HangHoaDTO hangHoaDTO) {
+        this.hangHoaDTO = hangHoaDTO;
+    }
 }

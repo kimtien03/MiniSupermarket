@@ -58,4 +58,8 @@ public class PhieuNhapDTO {
     public void setTinhTrang(boolean TinhTrang) {
         this.TinhTrang = TinhTrang;
     }
+    @Override
+    public String toString() {
+        return "PhieuNhapDTO{" + "MaPN=" + MaPN + ", NgLapPhieu=" + NgLapPhieu + ", MaNV=" + MaNV + ", ThanhTien=" + ThanhTien + ", TinhTrang=" + TinhTrang + '}';
+    }
 }

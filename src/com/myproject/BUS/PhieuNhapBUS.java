@@ -54,5 +54,25 @@ public class PhieuNhapBUS {
         pn = new PhieuNhapDAO();
         pn.updateThanhTien(MaPN,thanhTien);
     }
+    
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_MaSP(String maSP) {
+        pn = new PhieuNhapDAO();
+        return pn.find_PhieuNhap_By_MaSP(maSP);
+    }
+    
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_ngayYC(String ngayYC) {
+        pn = new PhieuNhapDAO();
+        return pn.find_PhieuNhap_By_ngayYC(ngayYC);
+    }
+    
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_maNCC(String maNCC) {
+        pn = new PhieuNhapDAO();
+        return pn.find_PhieuNhap_By_maNCC(maNCC);
+    }
+    
+    
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_tinhTrang(String tinhTrang) {
+        pn = new PhieuNhapDAO();
+        return pn.find_PhieuNhap_By_tinhTrang(tinhTrang);
+    }
 }
-
