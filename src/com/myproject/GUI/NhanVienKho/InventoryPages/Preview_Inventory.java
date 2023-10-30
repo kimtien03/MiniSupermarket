@@ -541,6 +541,7 @@ public class Preview_Inventory extends javax.swing.JPanel implements ActionListe
     private void read_PhieuNhapSQL() {
         ArrayList<PhieuNhapDTO> data_phieuNhaps = phieuNhapBUS.getAllPN();
         this.classListPhieuNhap.setListPhieuNhap(data_phieuNhaps);
+       
 //        for (var item: classListPhieuNhap.getListPhieuNhap()) {
 //            System.out.println("---");
 //            System.out.println(item.toString());
