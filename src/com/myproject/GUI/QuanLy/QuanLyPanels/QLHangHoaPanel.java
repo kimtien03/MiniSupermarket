@@ -174,11 +174,8 @@ public class QLHangHoaPanel extends javax.swing.JPanel {
     public void FilterLH() {
         if(jcbboxLH.getSelectedIndex() != 0) {
             String loaiSP = jcbboxLH.getSelectedItem().toString();
-            System.out.println(loaiSP);
             int i=0;
             while(i<hangHoaList.size()) {
-                System.out.println(loaiSP);
-                System.out.println(hangHoaList.get(i).getTenLH());
                 if(!loaiSP.equalsIgnoreCase(hangHoaList.get(i).getTenLH()))
                 {
                     hangHoaList.remove(hangHoaList.get(i));
