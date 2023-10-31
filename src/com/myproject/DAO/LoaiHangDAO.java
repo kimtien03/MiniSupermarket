@@ -89,31 +89,6 @@ public class LoaiHangDAO extends conndb{
         }
         return result;
     }
-
-    public ArrayList<LoaiHangDTO> getAllMaLH() {
-        ArrayList<LoaiHangDTO> listMaLH = new ArrayList<>();
-        if (openConnection()) {
-            try {
-                String sql1 = "SELECT * FROM LOAIHANG";
-                PreparedStatement stmt = con.prepareStatement(sql1);
-                ResultSet resultSet = stmt.executeQuery();
-                while (resultSet.next()) {
-                    LoaiHangDTO lh = new LoaiHangDTO();
-                    lh.setMaLH(resultSet.getString("MaLH"));
-                    lh.setTenLH(resultSet.getString("TenLH"));
-                    lh.setTinhTrang(resultSet.getBoolean("TinhTrang"));
-                    listMaLH.add(lh);
-                }
-                resultSet.close();
-                stmt.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                closeConnection();
-            }
-        }
-        return listMaLH;
-    }
     
     public String findLH(String maLH) {
         String tenLH = "";

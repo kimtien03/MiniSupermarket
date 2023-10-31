@@ -41,11 +41,11 @@ public class CT_HangHoaDAO extends conndb {
                 String sql = "INSERT INTO CT_HANGHOA VALUES(?,?,?,?,?,?)";
                 PreparedStatement ps = con.prepareCall(sql);
                 ps.setString(1, ct.getMaCT_HH());
-                ps.setFloat(2, ct.getSoLuong());
-                ps.setDate(3, ct.getNgaySX());
-                ps.setDate(4, ct.getHSD());
-                ps.setBoolean(5, ct.isTinhTrang());
-                ps.setString(6, ct.getMaHH());
+                ps.setDate(2, ct.getNgaySX());
+                ps.setDate(3, ct.getHSD());
+                ps.setBoolean(4, ct.isTinhTrang());
+                ps.setString(5, ct.getMaHH());
+                ps.setFloat(6, ct.getSoLuong());
                 if (ps.executeUpdate() >= 1) {
                     check = true;
                 }

@@ -37,7 +37,7 @@ public class AddNewProduct extends javax.swing.JDialog {
         jComboBox1.removeAllItems();
         jComboBox1.addItem("Tất cả");
         LoaiHangBUS lh = new LoaiHangBUS();
-        for (LoaiHangDTO x : lh.getAllMaLH()) {
+        for (LoaiHangDTO x : lh.getALLLH()) {
             jComboBox1.addItem(x.getMaLH().trim() + " - " + x.getTenLH().trim());
         }
     }
@@ -443,17 +443,17 @@ public static boolean ValidateName(String name) {
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (jTextField15.getText().trim().length() == 0 || !ValidateName(jTextField15.getText().trim())) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập tên hàng hóa đúng dịnh dạng");
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập tên hàng hóa đúng dịnh dạng!");
             jTextField15.setText("");
             jTextField15.requestFocus();
         } else {
             if (jTextField3.getText().trim().length() == 0 || !ValidateName(jTextField3.getText().trim())) {
-                JOptionPane.showMessageDialog(null, "Vui lòng nhập đơn vị đúng dịnh dạng");
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập đơn vị đúng dịnh dạng!");
                 jTextField3.setText("");
                 jTextField3.requestFocus();
             } else {
                 if (jTextField22.getText().trim().length() == 0) {
-                    JOptionPane.showMessageDialog(null, "Vui lòng nhập đơn giá");
+                    JOptionPane.showMessageDialog(null, "Vui lòng nhập đơn giá!");
                     jTextField22.setText("");
                     jTextField22.requestFocus();
                 } else {
@@ -477,22 +477,22 @@ public static boolean ValidateName(String name) {
                                 hhDTO.setDonVi(jTextField3.getText());
                                 hhDTO.setTinhTrang(true);
                                 if (hh.insertHH(hhDTO)) {
-                                    JOptionPane.showMessageDialog(null, "Thêm thành công hàng hóa mới", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "Thêm thành công hàng hóa mới!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                                     productStorage.render();
                                     dispose();
                                 } else {
-                                    JOptionPane.showMessageDialog(null, "Thêm hàng hóa không thành công", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "Thêm hàng hóa không thành công!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(null, "Vui lòng chọn loại hàng", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Vui lòng chọn loại hàng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null, "Đơn giá phải lớn hơn 0");
+                            JOptionPane.showMessageDialog(null, "Đơn giá phải lớn hơn 0!");
                             jTextField22.setText("");
                             jTextField22.requestFocus();
                         }
                     } catch (Exception e) {
-                        JOptionPane.showMessageDialog(null, "Đơn giá phải là số");
+                        JOptionPane.showMessageDialog(null, "Đơn giá phải là số!");
                         jTextField22.setText("");
                         jTextField22.requestFocus();
                     }

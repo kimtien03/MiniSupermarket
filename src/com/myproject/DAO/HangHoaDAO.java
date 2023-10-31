@@ -193,35 +193,6 @@ public class HangHoaDAO extends conndb{
         }
         return check;
     }
-    
-    public ArrayList<HangHoaDTO> getAllMaHH() {
-        ArrayList<HangHoaDTO> listMaHH = new ArrayList<>();
-        if (openConnection()) {
-            try {
-                String sql1 = "SELECT * FROM HANGHOA";
-                PreparedStatement stmt = con.prepareStatement(sql1);
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    HangHoaDTO hh = new HangHoaDTO();
-                    hh.setMaHH(rs.getString("MaHH"));
-                    hh.setTenHH(rs.getString("TenHH"));
-                    hh.setMaKM(rs.getString("MaKM"));
-                    hh.setDonGiaBan(rs.getFloat("DonGiaBan"));
-                    hh.setDonVi(rs.getString("DonVi"));
-                    hh.setMaLH(rs.getString("MaLH"));
-                    hh.setTinhTrang(rs.getBoolean("TinhTrang"));
-                    listMaHH.add(hh);
-                }
-                rs.close();
-                stmt.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                closeConnection();
-            }
-        }
-        return listMaHH;
-    }
 
     public ArrayList<Float> getHangSL() {
         ArrayList<Float> listHang = new ArrayList<>();

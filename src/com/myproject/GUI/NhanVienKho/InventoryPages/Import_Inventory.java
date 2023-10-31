@@ -102,7 +102,7 @@ public class Import_Inventory extends javax.swing.JPanel {
         dtm.addColumn("Số lượng");
 
         HangHoaBUS hhBUS = new HangHoaBUS();
-        ArrayList<HangHoaDTO> listHang = hhBUS.getAllHH();
+        ArrayList<HangHoaDTO> listHang = (ArrayList<HangHoaDTO>) hhBUS.getList();
         ArrayList<Float> listSL = hhBUS.getHangSL();
 
         for (int i = 0; i < listHang.size(); i++) {
@@ -176,7 +176,7 @@ public class Import_Inventory extends javax.swing.JPanel {
         dtm.addColumn("Số lượng");
 
         HangHoaBUS hhBUS = new HangHoaBUS();
-        ArrayList<HangHoaDTO> listHang = hhBUS.getAllHH();
+        ArrayList<HangHoaDTO> listHang = (ArrayList<HangHoaDTO>) hhBUS.getList();
         ArrayList<Float> listSL = hhBUS.getHangSL();
         for (int i = 0; i < listHang.size(); i++) {
             if (listHang.get(i).getMaHH().toUpperCase().contains(textSearch.toUpperCase())
@@ -1100,24 +1100,26 @@ public class Import_Inventory extends javax.swing.JPanel {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                 Date nsx = null;
                 try {
-                    nsx = (Date) sdf.parse(a[2].toString().trim());
+                    java.util.Date parsedDate = sdf.parse(a[2].toString().trim());
+                    nsx = new Date(parsedDate.getTime());
                 } catch (ParseException ex) {
 
                 }
                 Calendar cdsx = Calendar.getInstance();
                 cdsx.setTime(nsx);
                 LocalDate ldsx = LocalDate.of(cdsx.get(Calendar.YEAR), cdsx.get(Calendar.MONTH) + 1, cdsx.get(Calendar.DATE));
-                cth.setNgaySX(Date.valueOf(ldsx));
+                cth.setNgaySX(java.sql.Date.valueOf(ldsx));
                 Date hsd = null;
                 try {
-                    hsd = (Date) sdf.parse(a[3].toString().trim());
+                    java.util.Date parsedDate = sdf.parse(a[3].toString().trim());
+                    hsd = new Date(parsedDate.getTime());
                 } catch (ParseException ex) {
 
                 }
                 Calendar hdsx = Calendar.getInstance();
                 hdsx.setTime(hsd);
                 LocalDate hsdlc = LocalDate.of(hdsx.get(Calendar.YEAR), hdsx.get(Calendar.MONTH) + 1, hdsx.get(Calendar.DATE));
-                cth.setHSD(Date.valueOf(hsdlc));
+                cth.setHSD(java.sql.Date.valueOf(hsdlc));
                 LocalDateTime lcn = LocalDateTime.now();
                 cth.setTinhTrang(false);
                 cth.setMaHH(a[0].toString().trim());
@@ -1155,8 +1157,13 @@ public class Import_Inventory extends javax.swing.JPanel {
         if (!jTextField1.getText().trim().equals("")) {
             JTextField dateTextField = (JTextField) jDateChooser1.getDateEditor().getUiComponent();
             dateTextField.setEditable(false);
+            dateTextField.setText("");
             dateTextField = (JTextField) jDateChooser2.getDateEditor().getUiComponent();
             dateTextField.setEditable(false);
+            dateTextField.setText("");
+            jTextField3.setText("");
+            jTextField4.setText("");
+            jComboBox1.setSelectedIndex(0);
             jDialog1.setLocationRelativeTo(null);
             jDialog1.setVisible(true);
         } else {

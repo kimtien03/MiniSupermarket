@@ -27,10 +27,6 @@ public class HangHoaBUS {
         hh = new HangHoaDAO();
         return hh.updateTinhTrangHangHoa(maHH, newTinhTrang);
     }
-    public ArrayList<HangHoaDTO> getAllHH() {
-        hh = new HangHoaDAO();
-        return hh.getAllMaHH();
-    }
     
     public int getCountHH() {
         hh = new HangHoaDAO();

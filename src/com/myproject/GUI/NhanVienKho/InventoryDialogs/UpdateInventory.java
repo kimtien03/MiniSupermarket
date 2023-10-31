@@ -32,7 +32,7 @@ public class UpdateInventory extends javax.swing.JDialog {
         jComboBox1.removeAllItems();
         jComboBox1.addItem("Tất cả");
         LoaiHangBUS lh = new LoaiHangBUS();
-        for (LoaiHangDTO x : lh.getAllMaLH()) {
+        for (LoaiHangDTO x : lh.getALLLH()) {
             jComboBox1.addItem(x.getMaLH().trim() + " - " + x.getTenLH().trim());
         }
     }
@@ -401,7 +401,7 @@ public class UpdateInventory extends javax.swing.JDialog {
         if (!jComboBox1.getSelectedItem().toString().trim().equals("Tất cả")) {
             maLH = jComboBox1.getSelectedItem().toString().trim().split(" - ")[0];
         } else {
-            JOptionPane.showMessageDialog(null, "Vui lòng ch?n", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn mã loại hàng!", "Thông báo", JOptionPane.ERROR_MESSAGE);
             return;
         }
         boolean tinhTrang = false;
@@ -412,7 +412,7 @@ public class UpdateInventory extends javax.swing.JDialog {
         }
         HangHoaBUS hh = new HangHoaBUS();
         hh.updateHang(maHH, maLH, tinhTrang);
-        JOptionPane.showMessageDialog(null, "Thay đổi thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Thay đổi thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         productStorage.render();
         dispose();
         setVisible(false);
@@ -425,7 +425,7 @@ public class UpdateInventory extends javax.swing.JDialog {
         boolean check = false;
         String tenHH = ""; // biến tạm để lưu tên hàng hóa
 
-        for (HangHoaDTO x : hh.getAllHH()) {
+        for (HangHoaDTO x : hh.getList()) {
             if (jTextField1.getText().trim().toUpperCase().equals(x.getMaHH().trim().toUpperCase())) {
                 check = true;
                 System.out.println(check);
