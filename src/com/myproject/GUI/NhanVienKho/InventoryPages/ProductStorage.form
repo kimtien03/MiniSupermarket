@@ -1114,11 +1114,9 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="146" max="32767" attributes="0"/>
+                      <EmptySpace pref="300" max="32767" attributes="0"/>
                       <Component id="addProductBtn" min="-2" pref="175" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="addProductBtn1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="addProductBtn2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -1130,7 +1128,6 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="addProductBtn" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
-                          <Component id="addProductBtn1" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                           <Component id="addProductBtn2" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="25" max="32767" attributes="0"/>
@@ -1160,29 +1157,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addProductBtnActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="addProductBtn1">
-              <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="33" green="99" red="0" type="rgb"/>
-                </Property>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Segoe UI" size="14" style="1"/>
-                </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                </Property>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/resources/images/xls-file.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Nh&#x1ead;p File"/>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Hand Cursor"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addProductBtn1ActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="addProductBtn2">
@@ -1230,7 +1204,7 @@
                     <Column editable="false" title="Ng&#xe0;y S&#x1ea3;n Xu&#x1ea5;t" type="java.lang.String"/>
                     <Column editable="false" title="H&#x1ea1;n s&#x1eed; d&#x1ee5;ng" type="java.lang.String"/>
                     <Column editable="false" title="&#x110;&#x1a1;n Gi&#xe1;" type="java.lang.Float"/>
-                    <Column editable="false" title="Gi&#xe1; Khuy&#x1ebf;n M&#xe3;i" type="java.lang.Float"/>
+                    <Column editable="false" title="M&#xe3; Khuy&#x1ebf;n M&#xe3;i" type="java.lang.Float"/>
                     <Column editable="false" title="&#x110;&#x1a1;n V&#x1ecb;" type="java.lang.String"/>
                     <Column editable="false" title="Lo&#x1ea1;i H&#xe0;ng" type="java.lang.String"/>
                     <Column editable="false" title="S&#x1ed1; l&#x1b0;&#x1ee3;ng" type="java.lang.Float"/>
