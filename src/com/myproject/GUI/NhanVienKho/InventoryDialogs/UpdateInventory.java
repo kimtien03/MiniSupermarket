@@ -4,19 +4,37 @@
  */
 package com.myproject.GUI.NhanVienKho.InventoryDialogs;
 
+import com.myproject.BUS.HangHoaBUS;
+import com.myproject.BUS.LoaiHangBUS;
+import com.myproject.DAO.HangHoaDAO;
+import com.myproject.DTO.HangHoaDTO;
+import com.myproject.DTO.LoaiHangDTO;
+import com.myproject.GUI.NhanVienKho.InventoryPages.ProductStorage;
+import javax.swing.JOptionPane;
+import org.apache.poi.xdgf.util.VsdxToPng;
+
 /**
  *
  * @author ADMIN
  */
 public class UpdateInventory extends javax.swing.JDialog {
 
+    ProductStorage productStorage;
+
     /**
      * Creates new form UpdateInventory
      */
-    public UpdateInventory(java.awt.Frame parent, boolean modal) {
+    public UpdateInventory(java.awt.Frame parent, boolean modal, ProductStorage productStorage) {
         super(parent, modal);
+        this.productStorage = productStorage;
         initComponents();
         this.setLocationRelativeTo(null);
+        jComboBox1.removeAllItems();
+        jComboBox1.addItem("Tất cả");
+        LoaiHangBUS lh = new LoaiHangBUS();
+        for (LoaiHangDTO x : lh.getAllMaLH()) {
+            jComboBox1.addItem(x.getMaLH().trim() + " - " + x.getTenLH().trim());
+        }
     }
 
     /**
@@ -125,6 +143,7 @@ public class UpdateInventory extends javax.swing.JDialog {
             .addComponent(jLabel26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        jTextField15.setEnabled(false);
         jTextField15.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField15ActionPerformed(evt);
@@ -195,7 +214,7 @@ public class UpdateInventory extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(288, 288, 288)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(69, 69, 69)
@@ -333,7 +352,7 @@ public class UpdateInventory extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -369,14 +388,66 @@ public class UpdateInventory extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        jTextField1.setText("");
+        jTextField15.setText("");
+        jComboBox1.setSelectedIndex(0);
+        jComboBox1.setSelectedIndex(0);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        String maHH = jTextField1.getText().trim();
+        String maLH;
+        if (!jComboBox1.getSelectedItem().toString().trim().equals("Tất cả")) {
+            maLH = jComboBox1.getSelectedItem().toString().trim().split(" - ")[0];
+        } else {
+            JOptionPane.showMessageDialog(null, "Vui lòng ch?n", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        boolean tinhTrang = false;
+        if (jComboBox2.getSelectedIndex() == 0) {
+            tinhTrang = true;
+        } else if (jComboBox2.getSelectedIndex() == 1) {
+            tinhTrang = false;
+        }
+        HangHoaBUS hh = new HangHoaBUS();
+        hh.updateHang(maHH, maLH, tinhTrang);
+        JOptionPane.showMessageDialog(null, "Thay đổi thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        productStorage.render();
+        dispose();
+        setVisible(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        HangHoaBUS hh = new HangHoaBUS();
+        LoaiHangBUS lh = new LoaiHangBUS();
+        boolean check = false;
+        String tenHH = ""; // biến tạm để lưu tên hàng hóa
+
+        for (HangHoaDTO x : hh.getAllHH()) {
+            if (jTextField1.getText().trim().toUpperCase().equals(x.getMaHH().trim().toUpperCase())) {
+                check = true;
+                System.out.println(check);
+                tenHH = x.getTenHH(); // gán tên hàng hóa cho biến tạm
+                jComboBox1.setSelectedItem(x.getMaLH().trim() + " - " + lh.findTen(x.getMaLH().trim()).trim());
+                
+
+                if (x.isTinhTrang() == true) {
+                    jComboBox2.setSelectedIndex(0);
+                } else {
+                    jComboBox2.setSelectedIndex(1);
+                }
+                JOptionPane.showMessageDialog(null, "Tìm thấy hàng hóa", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                break; // thoát khỏi vòng lặp nếu tìm thấy
+            }
+
+        }
+//        hh.updateHang(hhd);
+        if (!check) {
+            JOptionPane.showMessageDialog(null, "Không tìm thấy hàng hóa", "Thông báo", JOptionPane.ERROR_MESSAGE);
+        }
+        jTextField15.setText(tenHH);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -409,14 +480,14 @@ public class UpdateInventory extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                UpdateInventory dialog = new UpdateInventory(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+//                UpdateInventory dialog = new UpdateInventory(new javax.swing.JFrame(), true);
+//                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+//                    @Override
+//                    public void windowClosing(java.awt.event.WindowEvent e) {
+//                        System.exit(0);
+//                    }
+//                });
+//                dialog.setVisible(true);
             }
         });
     }

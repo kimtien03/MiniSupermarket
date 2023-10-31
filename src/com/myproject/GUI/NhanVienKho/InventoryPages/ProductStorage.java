@@ -5,13 +5,21 @@
 package com.myproject.GUI.NhanVienKho.InventoryPages;
 
 import GUI.InventoryDialogs.AddNewProduct;
+import com.myproject.BUS.HangHoaBUS;
+import com.myproject.DAO.HangHoaDAO;
+import com.myproject.DTO.CT_HangHoaDTO;
+import com.myproject.DTO.HangHoaDTO;
+import com.myproject.DTO.HangHoaTongDTO;
+import com.myproject.DTO.LoaiHangDTO;
 import com.myproject.GUI.NhanVienKho.InventoryDialogs.UpdateInventory;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.plaf.RootPaneUI;
 
 /**
@@ -21,13 +29,62 @@ import javax.swing.plaf.RootPaneUI;
 public class ProductStorage extends javax.swing.JPanel implements ActionListener {
 
     private JFrame parent;
+
     /**
      * Creates new form ProductStorage
      */
+    
     public ProductStorage(JFrame parent) {
         this.parent = parent;
         initComponents();
         this.addListener();
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        render();
+    }
+
+    public void render() {
+
+        javax.swing.table.DefaultTableModel dtm = new javax.swing.table.DefaultTableModel() {
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 10) {
+                    return Boolean.class;
+                } else {
+                    return super.getColumnClass(columnIndex);
+                }
+            }
+
+            public boolean isCellEditable(int row, int col) {
+                if (col == 10) {
+                    return false;
+                }
+                return false;
+            }
+        };
+
+        dtm.addColumn("Mã hàng hóa");
+        dtm.addColumn("Mã CTHH");
+        dtm.addColumn("Tên Hàng Hóa");
+        dtm.addColumn("Ngày Sản Xuất");
+        dtm.addColumn("Hạn sử dụng");
+        dtm.addColumn("Đơn Giá");
+        dtm.addColumn("Giá Khuyến Mãi");
+        dtm.addColumn("Đơn Vị");
+        dtm.addColumn("Loại Hàng");
+        dtm.addColumn("Số lượng");
+        dtm.addColumn("Tình Trạng");
+
+        HangHoaBUS hhBUS = new HangHoaBUS();
+        ArrayList<CT_HangHoaDTO> listCT = new ArrayList<>();
+        ArrayList<LoaiHangDTO> listLH = new ArrayList<>();
+        ArrayList<HangHoaDTO> listHH = hhBUS.getListHHTotal(listCT, listLH);
+        for (int i = 0; i < listHH.size(); i++) {
+            Object data[] = {listHH.get(i).getMaHH(),listCT.get(i).getMaCT_HH(),listHH.get(i).getTenHH(),
+            listCT.get(i).getNgaySX(),listCT.get(i).getHSD(),listHH.get(i).getDonGiaBan(),
+            listHH.get(i).getMaKM(), listHH.get(i).getDonVi(), listLH.get(i).getTenLH(), listCT.get(i).getSoLuong(),
+            listHH.get(i).isTinhTrang()};
+            dtm.addRow(data);
+        }
+        jTable1.setModel(dtm);
     }
 
     /**
@@ -93,7 +150,6 @@ public class ProductStorage extends javax.swing.JPanel implements ActionListener
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         updateInvenBtn = new javax.swing.JButton();
-        removeInvenBtn1 = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1200, 600));
 
@@ -663,16 +719,7 @@ public class ProductStorage extends javax.swing.JPanel implements ActionListener
         jTable1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Mã Hàng Hóa", "Mã CTHH", "Tên Hàng Hóa", "Ngày Sản Xuất", "Hạn sử dụng", "Đơn Giá", "Giá Khuyến Mãi", "Đơn Vị", "Loại Hàng", "Số lượng", "Tình Trạng"
@@ -695,6 +742,19 @@ public class ProductStorage extends javax.swing.JPanel implements ActionListener
         });
         jTable1.setGridColor(new java.awt.Color(3, 169, 244));
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+            jTable1.getColumnModel().getColumn(6).setResizable(false);
+            jTable1.getColumnModel().getColumn(7).setResizable(false);
+            jTable1.getColumnModel().getColumn(8).setResizable(false);
+            jTable1.getColumnModel().getColumn(9).setResizable(false);
+            jTable1.getColumnModel().getColumn(10).setResizable(false);
+        }
 
         updateInvenBtn.setBackground(new java.awt.Color(0, 153, 51));
         updateInvenBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -708,30 +768,19 @@ public class ProductStorage extends javax.swing.JPanel implements ActionListener
             }
         });
 
-        removeInvenBtn1.setBackground(new java.awt.Color(0, 153, 51));
-        removeInvenBtn1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        removeInvenBtn1.setForeground(new java.awt.Color(255, 255, 255));
-        removeInvenBtn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/reload.png"))); // NOI18N
-        removeInvenBtn1.setText("Làm Mới");
-        removeInvenBtn1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(614, Short.MAX_VALUE)
-                .addComponent(removeInvenBtn1)
-                .addGap(18, 18, 18)
+                .addContainerGap(756, Short.MAX_VALUE)
                 .addComponent(updateInvenBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(19, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(updateInvenBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(removeInvenBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(updateInvenBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -851,7 +900,6 @@ public class ProductStorage extends javax.swing.JPanel implements ActionListener
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JButton removeInvenBtn1;
     private javax.swing.JButton updateInvenBtn;
     // End of variables declaration//GEN-END:variables
 
@@ -864,9 +912,9 @@ public class ProductStorage extends javax.swing.JPanel implements ActionListener
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if (src.equals(this.addProductBtn)) {
-            new AddNewProduct(parent, true).setVisible(true);
+            new AddNewProduct(parent, true, ProductStorage.this).setVisible(true);
         } else if (src.equals(this.updateInvenBtn)) {
-            new UpdateInventory(parent, true).setVisible(true);
+            new UpdateInventory(parent, true, ProductStorage.this).setVisible(true);
         }
     }
 }

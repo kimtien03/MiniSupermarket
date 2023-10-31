@@ -4,19 +4,46 @@
  */
 package GUI.InventoryDialogs;
 
+import com.myproject.BUS.HangHoaBUS;
+import com.myproject.BUS.LoaiHangBUS;
+import com.myproject.DTO.HangHoaDTO;
+import com.myproject.DTO.HangHoaTongDTO;
+import com.myproject.DTO.LoaiHangDTO;
+import com.myproject.GUI.NhanVienKho.InventoryPages.ProductStorage;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ADMIN
  */
 public class AddNewProduct extends javax.swing.JDialog {
 
+    ProductStorage productStorage;
+
     /**
      * Creates new form AddNewProduct
      */
-    public AddNewProduct(java.awt.Frame parent, boolean modal) {
+    public AddNewProduct(java.awt.Frame parent, boolean modal, ProductStorage productStorage) {
         super(parent, modal);
+        this.productStorage = productStorage;
         initComponents();
         this.setLocationRelativeTo(null);
+        HangHoaBUS hh = new HangHoaBUS();
+        if (hh.getCountHH() + 1 < 10) {
+            jTextField1.setText("HH00" + (hh.getCountHH() + 1));
+        } else if (hh.getCountHH() + 1 >= 10 && hh.getCountHH() + 1 < 100) {
+            jTextField1.setText("HH0" + (hh.getCountHH() + 1));
+        } else if (hh.getCountHH() + 1 >= 100) {
+            jTextField1.setText("HH" + (hh.getCountHH() + 1));
+        }
+        jComboBox1.removeAllItems();
+        jComboBox1.addItem("Tất cả");
+        LoaiHangBUS lh = new LoaiHangBUS();
+        for (LoaiHangDTO x : lh.getAllMaLH()) {
+            jComboBox1.addItem(x.getMaLH().trim() + " - " + x.getTenLH().trim());
+        }
     }
 
     /**
@@ -412,9 +439,70 @@ public class AddNewProduct extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+public static boolean ValidateName(String name) {
+        String regex = "^[\\p{L} .'-]+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        if (jTextField15.getText().trim().length() == 0 || !ValidateName(jTextField15.getText().trim())) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập tên hàng hóa đúng dịnh dạng");
+            jTextField15.setText("");
+            jTextField15.requestFocus();
+        } else {
+            if (jTextField3.getText().trim().length() == 0 || !ValidateName(jTextField3.getText().trim())) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập đơn vị đúng dịnh dạng");
+                jTextField3.setText("");
+                jTextField3.requestFocus();
+            } else {
+                if (jTextField22.getText().trim().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng nhập đơn giá");
+                    jTextField22.setText("");
+                    jTextField22.requestFocus();
+                } else {
+                    try {
+                        float gia = Float.parseFloat(jTextField22.getText().trim());
+                        if (gia > 0) {
+                            HangHoaBUS hh = new HangHoaBUS();
+//                            if (hh.getCountHH() + 1 < 10) {
+//                                jTextField1.setText("HH00" + (hh.getCountHH() + 1));
+//                            } else if (hh.getCountHH() + 1 >= 10 && hh.getCountHH() + 1 < 100) {
+//                                jTextField1.setText("HH0" + (hh.getCountHH() + 1));
+//                            } else if (hh.getCountHH() + 1 >= 100) {
+//                                jTextField1.setText("HH" + (hh.getCountHH() + 1));
+//                            }
+                            if (!jComboBox1.getSelectedItem().toString().equals("Tất cả")) {
+                                HangHoaDTO hhDTO = new HangHoaDTO();
+                                hhDTO.setMaHH(jTextField1.getText().trim());
+                                hhDTO.setTenHH(jTextField15.getText().trim());
+                                hhDTO.setMaLH(jComboBox1.getSelectedItem().toString().trim().split(" - ")[0]);
+                                hhDTO.setDonGiaBan(gia);
+                                hhDTO.setDonVi(jTextField3.getText());
+                                hhDTO.setTinhTrang(true);
+                                if (hh.insertHH(hhDTO)) {
+                                    JOptionPane.showMessageDialog(null, "Thêm thành công hàng hóa mới", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                                    productStorage.render();
+                                    dispose();
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Thêm hàng hóa không thành công", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Vui lòng chọn loại hàng", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Đơn giá phải lớn hơn 0");
+                            jTextField22.setText("");
+                            jTextField22.requestFocus();
+                        }
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Đơn giá phải là số");
+                        jTextField22.setText("");
+                        jTextField22.requestFocus();
+                    }
+                }
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField15ActionPerformed
@@ -427,6 +515,10 @@ public class AddNewProduct extends javax.swing.JDialog {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        jTextField15.setText("");
+        jTextField3.setText("");
+        jTextField22.setText("");
+        jComboBox1.setSelectedIndex(0);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
@@ -459,14 +551,14 @@ public class AddNewProduct extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AddNewProduct dialog = new AddNewProduct(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+//                AddNewProduct dialog = new AddNewProduct(new javax.swing.JFrame(), true);
+//                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+//                    @Override
+//                    public void windowClosing(java.awt.event.WindowEvent e) {
+//                        System.exit(0);
+//                    }
+//                });
+//                dialog.setVisible(true);
             }
         });
     }
