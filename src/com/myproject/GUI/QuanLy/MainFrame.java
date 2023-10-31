@@ -1,20 +1,23 @@
 package com.myproject.GUI.QuanLy;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.myproject.GUI.Login.Login_JFrame;
 import com.myproject.GUI.QuanLy.setupMenu.DanhMucMenu;
 import com.myproject.GUI.QuanLy.setupMenu.ScreenChange;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 public class MainFrame extends javax.swing.JFrame {
 
-    public MainFrame() {
+    public MainFrame(String tenNV) {
         initComponents();
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        jlbInfo.setText(tenNV);
         setLocationRelativeTo(null);
         setTitle("SIÊU THỊ MINI");
         ScreenChange controller = new ScreenChange(jPanelContent);
@@ -324,6 +327,11 @@ public class MainFrame extends javax.swing.JFrame {
         jlbLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/logout.png"))); // NOI18N
         jlbLogout.setText("Đăng Xuất");
         jlbLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jlbLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jlbLogoutMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelHeaderLayout = new javax.swing.GroupLayout(jPanelHeader);
         jPanelHeader.setLayout(jPanelHeaderLayout);
@@ -385,13 +393,14 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainFrame().setVisible(true);
-            }
-        });
-    }
+    private void jlbLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jlbLogoutMouseClicked
+        int choose = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn đăng xuất?","Đăng xuất",JOptionPane.OK_CANCEL_OPTION);
+        if (choose == JOptionPane.OK_OPTION) {
+            this.dispose();
+            new Login_JFrame().setVisible(true);
+        }
+    }//GEN-LAST:event_jlbLogoutMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLbTK;
     private javax.swing.JPanel jPanelContent;

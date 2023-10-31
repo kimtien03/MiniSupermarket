@@ -837,6 +837,7 @@ public class KhuyenMaiPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtbKhuyenMai.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jtbKhuyenMai.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtbKhuyenMaiMouseClicked(evt);

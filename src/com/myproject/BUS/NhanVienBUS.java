@@ -26,4 +26,7 @@ public class NhanVienBUS {
         }
     }
 
+    public boolean UpdateMK(String maNV,String mk) {
+        return NVDAO.UpdateMK(maNV,mk);
+    }
 }

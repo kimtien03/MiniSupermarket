@@ -5,29 +5,31 @@ import java.util.ArrayList;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
-public class LoaiHangDAO extends conndb{
+
+public class LoaiHangDAO extends conndb {
+
     public ArrayList<LoaiHangDTO> getAllLH() {
-       ArrayList<LoaiHangDTO> arr = new ArrayList<>();
-       if(openConnection()) {
-           try {
-               String sql = "SELECT * FROM LOAIHANG";
-               Statement s = con.createStatement();
-               ResultSet rs = s.executeQuery(sql);
-               while(rs.next()) {
-                   LoaiHangDTO p = new LoaiHangDTO();
-                   p.setMaLH(rs.getString("MaLH"));
-                   p.setTenLH(rs.getString("TenLH"));
-                   p.setTinhTrang(rs.getBoolean("TinhTrang"));
-                   arr.add(p);
-               }
-           } catch (Exception e) {
-               System.out.println(e);
-           } finally {
-               closeConnection();
-           }
-       }
-       return arr;
-   }
+        ArrayList<LoaiHangDTO> arr = new ArrayList<>();
+        if (openConnection()) {
+            try {
+                String sql = "SELECT * FROM LOAIHANG";
+                Statement s = con.createStatement();
+                ResultSet rs = s.executeQuery(sql);
+                while (rs.next()) {
+                    LoaiHangDTO p = new LoaiHangDTO();
+                    p.setMaLH(rs.getString("MaLH"));
+                    p.setTenLH(rs.getString("TenLH"));
+                    p.setTinhTrang(rs.getBoolean("TinhTrang"));
+                    arr.add(p);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            } finally {
+                closeConnection();
+            }
+        }
+        return arr;
+    }
 
     public boolean addLH(String MaLH, String TenLH) {
         boolean result = false;
@@ -50,8 +52,30 @@ public class LoaiHangDAO extends conndb{
         }
         return result;
     }
+
+    private int checkFix(String MaLH) {
+        int row = 0;
+        if (openConnection()) {
+            try {
+                String sql = "SELECT COUNT(*) as 'COUNT' FROM HANGHOA WHERE MALH = '" + MaLH + "'";
+                Statement s = con.createStatement();
+                ResultSet rs = s.executeQuery(sql);
+                if (rs.next()) {
+                    row = rs.getInt("COUNT");
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+        System.out.println(row);
+        return row;
+    }
+
     private boolean fixTTHH(String MaLH, boolean TinhTrang) {
         boolean result = false;
+        if (checkFix(MaLH) == 0) {
+            return true;
+        }
         if (openConnection()) {
             try {
                 String sql = "UPDATE HANGHOA SET TINHTRANG = ? WHERE MALH = ?";
@@ -68,6 +92,7 @@ public class LoaiHangDAO extends conndb{
         }
         return result;
     }
+
     public boolean fixLH(String MaLH, String TenLH, boolean TinhTrang) {
         boolean result = false;
         if (openConnection()) {
@@ -78,8 +103,14 @@ public class LoaiHangDAO extends conndb{
                 prest.setString(1, TenLH);
                 prest.setBoolean(2, TinhTrang);
                 prest.setString(3, MaLH);
-                if (prest.executeUpdate() >= 1 && fixTTHH(MaLH, TinhTrang)) {
-                    result = true;
+                if (TinhTrang) {
+                    if (prest.executeUpdate() >= 1) {
+                        result = true;
+                    }
+                } else {
+                    if (prest.executeUpdate() >= 1 && fixTTHH(MaLH, TinhTrang)) {
+                        result = true;
+                    }
                 }
             } catch (Exception e) {
                 System.out.println(e);
@@ -89,6 +120,5 @@ public class LoaiHangDAO extends conndb{
         }
         return result;
     }
-
 
 }

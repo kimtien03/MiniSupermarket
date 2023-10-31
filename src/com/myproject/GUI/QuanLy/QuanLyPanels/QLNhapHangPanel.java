@@ -307,6 +307,7 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtbSanPham.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane5.setViewportView(jtbSanPham);
 
         jbttnDeleteSP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/remove.png"))); // NOI18N
@@ -509,6 +510,7 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtbDanhMuc.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane4.setViewportView(jtbDanhMuc);
 
         jPanel14.setBorder(javax.swing.BorderFactory.createTitledBorder("Tìm kiếm"));
@@ -1078,6 +1080,7 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtbPNH.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jtbPNH.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtbPNHMouseClicked(evt);
@@ -1140,6 +1143,7 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jtbCTPN.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(jtbCTPN);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -1324,7 +1328,8 @@ public class QLNhapHangPanel extends javax.swing.JPanel {
             int i=0;
             while(i<arrLH.size()) {
                 String str = "";
-                if(!arrLH.get(i).getMaLH().toLowerCase().contains(search.toLowerCase()))
+                if(!arrLH.get(i).getMaLH().toLowerCase().contains(search.toLowerCase()) &&
+                    !arrLH.get(i).getTenLH().toLowerCase().contains(search.toLowerCase()))
                 {
                     arrLH.remove(arrLH.get(i));
                 } else {

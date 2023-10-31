@@ -195,4 +195,23 @@ public class NhanVienDAO extends conndb{
         }
         return rs;
     }
+
+    public boolean UpdateMK(String maNV, String mk) {
+        boolean result = false;
+        if (openConnection()) {
+            try {
+                String sql = "UPDATE NHANVIEN SET MATKHAU = ? WHERE MANV = ?";
+                PreparedStatement prest = con.prepareStatement(sql);
+                prest = con.prepareStatement(sql);
+                    prest.setString(1,mk);
+                    prest.setString(2, maNV);
+                if (prest.executeUpdate() >= 1) {
+                    result = true;
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+        return result;
+    }
 }
