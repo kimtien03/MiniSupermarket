@@ -3,10 +3,8 @@ package com.myproject.BUS;
 import com.myproject.DAO.HangHoaDAO;
 import com.myproject.DTO.CT_HangHoaDTO;
 import com.myproject.DTO.HangHoaDTO;
-import com.myproject.DTO.HangHoaTongDTO;
 import com.myproject.DTO.LoaiHangDTO;
 import java.util.ArrayList;
-import java.util.List;
 
 public class HangHoaBUS {
 

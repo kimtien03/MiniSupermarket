@@ -1,13 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
-package GUI.InventoryDialogs;
+
+package com.myproject.GUI.NhanVienKho.InventoryDialogs;
 
 import com.myproject.BUS.HangHoaBUS;
 import com.myproject.BUS.LoaiHangBUS;
 import com.myproject.DTO.HangHoaDTO;
-import com.myproject.DTO.HangHoaTongDTO;
 import com.myproject.DTO.LoaiHangDTO;
 import com.myproject.GUI.NhanVienKho.InventoryPages.ProductStorage;
 import java.util.regex.Matcher;

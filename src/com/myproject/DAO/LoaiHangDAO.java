@@ -1,14 +1,12 @@
 package com.myproject.DAO;
 
-import com.myproject.BUS.*;
-import com.myproject.DTO.HangHoaTongDTO;
 import com.myproject.DTO.LoaiHangDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class LoaiHangDAO extends conndb {
 

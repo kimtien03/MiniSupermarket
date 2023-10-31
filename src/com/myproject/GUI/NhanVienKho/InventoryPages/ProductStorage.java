@@ -1,21 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.myproject.GUI.NhanVienKho.InventoryPages;
 
-import GUI.InventoryDialogs.AddNewProduct;
+
 import com.myproject.BUS.HangHoaBUS;
-import com.myproject.DAO.HangHoaDAO;
 import com.myproject.DTO.CT_HangHoaDTO;
 import com.myproject.DTO.HangHoaDTO;
-import com.myproject.DTO.HangHoaTongDTO;
 import com.myproject.DTO.LoaiHangDTO;
+import com.myproject.GUI.NhanVienKho.InventoryDialogs.AddNewProduct;
 import com.myproject.GUI.NhanVienKho.InventoryDialogs.UpdateInventory;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
