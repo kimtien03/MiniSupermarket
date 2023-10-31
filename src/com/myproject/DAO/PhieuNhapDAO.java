@@ -442,4 +442,26 @@ public class PhieuNhapDAO extends conndb{
         }
         return null;
     }
+
+    
+    public boolean insertPhieuNhap(PhieuNhapDTO pn) {
+        boolean check = false;
+        if (openConnection()) {
+            try {
+                String sql = "INSERT INTO PHIEUNHAP VALUES(?,?,?,?,?)";
+                PreparedStatement ps = con.prepareCall(sql);
+                ps.setString(1, pn.getMaPN());
+                ps.setTimestamp(2, pn.getNgLapPhieu());
+                ps.setBoolean(3, pn.isTinhTrang());
+                ps.setString(4, pn.getMaNV());
+                ps.setFloat(5, pn.getThanhTien());
+                if (ps.executeUpdate() >= 1) {
+                    check = true;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return check;
+    }
 }

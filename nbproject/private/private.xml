@@ -3,13 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/QuanLy/MainFrame.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/Login/Forgot_Password_JDialog.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/Main/Main.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/Login/Change_Password_JDialog.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/Login/Login_JFrame.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/BUS/NhanVienBUS.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DAO/NhanVienDAO.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/BUS/HangHoaBUS.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryPages/Import_Inventory.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DAO/HangHoaDAO.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DAO/conndb.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/LoaiHangDTO.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DAO/LoaiHangDAO.java</file>
         </group>
     </open-files>
 </project-private>

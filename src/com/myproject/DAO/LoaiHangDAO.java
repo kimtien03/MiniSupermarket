@@ -5,31 +5,29 @@ import java.util.ArrayList;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
-
-public class LoaiHangDAO extends conndb {
-
+public class LoaiHangDAO extends conndb{
     public ArrayList<LoaiHangDTO> getAllLH() {
-        ArrayList<LoaiHangDTO> arr = new ArrayList<>();
-        if (openConnection()) {
-            try {
-                String sql = "SELECT * FROM LOAIHANG";
-                Statement s = con.createStatement();
-                ResultSet rs = s.executeQuery(sql);
-                while (rs.next()) {
-                    LoaiHangDTO p = new LoaiHangDTO();
-                    p.setMaLH(rs.getString("MaLH"));
-                    p.setTenLH(rs.getString("TenLH"));
-                    p.setTinhTrang(rs.getBoolean("TinhTrang"));
-                    arr.add(p);
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-            } finally {
-                closeConnection();
-            }
-        }
-        return arr;
-    }
+       ArrayList<LoaiHangDTO> arr = new ArrayList<>();
+       if(openConnection()) {
+           try {
+               String sql = "SELECT * FROM LOAIHANG";
+               Statement s = con.createStatement();
+               ResultSet rs = s.executeQuery(sql);
+               while(rs.next()) {
+                   LoaiHangDTO p = new LoaiHangDTO();
+                   p.setMaLH(rs.getString("MaLH"));
+                   p.setTenLH(rs.getString("TenLH"));
+                   p.setTinhTrang(rs.getBoolean("TinhTrang"));
+                   arr.add(p);
+               }
+           } catch (Exception e) {
+               System.out.println(e);
+           } finally {
+               closeConnection();
+           }
+       }
+       return arr;
+   }
 
     public boolean addLH(String MaLH, String TenLH) {
         boolean result = false;
@@ -52,30 +50,8 @@ public class LoaiHangDAO extends conndb {
         }
         return result;
     }
-
-    private int checkFix(String MaLH) {
-        int row = 0;
-        if (openConnection()) {
-            try {
-                String sql = "SELECT COUNT(*) as 'COUNT' FROM HANGHOA WHERE MALH = '" + MaLH + "'";
-                Statement s = con.createStatement();
-                ResultSet rs = s.executeQuery(sql);
-                if (rs.next()) {
-                    row = rs.getInt("COUNT");
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-        }
-        System.out.println(row);
-        return row;
-    }
-
     private boolean fixTTHH(String MaLH, boolean TinhTrang) {
         boolean result = false;
-        if (checkFix(MaLH) == 0) {
-            return true;
-        }
         if (openConnection()) {
             try {
                 String sql = "UPDATE HANGHOA SET TINHTRANG = ? WHERE MALH = ?";
@@ -92,7 +68,6 @@ public class LoaiHangDAO extends conndb {
         }
         return result;
     }
-
     public boolean fixLH(String MaLH, String TenLH, boolean TinhTrang) {
         boolean result = false;
         if (openConnection()) {
@@ -103,14 +78,8 @@ public class LoaiHangDAO extends conndb {
                 prest.setString(1, TenLH);
                 prest.setBoolean(2, TinhTrang);
                 prest.setString(3, MaLH);
-                if (TinhTrang) {
-                    if (prest.executeUpdate() >= 1) {
-                        result = true;
-                    }
-                } else {
-                    if (prest.executeUpdate() >= 1 && fixTTHH(MaLH, TinhTrang)) {
-                        result = true;
-                    }
+                if (prest.executeUpdate() >= 1 && fixTTHH(MaLH, TinhTrang)) {
+                    result = true;
                 }
             } catch (Exception e) {
                 System.out.println(e);
@@ -119,6 +88,50 @@ public class LoaiHangDAO extends conndb {
             }
         }
         return result;
+    }
+
+    public ArrayList<LoaiHangDTO> getAllMaLH() {
+        ArrayList<LoaiHangDTO> listMaLH = new ArrayList<>();
+        if (openConnection()) {
+            try {
+                String sql1 = "SELECT * FROM LOAIHANG";
+                PreparedStatement stmt = con.prepareStatement(sql1);
+                ResultSet resultSet = stmt.executeQuery();
+                while (resultSet.next()) {
+                    LoaiHangDTO lh = new LoaiHangDTO();
+                    lh.setMaLH(resultSet.getString("MaLH"));
+                    lh.setTenLH(resultSet.getString("TenLH"));
+                    lh.setTinhTrang(resultSet.getBoolean("TinhTrang"));
+                    listMaLH.add(lh);
+                }
+                resultSet.close();
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                closeConnection();
+            }
+        }
+        return listMaLH;
+    }
+    
+    public String findLH(String maLH) {
+        String tenLH = "";
+        if (openConnection()) {
+            try {
+                String query = "SELECT TENLH FROM LOAIHANG WHERE MALH = '" + maLH + "'";
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(query);
+                while (rs.next()) {
+                    tenLH = rs.getString(1);
+                }
+            } catch (Exception ex) {
+
+            } finally {
+                closeConnection();
+            }
+        }
+        return tenLH;
     }
 
 }

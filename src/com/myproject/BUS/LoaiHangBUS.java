@@ -21,4 +21,13 @@ public class LoaiHangBUS {
         lh = new LoaiHangDAO();
         return lh.fixLH(MaLH,TenLH,TinhTrang);
     }
+    public ArrayList<LoaiHangDTO> getAllMaLH() {
+        LoaiHangDAO lh = new LoaiHangDAO();
+        return lh.getAllMaLH();
+    }
+    
+    public String findTen(String maLH) {
+        LoaiHangDAO lh = new LoaiHangDAO();
+        return lh.findLH(maLH);
+    }
 }

@@ -20,4 +20,9 @@ public class CT_PhieuNhapBUS {
     public ArrayList<CT_PhieuNhapDTO> find_CTPN_row(String ID_PN) {
         return CTPNDAO.find_CT_PhieuNhapByRow(ID_PN);
     }
+    public boolean insertCTPhieu(CT_PhieuNhapDTO ct) {
+        CT_PhieuNhapDAO cp = new CT_PhieuNhapDAO();
+        cp.insertCTPhieuNhap(ct);
+        return true;
+    }
 }

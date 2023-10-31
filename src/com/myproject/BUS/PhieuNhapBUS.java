@@ -75,4 +75,10 @@ public class PhieuNhapBUS {
         pn = new PhieuNhapDAO();
         return pn.find_PhieuNhap_By_tinhTrang(tinhTrang);
     }
+    public boolean insertPhieu(PhieuNhapDTO p) {
+        pn = new PhieuNhapDAO();
+        pn.insertPhieuNhap(p);
+        return true;
+    }
+    
 }

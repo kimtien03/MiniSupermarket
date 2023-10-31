@@ -32,4 +32,44 @@ public class CT_HangHoaDAO extends conndb {
         }
         return null;
     }
+
+    
+    public boolean insertCTHH(CT_HangHoaDTO ct) {
+        boolean check = false;
+        if (openConnection()) {
+            try {
+                String sql = "INSERT INTO CT_HANGHOA VALUES(?,?,?,?,?,?)";
+                PreparedStatement ps = con.prepareCall(sql);
+                ps.setString(1, ct.getMaCT_HH());
+                ps.setFloat(2, ct.getSoLuong());
+                ps.setDate(3, ct.getNgaySX());
+                ps.setDate(4, ct.getHSD());
+                ps.setBoolean(5, ct.isTinhTrang());
+                ps.setString(6, ct.getMaHH());
+                if (ps.executeUpdate() >= 1) {
+                    check = true;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return check;
+    }
+    
+    public boolean updateSL(float soLuong, String maCT_HH) {
+        boolean check = false;
+        if (openConnection()) {
+            try {
+                String sql = "Update CT_HangHoa set SoLuong = ? where maCT_HH = '" + maCT_HH + "'";
+                PreparedStatement ps = con.prepareCall(sql);
+                ps.setFloat(1, soLuong);
+                if (ps.executeUpdate() >= 1) {
+                    check =true;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return check;
+    }
 }
