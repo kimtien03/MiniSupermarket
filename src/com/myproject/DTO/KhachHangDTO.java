@@ -2,6 +2,7 @@ package com.myproject.DTO;
 
 import java.util.Date;
 
+
 public class KhachHangDTO {
     private String MaKH;
     private String HoTen;

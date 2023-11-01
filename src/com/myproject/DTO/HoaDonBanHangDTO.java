@@ -1,7 +1,7 @@
 package com.myproject.DTO;
-import java.sql.Timestamp;
-import java.util.Date;
 
+import java.util.Date;
+import java.sql.Timestamp;
 public class HoaDonBanHangDTO {
     private String MaHD;
     private Timestamp NgLap;

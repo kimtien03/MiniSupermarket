@@ -128,7 +128,7 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="choosenDecentralization"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="clickedDecentralization"/>
               </Events>
 
               <Layout>
@@ -160,9 +160,6 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Ph&#xe2;n quy&#x1ec1;n"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel1MouseClicked"/>
-                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -182,7 +179,7 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="choosenAccounManagement"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="clickedAccounManagement"/>
               </Events>
 
               <Layout>

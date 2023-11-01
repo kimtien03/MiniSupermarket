@@ -55,8 +55,14 @@ public class HangHoaBUS {
     }
     
     public boolean updateHang(String maHH, String maLH, boolean tinhTrang) {
-        HangHoaDAO hh = new HangHoaDAO();
+        hh = new HangHoaDAO();
         hh.updateHang(maHH, maLH, tinhTrang);
         return true;
+    }
+    
+    
+    // TIENDAT
+    public HangHoaDTO getProductByID(String MaHH) {
+        return hh.getProductByID(MaHH);
     }
 }

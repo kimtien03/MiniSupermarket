@@ -54,4 +54,11 @@ public class KhuyenMaiBUS {
         km = new KhuyenMaiDAO();
         km.AutoUpdateKM(date);
     }
+    
+    
+    //TIENDAT
+    // lấy khuyễn mãi theo mã khuyến mãi
+    public KhuyenMaiDTO getPromtionByID(String MaKM) {
+        return km.getPromotion(MaKM);
+    }
 }

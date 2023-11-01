@@ -1,5 +1,7 @@
 package com.myproject.DTO;
+
 import java.sql.Date;
+
 
 public class KhuyenMaiDTO {
     private String MaKM;
