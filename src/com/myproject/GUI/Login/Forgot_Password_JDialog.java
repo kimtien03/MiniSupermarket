@@ -208,26 +208,11 @@ public class Forgot_Password_JDialog extends javax.swing.JDialog {
             return;
         }
         int OTP = SendEmail(email);
-        System.out.println("otp 1: " + OTP);
-        Change_Password_JDialog change_Password_JDialog = new Change_Password_JDialog(this, rootPaneCheckingEnabled,maNV,OTP);
+        Change_Password_JDialog change_Password_JDialog = new Change_Password_JDialog(this, rootPaneCheckingEnabled,maNV.toUpperCase(),OTP);
         change_Password_JDialog.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jbttnSendOTPActionPerformed
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                Forgot_Password_JDialog dialog = new Forgot_Password_JDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

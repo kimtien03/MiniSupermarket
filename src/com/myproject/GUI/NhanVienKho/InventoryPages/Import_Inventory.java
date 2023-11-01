@@ -28,15 +28,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class Import_Inventory extends javax.swing.JPanel {
-
-    /**
-     * Creates new form Import_Inventory
-     */
     ArrayList<Object[]> list;
 
-    public Import_Inventory() {
+    public Import_Inventory(String maNV) {
         list = new ArrayList<>();
         initComponents();
+        jTextField16.setText(maNV);
         editorNSX = (JTextFieldDateEditor) jDateChooser1.getDateEditor();
         editorHSD = (JTextFieldDateEditor) jDateChooser2.getDateEditor();
         jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -734,7 +731,6 @@ public class Import_Inventory extends javax.swing.JPanel {
         );
 
         jTextField16.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField16.setText("NV02");
         jTextField16.setEnabled(false);
         jTextField16.setFocusable(false);
 

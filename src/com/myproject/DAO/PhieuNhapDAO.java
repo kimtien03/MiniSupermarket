@@ -35,6 +35,30 @@ public class PhieuNhapDAO extends conndb{
        }
        return arr;
    }
+    public ArrayList<PhieuNhapDTO> getPNTheoMaNV(String maNV) {
+       ArrayList<PhieuNhapDTO> arr = new ArrayList<>();
+       if(openConnection()) {
+           try {
+               String sql = "SELECT * FROM PHIEUNHAP WHERE MANV = '"+maNV+"'";
+               Statement s = con.createStatement();
+               ResultSet rs = s.executeQuery(sql);
+               while(rs.next()) {
+                   PhieuNhapDTO p = new PhieuNhapDTO();
+                   p.setMaPN(rs.getString("MaPhieuNhap"));
+                   p.setMaNV(rs.getString("MaNV"));
+                   p.setNgLapPhieu(rs.getTimestamp("NgLapPhieu"));
+                   p.setThanhTien(rs.getFloat("ThanhTien"));
+                   p.setTinhTrang(rs.getBoolean("TinhTrang"));
+                   arr.add(p);
+               }
+           } catch (Exception e) {
+               System.out.println(e);
+           } finally {
+               closeConnection();
+           }
+       }
+       return arr;
+   }
     public ArrayList<CTPN_CTHH_HH_DTO> getAllCTPN() {
        ArrayList<CTPN_CTHH_HH_DTO> arr = new ArrayList<>();
        if(openConnection()) {
@@ -331,16 +355,17 @@ public class PhieuNhapDAO extends conndb{
         }
     }
 
-    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_MaSP(String maSP) {
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_MaSP(String maSP, String MaNV) {
         if (openConnection()) {
             ArrayList<PhieuNhapDTO> DSPhieuNhap = new ArrayList<>();
             try {
                 String selectAllQuery = "SELECT PN.MaPhieuNhap, PN.NgLapPhieu, PN.TinhTrang, PN.MaNV, PN.ThanhTien FROM PHIEUNHAP PN\n"
                         + "JOIN CT_PHIEUNHAP CTPN ON CTPN.MaPhieuNhap = PN.MaPhieuNhap\n"
                         + "JOIN CT_HANGHOA CTHH ON  CTHH.MaCT_HH = CTPN.MaCT_HH\n"
-                        + "WHERE CTHH.MaHH = ?";
+                        + "WHERE CTHH.MaHH = ? AND MANV = ?";
                 PreparedStatement prepareStm = con.prepareStatement(selectAllQuery);
                 prepareStm.setString(1, maSP);
+                prepareStm.setString(2, MaNV);
                 ResultSet rs = prepareStm.executeQuery();
                 while (rs.next()) {
                     String maPhieuNhap = rs.getString(1);
@@ -360,13 +385,14 @@ public class PhieuNhapDAO extends conndb{
         return null;
     }
 
-    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_ngayYC(String ngayYC) {
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_ngayYC(String ngayYC, String MaNV) {
         if (openConnection()) {
             ArrayList<PhieuNhapDTO> DSPhieuNhap = new ArrayList<>();
             try {
-                String selectAllQuery = "SELECT * FROM PHIEUNHAP WHERE PHIEUNHAP.NgLapPhieu = ?";
+                String selectAllQuery = "SELECT * FROM PHIEUNHAP WHERE CAST(PHIEUNHAP.NgLapPhieu AS date) = ? AND PHIEUNHAP.MANV = ?";
                 PreparedStatement prepareStm = con.prepareStatement(selectAllQuery);
                 prepareStm.setString(1, ngayYC);
+                prepareStm.setString(2, MaNV);
                 ResultSet rs = prepareStm.executeQuery();
                 while (rs.next()) {
                     String maPhieuNhap = rs.getString(1);
@@ -386,7 +412,7 @@ public class PhieuNhapDAO extends conndb{
         return null;
     }
 
-    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_maNCC(String maNCC) {
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_maNCC(String maNCC, String MaNV) {
         if (openConnection()) {
             ArrayList<PhieuNhapDTO> DSPhieuNhap = new ArrayList<>();
             try {
@@ -395,9 +421,10 @@ public class PhieuNhapDAO extends conndb{
                         + "(SELECT DISTINCT PN.MaPhieuNhap FROM PHIEUNHAP PN \n"
                         + "JOIN CT_PHIEUNHAP CTPN ON CTPN.MaPhieuNhap = PN.MaPhieuNhap\n"
                         + "JOIN NHACUNGCAP NCC ON NCC.MaNCC = CTPN.MaNCC\n"
-                        + "WHERE NCC.MaNCC = ?)";
+                        + "WHERE NCC.MaNCC = ? AND PHIEUNHAP.MaNV = ?)";
                 PreparedStatement prepareStm = con.prepareStatement(selectAllQuery);
                 prepareStm.setString(1, maNCC);
+                prepareStm.setString(2, MaNV);
                 ResultSet rs = prepareStm.executeQuery();
                 while (rs.next()) {
                     String maPhieuNhap = rs.getString(1);
@@ -417,13 +444,14 @@ public class PhieuNhapDAO extends conndb{
         return null;
     }
     
-    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_tinhTrang(String tinhTrang_input) {
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_tinhTrang(String tinhTrang_input, String MaNV) {
         if (openConnection()) {
             ArrayList<PhieuNhapDTO> DSPhieuNhap = new ArrayList<>();
             try {
-                String selectAllQuery = "SELECT * FROM PHIEUNHAP WHERE PHIEUNHAP.TinhTrang = ?";
+                String selectAllQuery = "SELECT * FROM PHIEUNHAP WHERE PHIEUNHAP.TinhTrang = ? AND PHIEUNHAP.MANV = ?";
                 PreparedStatement prepareStm = con.prepareStatement(selectAllQuery);
                 prepareStm.setString(1, tinhTrang_input);
+                prepareStm.setString(2, MaNV);
                 ResultSet rs = prepareStm.executeQuery();
                 while (rs.next()) {
                     String maPhieuNhap = rs.getString(1);

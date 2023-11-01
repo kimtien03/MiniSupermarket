@@ -49,4 +49,9 @@ public class KhuyenMaiBUS {
         km = new KhuyenMaiDAO();
         return km.updateKM(MaKM,NKTDate,moTa,arrHH);
     }
+
+    public void AutoUpdateKM(Date date) {
+        km = new KhuyenMaiDAO();
+        km.AutoUpdateKM(date);
+    }
 }

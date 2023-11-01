@@ -1159,6 +1159,10 @@ public class KhuyenMaiPanel extends javax.swing.JPanel {
         String NKTString = dateTextField.getText();
         String tlgString = jtfTLGFormFixKM.getText();
         String moTa = jtfMTFormFixKM.getText();
+        java.util.Date currentDate = new java.util.Date();
+        Date date = new Date(currentDate.getTime());
+        Date NKTDate = Date.valueOf(NKTString);
+        int comparison = NKTDate.compareTo(date);
         if (moTa.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập mô tả!");
             return;
@@ -1167,12 +1171,15 @@ public class KhuyenMaiPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày kết thúc lớn hơn ngày bắt đầu!");
             return;
         }
+        if (comparison <= 0) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày kết thúc phải lớn hơn ngày hiện tại!");
+            return;
+        }
         if (!ValidateChonHH(jtbKMFormFixKM)) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn ít nhất 1 hàng hóa!");
             return;
         }
         // them vao csdl
-        Date NKTDate = Date.valueOf(NKTString);
         ArrayList<HH_LH_DTO> arrHH = new ArrayList<>();
         DefaultTableModel modelTableFixKM = (DefaultTableModel) jtbKMFormFixKM.getModel();
         for (int i=0;i<modelTableFixKM.getRowCount();i++) {

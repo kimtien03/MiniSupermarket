@@ -1,17 +1,22 @@
 package com.myproject.GUI.Login;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.myproject.BUS.CT_HangHoaBUS;
+import com.myproject.BUS.KhuyenMaiBUS;
 import com.myproject.BUS.NhanVienBUS;
 import com.myproject.DTO.NhanVienDTO;
 import com.myproject.GUI.Admin.Admin_MainJFrame;
 import com.myproject.GUI.NhanVienBanHang.Cashier_MainJFrame;
 import com.myproject.GUI.NhanVienKho.MainInventory;
 import com.myproject.GUI.QuanLy.MainFrame;
+import java.sql.Date;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 public class Login_JFrame extends javax.swing.JFrame {
     NhanVienBUS nv = new NhanVienBUS();
+    CT_HangHoaBUS cthh = new CT_HangHoaBUS();
+    KhuyenMaiBUS km = new KhuyenMaiBUS();
     ArrayList <NhanVienDTO> arrNV = (ArrayList <NhanVienDTO>) nv.getList();
     public Login_JFrame() {
         initComponents();
@@ -21,8 +26,17 @@ public class Login_JFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Login_JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         this.setLocationRelativeTo(null);
+        java.util.Date currentDate = new java.util.Date();
+        Date date = new Date(currentDate.getTime());
+        AutoUpdateCT_HH(date);
+        AutoUpdateKM(date);
     }
-
+    private void AutoUpdateCT_HH(Date date) {
+        cthh.AutoUpdateCT_HH(date);
+    }
+    private void AutoUpdateKM(Date date) {
+        km.AutoUpdateKM(date);
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -38,6 +52,7 @@ public class Login_JFrame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login_JFrame");
 
         jPanel1.setBackground(new java.awt.Color(3, 169, 244));
 
@@ -192,7 +207,7 @@ public class Login_JFrame extends javax.swing.JFrame {
             new Cashier_MainJFrame().setVisible(true);
         }
         else if (maQuyen.equalsIgnoreCase("MQ03")) {
-            new MainInventory().setVisible(true);
+            new MainInventory(taiKhoan.trim().toUpperCase(),tenNV).setVisible(true);
         }
         else if (maQuyen.equalsIgnoreCase("MQ04")) {
             new Admin_MainJFrame().setVisible(true);
@@ -227,13 +242,6 @@ public class Login_JFrame extends javax.swing.JFrame {
         forgot_Password_JDialog.setVisible(true);
     }//GEN-LAST:event_quenMatKhau
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login_JFrame().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

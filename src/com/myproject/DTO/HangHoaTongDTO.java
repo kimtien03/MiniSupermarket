@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.myproject.DTO;
 
 import java.sql.Timestamp;
 
-/**
- *
- * @author ACER
- */
 public class HangHoaTongDTO  {
     private String MaCT_HH;
     private String MaHH;
@@ -22,7 +14,6 @@ public class HangHoaTongDTO  {
     private String TenLH;
     private float SoLuong;
     private boolean TinhTrang;
-    
 
     public HangHoaTongDTO() {
     }
@@ -39,7 +30,6 @@ public class HangHoaTongDTO  {
         this.TenLH = TenLH;
         this.SoLuong = SoLuong;
         this.TinhTrang = TinhTrang;
-        
     }
 
     
@@ -129,8 +119,5 @@ public class HangHoaTongDTO  {
 
     public void setTinhTrang(boolean TinhTrang) {
         this.TinhTrang = TinhTrang;
-    }
-
-    
-    
+    } 
 }

@@ -253,4 +253,31 @@ public class KhuyenMaiDAO extends conndb{
         }
         return result;
     }
+    public void AutoUpdateMaKM_HH(Date date) {
+        if (openConnection()) {
+            try {
+                String sql = "UPDATE hanghoa SET hanghoa.makm = null\n" +
+                "where hanghoa.mahh in (select hanghoa.mahh from hanghoa,khuyenmai where hanghoa.makm = khuyenmai.makm"
+                + " and khuyenmai.tinhtrang = 0)";
+                PreparedStatement ps = con.prepareCall(sql);
+                ps.executeUpdate();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    public void AutoUpdateKM(Date date) {
+        if (openConnection()) {
+            try {
+                String sql = "Update KhuyenMai set TinhTrang = 0 where NgKetThucKM <= '" + date + "'";
+                PreparedStatement ps = con.prepareCall(sql);
+                ps.executeUpdate();
+                AutoUpdateMaKM_HH(date);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                closeConnection();
+            }
+        }
+    }
 }

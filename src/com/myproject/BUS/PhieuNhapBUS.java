@@ -13,6 +13,10 @@ public class PhieuNhapBUS {
         pn = new PhieuNhapDAO();
         return pn.getAllPN();
     }
+    public ArrayList<PhieuNhapDTO> getPNTheoMaNV(String maNV) {
+        pn = new PhieuNhapDAO();
+        return pn.getPNTheoMaNV(maNV);
+    }
     public ArrayList<CTPN_CTHH_HH_DTO> getAllCTPN() {
         pn = new PhieuNhapDAO();
         return pn.getAllCTPN();
@@ -55,25 +59,25 @@ public class PhieuNhapBUS {
         pn.updateThanhTien(MaPN,thanhTien);
     }
     
-    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_MaSP(String maSP) {
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_MaSP(String maSP, String MaNV) {
         pn = new PhieuNhapDAO();
-        return pn.find_PhieuNhap_By_MaSP(maSP);
+        return pn.find_PhieuNhap_By_MaSP(maSP,MaNV);
     }
     
-    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_ngayYC(String ngayYC) {
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_ngayYC(String ngayYC, String MaNV) {
         pn = new PhieuNhapDAO();
-        return pn.find_PhieuNhap_By_ngayYC(ngayYC);
+        return pn.find_PhieuNhap_By_ngayYC(ngayYC,MaNV);
     }
     
-    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_maNCC(String maNCC) {
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_maNCC(String maNCC, String MaNV) {
         pn = new PhieuNhapDAO();
-        return pn.find_PhieuNhap_By_maNCC(maNCC);
+        return pn.find_PhieuNhap_By_maNCC(maNCC,MaNV);
     }
     
     
-    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_tinhTrang(String tinhTrang) {
+    public ArrayList<PhieuNhapDTO> find_PhieuNhap_By_tinhTrang(String tinhTrang, String MaNV) {
         pn = new PhieuNhapDAO();
-        return pn.find_PhieuNhap_By_tinhTrang(tinhTrang);
+        return pn.find_PhieuNhap_By_tinhTrang(tinhTrang,MaNV);
     }
     public boolean insertPhieu(PhieuNhapDTO p) {
         pn = new PhieuNhapDAO();

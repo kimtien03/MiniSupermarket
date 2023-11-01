@@ -4,10 +4,12 @@ import com.myproject.GUI.NhanVienKho.InventoryPages.Import_Inventory;
 import com.myproject.GUI.NhanVienKho.InventoryPages.ProductStorage;
 import com.myproject.GUI.NhanVienKho.InventoryPages.Preview_Inventory;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.myproject.GUI.Login.Login_JFrame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
@@ -16,17 +18,17 @@ import javax.swing.UIManager;
  * @author ADMIN
  */
 public class MainInventory extends javax.swing.JFrame{
-
-    /**
-     * Creates new form MainInventory
-     */
-    public MainInventory() {
+    private String maNV;
+    private String tenNV;
+    public MainInventory(String maNV, String tenNV) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultPanel();
         this.BodyPN.setLayout(new BorderLayout());
-   
-        new Preview_Inventory();
+        this.maNV = maNV;
+        this.tenNV = tenNV;
+        jLabel2.setText(this.tenNV);
+//        new Preview_Inventory(this.maNV.toUpperCase());
     }
 
     /**
@@ -86,6 +88,11 @@ public class MainInventory extends javax.swing.JFrame{
         jlbLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/logout.png"))); // NOI18N
         jlbLogout.setText("Đăng Xuất");
         jlbLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jlbLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jlbLogoutMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -315,7 +322,7 @@ public class MainInventory extends javax.swing.JFrame{
     private void eventMoveImport(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eventMoveImport
         // TODO add your handling code here:
         this.BodyPN.removeAll();
-        this.BodyPN.add(new Import_Inventory());
+        this.BodyPN.add(new Import_Inventory(maNV.toUpperCase()));
         this.import_nav.setBackground(new Color(182,224,244));
         this.Inven_nav.setBackground(new Color(3,169,244));
         this.Preview_nav.setBackground(new Color(3,169,244));
@@ -325,26 +332,22 @@ public class MainInventory extends javax.swing.JFrame{
 
     private void Preview_navMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Preview_navMouseClicked
         this.BodyPN.removeAll();
-        this.BodyPN.add(new Preview_Inventory());
+        this.BodyPN.add(new Preview_Inventory(maNV.toUpperCase()));
         this.Preview_nav.setBackground(new Color(182,224,244));
         this.import_nav.setBackground(new Color(3,169,244));
         this.Inven_nav.setBackground(new Color(3,169,244));
         this.BodyPN.validate();
         this.BodyPN.repaint();
     }//GEN-LAST:event_Preview_navMouseClicked
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainInventory.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+    private void jlbLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jlbLogoutMouseClicked
+        int choose = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn đăng xuất?","Đăng xuất",JOptionPane.OK_CANCEL_OPTION);
+        if (choose == JOptionPane.OK_OPTION) {
+            this.dispose();
+            new Login_JFrame().setVisible(true);
         }
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            
-            public void run() {
-                new MainInventory().setVisible(true);
-            }
-        });
-    }
+    }//GEN-LAST:event_jlbLogoutMouseClicked
+
     /**
      * @param args the command line arguments
      */

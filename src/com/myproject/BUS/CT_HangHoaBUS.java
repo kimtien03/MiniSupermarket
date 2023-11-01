@@ -2,6 +2,7 @@ package com.myproject.BUS;
 
 import com.myproject.DAO.CT_HangHoaDAO;
 import com.myproject.DTO.CT_HangHoaDTO;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,5 +15,8 @@ public class CT_HangHoaBUS {
     public boolean insertCTHH(CT_HangHoaDTO cth) {
         CTHH_DAO.insertCTHH(cth);
         return true;
+    }
+    public void AutoUpdateCT_HH(Date date) {
+        CTHH_DAO.AutoUpdateCT_HH(date);
     }
 }

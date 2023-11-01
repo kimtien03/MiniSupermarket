@@ -1,22 +1,16 @@
 package com.myproject.GUI.Login;
 
 import com.myproject.BUS.NhanVienBUS;
+import java.awt.Frame;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class Change_Password_JDialog extends javax.swing.JDialog {
     private int OTP;
     private String maNV;
     NhanVienBUS nv = new NhanVienBUS();
-    public Change_Password_JDialog(java.awt.Frame parent, boolean modal, String maNV, int OTP) {
-        super(parent, modal);
-        initComponents();
-        this.setLocationRelativeTo(null);
-        this.OTP = OTP;
-        this.maNV = maNV;
-        System.out.println("otp 2: " + this.OTP);
-    }
     
     public Change_Password_JDialog(java.awt.Dialog parent, boolean modal, String maNV, int OTP) {
         super(parent, modal);
@@ -186,11 +180,20 @@ public class Change_Password_JDialog extends javax.swing.JDialog {
         if (nv.UpdateMK(maNV,mk)) {
             JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công!");
             dispose();
+            closeLoginFrame();
+            new Login_JFrame().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, "Đổi mật khẩu thất bại!");
         }
     }//GEN-LAST:event_jbttnDMKActionPerformed
-
+    private void closeLoginFrame() {
+        Frame[] frames = Frame.getFrames();
+        for (Frame frame : frames) {
+            if (frame instanceof JFrame && frame.getTitle().equals("Login_JFrame")) {
+                frame.dispose();
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

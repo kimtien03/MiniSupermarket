@@ -1,6 +1,7 @@
 package com.myproject.DAO;
 
 import com.myproject.DTO.CT_HangHoaDTO;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
@@ -71,5 +72,19 @@ public class CT_HangHoaDAO extends conndb {
             }
         }
         return check;
+    }
+
+    public void AutoUpdateCT_HH(Date date) {
+        if (openConnection()) {
+            try {
+                String sql = "Update CT_HangHoa set TinhTrang = 0 where HanSuDung <= '" + date + "'";
+                PreparedStatement ps = con.prepareCall(sql);
+                ps.executeUpdate();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                closeConnection();
+            }
+        }
     }
 }
