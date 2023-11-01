@@ -81,6 +81,7 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        Staff_JTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         Staff_JTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 clickedRowOnTable(evt);
@@ -267,23 +268,19 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
         if(selectedRow != -1) {
             this.StaffID_JTF.setText((String) this.tableModelStaff.getValueAt(selectedRow, 0));
             this.StaffName_JTF.setText((String) this.tableModelStaff.getValueAt(selectedRow, 1));
-            switch ((String) this.tableModelStaff.getValueAt(selectedRow, 2)) {
-                case "Quản lý":
-                    this.position_JCB.setSelectedIndex(0);
-                    break;
-                case "Nhân viên bán hàng":
-                    this.position_JCB.setSelectedIndex(1);
-                    break;
-                case "Nhân viên kho":
-                    this.position_JCB.setSelectedIndex(2);
-                    break;
-                case "Quản trị viên":
-                    this.position_JCB.setSelectedIndex(3);
-                    break;
-                default:
-                    throw new AssertionError();
+            String chucVu = (String) this.tableModelStaff.getValueAt(selectedRow, 2);
+            if (chucVu.trim().equalsIgnoreCase("Quản lý")) {
+                this.position_JCB.setSelectedIndex(0);
             }
-
+            else if (chucVu.trim().equalsIgnoreCase("Nhân viên bán hàng")) {
+                this.position_JCB.setSelectedIndex(1);
+            }
+            else if (chucVu.trim().equalsIgnoreCase("Nhân viên kho")) {
+                this.position_JCB.setSelectedIndex(2);
+            }
+            else {
+                this.position_JCB.setSelectedIndex(3);
+            }
         }
     }//GEN-LAST:event_clickedRowOnTable
 

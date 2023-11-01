@@ -206,6 +206,8 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
         this.ItemJPanel.repaint();
         decentrazilation_JPanel.setVisible(true);
         accountManag_JPanel.setVisible(false);
+        accoutManagJPanel.setBackground(new Color(3,169,244));
+        decentralizationJPanel.setBackground(new Color(182,224,244));
     }//GEN-LAST:event_clickedDecentralization
 
     private void clickedAccounManagement(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clickedAccounManagement
@@ -216,6 +218,8 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
         this.ItemJPanel.repaint();
         accountManag_JPanel.setVisible(true);
         decentrazilation_JPanel.setVisible(false);
+        accoutManagJPanel.setBackground(new Color(182,224,244));
+        decentralizationJPanel.setBackground(new Color(3,169,244));
     }//GEN-LAST:event_clickedAccounManagement
 
     private void closePage(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closePage
@@ -253,6 +257,8 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
         this.ItemJPanel.repaint();
         decentrazilation_JPanel.setVisible(true);
         accountManag_JPanel.setVisible(false);
+        decentralizationJPanel.setBackground(new Color(182,224,244));
+        accoutManagJPanel.setBackground(new Color(3,169,244));
     }
 }
 

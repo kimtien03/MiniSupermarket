@@ -1,7 +1,10 @@
 package com.myproject.GUI.Admin;
 
 import com.myproject.BUS.NhanVienBUS;
+import com.myproject.BUS.NhomQuyenBUS;
 import com.myproject.DTO.NhanVienDTO;
+import com.myproject.DTO.NhomQuyenDTO;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
@@ -53,6 +56,7 @@ public class Decentrazilation_JPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        decentrazilation_JTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         decentrazilation_JTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 clickedOnTable(evt);
@@ -89,7 +93,7 @@ public class Decentrazilation_JPanel extends javax.swing.JPanel {
 
         buttonGroup1.add(admin_JRB);
         admin_JRB.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        admin_JRB.setText("Admin");
+        admin_JRB.setText("Quản trị viên");
 
         refesh_JBTN.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         refesh_JBTN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/reload.png"))); // NOI18N
@@ -153,16 +157,22 @@ public class Decentrazilation_JPanel extends javax.swing.JPanel {
                 if(checkJRadioButton(staff)) {
                     JOptionPane.showMessageDialog(null, "QUYỀN ĐÃ ĐƯỢC GÁN CHO NHÂN VIÊN!");
                 } else {
-                    if(this.manager_JRB.isSelected()) {
-                        staff.setMaQuyen("MQ0001");
-                    } else if(this.salesClerk_JRB.isSelected()) {
-                        staff.setMaQuyen("MQ0002");
-                    } else if(this.warehouseStaff_JRB.isSelected()) {
-                        staff.setMaQuyen("MQ0003");
-                    } else if(this.admin_JRB.isSelected()) {
-                        staff.setMaQuyen("MQ0004");
+                    if(this.manager_JRB.isSelected() && staff.getChucVu().equalsIgnoreCase("Quản Lý")) {
+                        staff.setMaQuyen("MQ01");
+                    } else if(this.salesClerk_JRB.isSelected() && staff.getChucVu().equalsIgnoreCase("Nhân Viên Bán Hàng")) {
+                        staff.setMaQuyen("MQ02");
+                    } else if(this.warehouseStaff_JRB.isSelected() && staff.getChucVu().equalsIgnoreCase("Nhân Viên Kho")) {
+                        staff.setMaQuyen("MQ03");
+                    } else if(this.admin_JRB.isSelected() && staff.getChucVu().equalsIgnoreCase("Quản Trị Viên")) {
+                        staff.setMaQuyen("MQ04");
                     } else {
-                        JOptionPane.showMessageDialog(null, "PHÂN QUYỀN KHÔNG THÀNH CÔNG!");
+                        JOptionPane.showMessageDialog(null, "Cần Phân Quyền Đúng Với Chức Vụ Của Nhân Viên!");
+                        return;
+                    }
+                    if (staff.getPasswd().trim().equals("")) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        String ngSinhString = sdf.format(staff.getNgSinh());
+                        staff.setPasswd(ngSinhString);
                     }
                     nhanVienBUS.updateStaffInfo(staff);
                     JOptionPane.showMessageDialog(null, "PHÂN QUYỀN THÀNH CÔNG!");
@@ -248,13 +258,13 @@ public class Decentrazilation_JPanel extends javax.swing.JPanel {
     }
     
     public boolean checkJRadioButton(NhanVienDTO staff) {
-        if(staff.getMaQuyen().equals("MQ0001") && this.manager_JRB.isSelected()) {
+        if(staff.getMaQuyen().trim().equals("MQ01") && this.manager_JRB.isSelected()) {
             return true;
-        } else if(staff.getMaQuyen().equals("MQ0002") && this.salesClerk_JRB.isSelected()) {
+        } else if(staff.getMaQuyen().trim().equals("MQ02") && this.salesClerk_JRB.isSelected()) {
             return true;
-        } else if(staff.getMaQuyen().equals("MQ0003") && this.warehouseStaff_JRB.isSelected()) {
+        } else if(staff.getMaQuyen().trim().equals("MQ03") && this.warehouseStaff_JRB.isSelected()) {
             return true;
-        } else if(staff.getMaQuyen().equals("MQ0004") && this.admin_JRB.isSelected()) {
+        } else if(staff.getMaQuyen().trim().equals("MQ04") && this.admin_JRB.isSelected()) {
             return true;
         }
         return false;

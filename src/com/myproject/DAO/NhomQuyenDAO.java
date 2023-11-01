@@ -22,7 +22,6 @@ public class NhomQuyenDAO extends conndb{
                     String MaQuyen = rs.getString("MaQuyen");
                     String TenQuyen = rs.getString("TenQuyen");
                     String Mota = rs.getString("MoTa");
-                    
                     NhomQuyenDTO permissionItem = new NhomQuyenDTO(MaQuyen, TenQuyen, Mota);
                     permissionArrayList.add(permissionItem);
                 }
