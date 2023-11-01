@@ -190,9 +190,9 @@ public class NhanVienDAO extends conndb{
         int rs = 0;
         if (openConnection()) {
             try {
-                String sql = "UPDATE NHANVIEN SET TenNV=?, NgSinh=?, GioiTinh=?, SDT=?, Email=?,TinhTrang=?,ChucVu=? where MaNV=?";
+                String sql = "UPDATE NHANVIEN SET TenNV=?, NgSinh=?, GioiTinh=?, SDT=?, Email=?,TinhTrang=?,ChucVu=?,KhoaTK=? where MaNV=?";
                 PreparedStatement ps = con.prepareStatement(sql);
-                ps.setString(8, FixNv.getMaNV());
+                ps.setString(9, FixNv.getMaNV());
                 ps.setString(1, FixNv.getTenNV());
                 java.sql.Date ngaySinhSQL = new java.sql.Date(FixNv.getNgSinh().getTime());
                 ps.setDate(2, ngaySinhSQL);
@@ -201,6 +201,7 @@ public class NhanVienDAO extends conndb{
                 ps.setString(5, FixNv.getEmail());
                 ps.setBoolean(6, FixNv.isTinhTrang());
                 ps.setString(7, FixNv.getChucVu());
+                ps.setBoolean(8, FixNv.isKhoaTK());
                 rs = ps.executeUpdate();
             } catch (Exception ex) {
                 ex.printStackTrace();

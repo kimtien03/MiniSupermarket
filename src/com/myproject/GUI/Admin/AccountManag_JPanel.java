@@ -295,7 +295,7 @@ public class AccountManag_JPanel extends javax.swing.JPanel {
     private void findStaff(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findStaff
         if(!this.StaffID_JTF.getText().isEmpty() && this.StaffName_JTF.getText().isEmpty()) {
             String staffId = this.StaffID_JTF.getText();
-            loadDataToTable(nhanVienBUS.getStaffArrayListByID(staffId));
+            loadDataToTable(nhanVienBUS.getStaffArrayListByID(staffId.toUpperCase()));
         } else if(this.StaffID_JTF.getText().isEmpty() && !this.StaffName_JTF.getText().isEmpty()) {
             String staffName = this.StaffName_JTF.getText();
             loadDataToTable(nhanVienBUS.getStaffArrayListByName(staffName));

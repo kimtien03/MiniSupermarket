@@ -191,6 +191,16 @@ public class Login_JFrame extends javax.swing.JFrame {
         }
         return result;
     }
+    public boolean isBlock(String taiKhoan) {
+        boolean result = false;
+        for (NhanVienDTO nv : arrNV) {
+            if (nv.getMaNV().trim().equalsIgnoreCase(taiKhoan.trim()) && !nv.isKhoaTK()) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
     public void DividePermission(String taiKhoan) {
         String maQuyen = null;
         String tenNV = null;
@@ -210,7 +220,7 @@ public class Login_JFrame extends javax.swing.JFrame {
             new MainInventory(taiKhoan.trim().toUpperCase(),tenNV).setVisible(true);
         }
         else if (maQuyen.equalsIgnoreCase("MQ04")) {
-            new Admin_MainJFrame().setVisible(true);
+            new Admin_MainJFrame(tenNV).setVisible(true);
         }
         this.dispose();
     }
@@ -232,6 +242,10 @@ public class Login_JFrame extends javax.swing.JFrame {
         }
         if (!isValidMK(taiKhoan,matKhau)) {
             JOptionPane.showMessageDialog(null, "Mật khẩu không đúng!");
+            return;
+        }
+        if (!isBlock(taiKhoan)) {
+            JOptionPane.showMessageDialog(null, "Tài khoản của bạn đã bị khóa!");
             return;
         }
         DividePermission(taiKhoan);

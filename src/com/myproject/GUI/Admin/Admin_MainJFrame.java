@@ -1,16 +1,20 @@
 package com.myproject.GUI.Admin;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.myproject.GUI.Login.Login_JFrame;
 import java.awt.Color;
 import java.awt.GridLayout;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 public class Admin_MainJFrame extends javax.swing.JFrame {
     private Decentrazilation_JPanel decentrazilation_JPanel = new Decentrazilation_JPanel();
     private AccountManag_JPanel accountManag_JPanel = new AccountManag_JPanel();
-    
-    public Admin_MainJFrame() {
+    private String tenNV;
+    public Admin_MainJFrame(String tenNV) {
         initComponents();
+        this.tenNV = tenNV;
+        jlbInfo.setText(tenNV);
         this.setLocationRelativeTo(null);
         this.setItemJPanel();
     }
@@ -28,7 +32,7 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         ItemJPanel = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
+        jlbInfo = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -140,11 +144,11 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
         ItemJPanel.setRequestFocusEnabled(false);
         ItemJPanel.setLayout(new javax.swing.BoxLayout(ItemJPanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/profile.png"))); // NOI18N
-        jLabel5.setText("Nguyễn Vũ Tiến Đạt");
-        jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jlbInfo.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        jlbInfo.setForeground(new java.awt.Color(255, 255, 255));
+        jlbInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/profile.png"))); // NOI18N
+        jlbInfo.setText("Nguyễn Vũ Tiến Đạt");
+        jlbInfo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -167,7 +171,7 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
                     .addComponent(ItemJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 951, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel5)
+                        .addComponent(jlbInfo)
                         .addGap(56, 56, 56)
                         .addComponent(jLabel2)
                         .addContainerGap())))
@@ -178,7 +182,7 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(jlbInfo)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ItemJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 658, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -223,16 +227,13 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_clickedAccounManagement
 
     private void closePage(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closePage
-        System.exit(0);
+        int choose = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn đăng xuất?","Đăng xuất",JOptionPane.OK_CANCEL_OPTION);
+        if (choose == JOptionPane.OK_OPTION) {
+            this.dispose();
+            new Login_JFrame().setVisible(true);
+        }
     }//GEN-LAST:event_closePage
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Admin_MainJFrame().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ItemJPanel;
@@ -242,10 +243,10 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JLabel jlbInfo;
     // End of variables declaration//GEN-END:variables
 
     // mặc định đăng nhập vào trang addmin sẽ hiển thị giao diện phân quyền

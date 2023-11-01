@@ -1043,8 +1043,10 @@ public class QLNhanVienPanel extends javax.swing.JPanel {
                     fixNv.setEmail(EmailNvFix.getText());
                     if ("Đang hoạt động".equals(TTNvFix.getSelectedItem())) {
                         fixNv.setTinhTrang(true);
+                        fixNv.setKhoaTK(false);
                     } else if ("Ngừng hoạt động".equals(TTNvFix.getSelectedItem())) {
                         fixNv.setTinhTrang(false);
+                        fixNv.setKhoaTK(true);
                     }
                     Date ngaySinhDate = NgSNvFix.getDate();
                     fixNv.setNgSinh(ngaySinhDate);
