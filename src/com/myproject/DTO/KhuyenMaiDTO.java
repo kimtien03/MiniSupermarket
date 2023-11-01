@@ -1,15 +1,16 @@
 package com.myproject.DTO;
 import java.security.Timestamp;
+import java.util.Date;
 
 public class KhuyenMaiDTO {
     private String MaKM;
     private float TiLeGiam;
-    private Timestamp NgBD;
-    private Timestamp NgKT;
+    private Date NgBD;
+    private Date NgKT;
     private String MoTa;
     private boolean TinhTrang;
 
-    public KhuyenMaiDTO(String MaKM, float TiLeGiam, Timestamp NgBD, Timestamp NgKT, String MoTa, boolean TinhTrang) {
+    public KhuyenMaiDTO(String MaKM, float TiLeGiam, Date NgBD, Date NgKT, String MoTa, boolean TinhTrang) {
         this.MaKM = MaKM;
         this.TiLeGiam = TiLeGiam;
         this.NgBD = NgBD;
@@ -37,19 +38,19 @@ public class KhuyenMaiDTO {
         this.TiLeGiam = TiLeGiam;
     }
 
-    public Timestamp getNgBD() {
+    public Date getNgBD() {
         return NgBD;
     }
 
-    public void setNgBD(Timestamp NgBD) {
+    public void setNgBD(Date NgBD) {
         this.NgBD = NgBD;
     }
 
-    public Timestamp getNgKT() {
+    public Date getNgKT() {
         return NgKT;
     }
 
-    public void setNgKT(Timestamp NgKT) {
+    public void setNgKT(Date NgKT) {
         this.NgKT = NgKT;
     }
     

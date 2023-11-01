@@ -1,12 +1,23 @@
 package com.myproject.GUI.NhanVienBanHang;
 
+import com.myproject.BUS.KhachHangBUS;
+import com.myproject.DTO.KhachHangDTO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 public class Cus_Info_JDialog extends javax.swing.JDialog {
+    private KhachHangBUS khachHangBUS = new KhachHangBUS();
+    
     public Cus_Info_JDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        JTextField dateTextField = (JTextField) dateOfBirth_JDC.getDateEditor().getUiComponent();
+        dateTextField.setEditable(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -15,16 +26,12 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        nameOfCus_JTF = new javax.swing.JTextField();
+        phoneNumOfCus_JTF = new javax.swing.JTextField();
+        dateOfBirth_JDC = new com.toedter.calendar.JDateChooser();
         jPanel4 = new javax.swing.JPanel();
         saveJBTN = new javax.swing.JButton();
         closeJBTN = new javax.swing.JButton();
@@ -39,9 +46,6 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
         jPanel2.setBackground(new java.awt.Color(3, 169, 244));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Thông tin khách hàng"));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel1.setText("Mã khách hàng");
-
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel2.setText("Tên khách hàng");
 
@@ -51,21 +55,12 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel5.setText("Điện thoại");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel7.setText("Nhóm khách hàng");
+        nameOfCus_JTF.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField1.setEnabled(false);
+        phoneNumOfCus_JTF.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-
-        jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đồng ", "Bạc", "Vàng", "Bạch Kim" }));
-
-        jDateChooser1.setDateFormatString("dd-MM-yyyy");
-        jDateChooser1.setPreferredSize(new java.awt.Dimension(64, 28));
+        dateOfBirth_JDC.setDateFormatString("yyyy-MM-dd");
+        dateOfBirth_JDC.setPreferredSize(new java.awt.Dimension(64, 28));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -75,25 +70,17 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(36, 36, 36)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(33, 33, 33)
-                        .addComponent(jTextField2))
+                        .addComponent(nameOfCus_JTF, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(72, 72, 72)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(dateOfBirth_JDC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(71, 71, 71)
-                        .addComponent(jTextField5))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(14, 14, 14)
-                        .addComponent(jComboBox1, 0, 236, Short.MAX_VALUE)))
+                        .addComponent(phoneNumOfCus_JTF)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -101,25 +88,17 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nameOfCus_JTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dateOfBirth_JDC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phoneNumOfCus_JTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(174, 174, 174))
+                .addGap(211, 211, 211))
         );
 
         jPanel4.setBackground(new java.awt.Color(3, 169, 244));
@@ -129,7 +108,7 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
         saveJBTN.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         saveJBTN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveJBTNActionPerformed(evt);
+                saveCusInfo(evt);
             }
         });
 
@@ -138,7 +117,7 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
         closeJBTN.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         closeJBTN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeJBTNActionPerformed(evt);
+                closePage(evt);
             }
         });
 
@@ -156,10 +135,11 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveJBTN)
-                    .addComponent(closeJBTN)))
+                    .addComponent(closeJBTN))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
@@ -180,12 +160,12 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(14, 14, 14))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -199,20 +179,63 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void saveJBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJBTNActionPerformed
-        System.out.println("heelo");
-    }//GEN-LAST:event_saveJBTNActionPerformed
+    private void saveCusInfo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveCusInfo
+        String nameOfCus = this.nameOfCus_JTF.getText();
+        String phoneNumOfCus = this.phoneNumOfCus_JTF.getText();
+        JTextField dateTextField = (JTextField) dateOfBirth_JDC.getDateEditor().getUiComponent();
+        System.out.println(dateTextField.getText());
+        Date dayOfBirth = Date.valueOf(dateTextField.getText());
+        System.out.println(dayOfBirth);
+        if(dateTextField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "VUI LÒNG NHẬP ĐẦY ĐỦ THÔNG TIN KHÁCH HÀNG!");
+            return;
+        } else if(phoneNumOfCus.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "VUI LÒNG NHẬP ĐẦY ĐỦ THÔNG TIN KHÁCH HÀNG!");
+            return;
+        } else if(nameOfCus.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "VUI LÒNG NHẬP ĐẦY ĐỦ THÔNG TIN KHÁCH HÀNG!");
+            return;
+        } else if(!isValidPhoneNumber(phoneNumOfCus)) {
+            JOptionPane.showMessageDialog(null, "SỐ ĐIỆN THOẠI NHẬP VÀO KHÔNG HỢP LỆ!");
+            this.phoneNumOfCus_JTF.setText("");
+            return;
+        } else if(!nameOfCus.isEmpty() || !phoneNumOfCus.isEmpty()) {
+            if(!nameOfCus.isEmpty()) {
+                KhachHangDTO checkExist = khachHangBUS.getCusByName(nameOfCus);
+                if(checkExist != null) {
+                    JOptionPane.showMessageDialog(null, "KHÁCH HÀNG ĐÃ TỒN TẠI!");
+                    return;
+                }
+            } else {
+                KhachHangDTO checkExist = khachHangBUS.getCusByPhoneNum(phoneNumOfCus);
+                if(checkExist != null) {
+                    JOptionPane.showMessageDialog(null, "KHÁCH HÀNG ĐÃ TỒN TẠI!");
+                    return;
+                }
+            }
+        }
+        String MaKH = generateNewMaKH();
+        System.out.println(MaKH);
+        KhachHangDTO customer = new KhachHangDTO(MaKH, nameOfCus, phoneNumOfCus, 0, dayOfBirth, true);
+        int check = khachHangBUS.addCustomer(customer);
+        if(check != -1) {
+            JOptionPane.showMessageDialog(null, "THÊM KHÁCH HÀNG THÀNH CÔNG!");
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, "THÊM KHÁCH HÀNG THẤT BẠI!");
+        }
+    }//GEN-LAST:event_saveCusInfo
 
-    private void closeJBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeJBTNActionPerformed
+    private void closePage(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closePage
         dispose();
-    }//GEN-LAST:event_closeJBTNActionPerformed
+    }//GEN-LAST:event_closePage
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -231,20 +254,32 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeJBTN;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private javax.swing.JLabel jLabel1;
+    private com.toedter.calendar.JDateChooser dateOfBirth_JDC;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField nameOfCus_JTF;
+    private javax.swing.JTextField phoneNumOfCus_JTF;
     private javax.swing.JButton saveJBTN;
     // End of variables declaration//GEN-END:variables
+
+    // PHƯƠNG THỨC
+    // kiểm tra số điện thoại nhập vào có đúng k 
+    public boolean isValidPhoneNumber(String phoneNumber) {
+        String regex = "^0[97]\\d{8}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+    
+    // tạo mã khách hàng tự động
+    private String generateNewMaKH() {
+        int rowCount = this.khachHangBUS.getCusArrayList().size();
+        int newSequence = rowCount + 1;
+        return "KH" + String.format("%03d", newSequence);
+    }
 }

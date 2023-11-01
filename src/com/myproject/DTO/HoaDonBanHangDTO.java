@@ -1,13 +1,14 @@
 package com.myproject.DTO;
 import java.security.Timestamp;
+import java.util.Date;
 
 public class HoaDonBanHangDTO {
     private String MaHD;
-    private Timestamp NgLap;
+    private Date NgLap;
     private float ThanhTien; 
     private String MaKH;
     private String MaNV;
-    public HoaDonBanHangDTO(String MaHD, Timestamp NgLap, float ThanhTien, String MaKH, String MaNV) {
+    public HoaDonBanHangDTO(String MaHD, Date NgLap, float ThanhTien, String MaKH, String MaNV) {
         this.MaHD = MaHD;
         this.NgLap = NgLap;
         this.ThanhTien = ThanhTien;
@@ -26,11 +27,11 @@ public class HoaDonBanHangDTO {
         this.MaHD = MaHD;
     }
 
-    public Timestamp getNgLap() {
+    public Date getNgLap() {
         return NgLap;
     }
 
-    public void setNgLap(Timestamp NgLap) {
+    public void setNgLap(Date NgLap) {
         this.NgLap = NgLap;
     }
 

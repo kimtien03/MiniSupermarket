@@ -6,15 +6,11 @@ import java.awt.GridLayout;
 import javax.swing.UIManager;
 
 public class Admin_MainJFrame extends javax.swing.JFrame {
-    
+    private Decentrazilation_JPanel decentrazilation_JPanel = new Decentrazilation_JPanel();
+    private AccountManag_JPanel accountManag_JPanel = new AccountManag_JPanel();
     
     public Admin_MainJFrame() {
         initComponents();
-        try {
-            UIManager.setLookAndFeel(new FlatLightLaf());
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Admin_MainJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
         this.setLocationRelativeTo(null);
         this.setItemJPanel();
     }
@@ -49,7 +45,7 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
         decentralizationJPanel.setPreferredSize(new java.awt.Dimension(139, 60));
         decentralizationJPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                choosenDecentralization(evt);
+                clickedDecentralization(evt);
             }
         });
 
@@ -58,11 +54,6 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/decentralized.png"))); // NOI18N
         jLabel1.setText("Phân quyền");
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
-            }
-        });
 
         javax.swing.GroupLayout decentralizationJPanelLayout = new javax.swing.GroupLayout(decentralizationJPanel);
         decentralizationJPanel.setLayout(decentralizationJPanelLayout);
@@ -81,7 +72,7 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
         accoutManagJPanel.setPreferredSize(new java.awt.Dimension(219, 60));
         accoutManagJPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                choosenAccounManagement(evt);
+                clickedAccounManagement(evt);
             }
         });
 
@@ -207,42 +198,29 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void choosenDecentralization(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_choosenDecentralization
-        Decentrazilation_JPanel decentrazilation_JPanel = new Decentrazilation_JPanel();
+    private void clickedDecentralization(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clickedDecentralization
         this.ItemJPanel.removeAll();
         this.ItemJPanel.setLayout(new GridLayout(1,1));
         this.ItemJPanel.add(decentrazilation_JPanel);
         this.ItemJPanel.validate();
         this.ItemJPanel.repaint();
-        decentralizationJPanel.setBackground(new Color(182,224,244));
-        accoutManagJPanel.setBackground(new Color(3,169,244));
-    }//GEN-LAST:event_choosenDecentralization
+        decentrazilation_JPanel.setVisible(true);
+        accountManag_JPanel.setVisible(false);
+    }//GEN-LAST:event_clickedDecentralization
 
-    private void choosenAccounManagement(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_choosenAccounManagement
-        AccountManag_JPanel accountManag_JPanel = new AccountManag_JPanel();
+    private void clickedAccounManagement(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clickedAccounManagement
         this.ItemJPanel.removeAll();
         this.ItemJPanel.setLayout(new GridLayout(1,1));
         this.ItemJPanel.add(accountManag_JPanel);
         this.ItemJPanel.validate();
         this.ItemJPanel.repaint();
-        accoutManagJPanel.setBackground(new Color(182,224,244));
-        decentralizationJPanel.setBackground(new Color(3,169,244));
-    }//GEN-LAST:event_choosenAccounManagement
+        accountManag_JPanel.setVisible(true);
+        decentrazilation_JPanel.setVisible(false);
+    }//GEN-LAST:event_clickedAccounManagement
 
     private void closePage(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closePage
         System.exit(0);
     }//GEN-LAST:event_closePage
-
-    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        Decentrazilation_JPanel decentrazilation_JPanel = new Decentrazilation_JPanel();
-        this.ItemJPanel.removeAll();
-        this.ItemJPanel.setLayout(new GridLayout(1,1));
-        this.ItemJPanel.add(decentrazilation_JPanel);
-        this.ItemJPanel.validate();
-        this.ItemJPanel.repaint();
-        decentralizationJPanel.setBackground(new Color(182,224,244));
-        accoutManagJPanel.setBackground(new Color(3,169,244));
-    }//GEN-LAST:event_jLabel1MouseClicked
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -273,8 +251,8 @@ public class Admin_MainJFrame extends javax.swing.JFrame {
         this.ItemJPanel.add(decentrazilation_JPanel);
         this.ItemJPanel.validate();
         this.ItemJPanel.repaint();
-        decentralizationJPanel.setBackground(new Color(182,224,244));
-        accoutManagJPanel.setBackground(new Color(3,169,244));
+        decentrazilation_JPanel.setVisible(true);
+        accountManag_JPanel.setVisible(false);
     }
 }
 
