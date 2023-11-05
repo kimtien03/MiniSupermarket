@@ -413,7 +413,7 @@ public class UpdateInventory extends javax.swing.JDialog {
         HangHoaBUS hh = new HangHoaBUS();
         hh.updateHang(maHH, maLH, tinhTrang);
         JOptionPane.showMessageDialog(null, "Thay đổi thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-        productStorage.render();
+        productStorage.render(productStorage.CurrentStatus.trim(),productStorage.CurrentLH.trim());
         dispose();
         setVisible(false);
     }//GEN-LAST:event_jButton4ActionPerformed

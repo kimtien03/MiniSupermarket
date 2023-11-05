@@ -4,13 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/BUS/HangHoaBUS.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/BUS/KhachHangBUS.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/Admin/AccountManag_JPanel.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/Login/Forgot_Password_JDialog.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DAO/HoaDonBanHangDAO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/QuanLy/QuanLyPanels/ThongKePanel.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienBanHang/Payment_JDialog.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DTO/HoaDonBanHangDTO.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryDialogs/AddNewProduct.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryPages/ProductStorage.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/DAO/HangHoaDAO.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/ProJectSieuThi_CNPM/src/com/myproject/GUI/NhanVienKho/InventoryDialogs/UpdateInventory.java</file>
         </group>
     </open-files>
 </project-private>
