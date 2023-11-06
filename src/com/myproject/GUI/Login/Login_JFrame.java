@@ -214,7 +214,7 @@ public class Login_JFrame extends javax.swing.JFrame {
             new MainFrame(tenNV).setVisible(true);
         } 
         else if (maQuyen.equalsIgnoreCase("MQ02")) {
-            new Cashier_MainJFrame().setVisible(true);
+            new Cashier_MainJFrame(taiKhoan,tenNV).setVisible(true);
         }
         else if (maQuyen.equalsIgnoreCase("MQ03")) {
             new MainInventory(taiKhoan.trim().toUpperCase(),tenNV).setVisible(true);

@@ -2,38 +2,41 @@ package com.myproject.GUI.NhanVienBanHang;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.myproject.BUS.CTHD_BanHangBUS;
+import com.myproject.BUS.CT_HangHoaBUS;
 import com.myproject.BUS.HangHoaBUS;
 import com.myproject.BUS.HoaDonBanHangBUS;
 import com.myproject.BUS.KhachHangBUS;
 import com.myproject.BUS.KhuyenMaiBUS;
-import com.myproject.DAO.HangHoaDAO;
+import com.myproject.DTO.CTHD_BanHangDTO;
+import com.myproject.DTO.CT_HangHoaDTO;
 import com.myproject.DTO.HangHoaDTO;
 import com.myproject.DTO.KhachHangDTO;
 import com.myproject.DTO.KhuyenMaiDTO;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.myproject.GUI.Login.Login_JFrame;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 public class Cashier_MainJFrame extends javax.swing.JFrame {
+    private String MaNV;
+    private String TenNV;
     private HangHoaBUS hangHoaBUS = new HangHoaBUS();
+    private CT_HangHoaBUS cT_HangHoaBUS = new CT_HangHoaBUS();
     private KhuyenMaiBUS khuyenMaiBUS = new KhuyenMaiBUS();
     private KhachHangBUS khachHangBUS = new KhachHangBUS();
     private HoaDonBanHangBUS hoaDonBanHangBUS = new HoaDonBanHangBUS();
     private CTHD_BanHangBUS cTHD_BanHangBUS = new CTHD_BanHangBUS();
     private KhachHangDTO customer = null;
     private HangHoaDTO product = null;
+    private ArrayList<CTHD_BanHangDTO> billDetailsList = new ArrayList<CTHD_BanHangDTO>();
     private ArrayList<HangHoaDTO> productsList = new ArrayList<HangHoaDTO>();
     private ArrayList<Integer> quantityOfProductList = new ArrayList<Integer>();
-    private int quantityOfProduct;
+    private float quantityOfProduct;
     private float total = 0;
     private float totalAfterUsePoint;
     private boolean isApplyingLoyaltyPoints = false;
@@ -42,7 +45,9 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
     private DefaultTableModel tableModelProduct;
     private int selectedRowProductTable;
 
-    public Cashier_MainJFrame() {
+    public Cashier_MainJFrame(String MaNV, String TenNV) {
+        this.MaNV = MaNV;
+        this.TenNV = TenNV;
         initComponents();
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
@@ -51,6 +56,7 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                     getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         this.setLocationRelativeTo(null);
+        this.staffName_JTF.setText(TenNV);
         setTimeNow();
         createIdBill();
         tableInitialization();
@@ -68,7 +74,7 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         cashierTitle = new javax.swing.JLabel();
-        cashierTitle1 = new javax.swing.JLabel();
+        staffName_JTF = new javax.swing.JLabel();
         currnetly_JLB = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -179,11 +185,11 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
         cashierTitle.setForeground(new java.awt.Color(255, 255, 255));
         cashierTitle.setText("Nhân viên:");
 
-        cashierTitle1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        cashierTitle1.setForeground(new java.awt.Color(255, 255, 255));
-        cashierTitle1.setText("Nguyễn Vũ Tiến Đạt");
-        cashierTitle1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        cashierTitle1.setPreferredSize(new java.awt.Dimension(250, 27));
+        staffName_JTF.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        staffName_JTF.setForeground(new java.awt.Color(255, 255, 255));
+        staffName_JTF.setText("Nguyễn Vũ Tiến Đạt");
+        staffName_JTF.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        staffName_JTF.setPreferredSize(new java.awt.Dimension(250, 27));
 
         currnetly_JLB.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         currnetly_JLB.setForeground(new java.awt.Color(255, 255, 255));
@@ -203,7 +209,7 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                 .addGap(54, 54, 54)
                 .addComponent(cashierTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cashierTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(staffName_JTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(currnetly_JLB)
                 .addContainerGap())
@@ -215,7 +221,7 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(cashierTitle)
-                    .addComponent(cashierTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(staffName_JTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(currnetly_JLB))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -565,7 +571,11 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void closePage(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closePage
-        System.exit(0);
+        int choose = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn đăng xuất?","Đăng xuất",JOptionPane.OK_CANCEL_OPTION);
+        if (choose == JOptionPane.OK_OPTION) {
+            this.dispose();
+            new Login_JFrame().setVisible(true);
+        }
     }//GEN-LAST:event_closePage
 
     private void deleteProduct(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProduct
@@ -577,7 +587,8 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
             if(selection == JOptionPane.OK_OPTION) {
                 this.total -= (float) this.tableModelProduct.getValueAt(selectedRow, 8);
                 this.total_JTF.setText(this.total + "");
-                HangHoaDTO tmp = hangHoaBUS.getProductByID((String) this.tableModelProduct.getValueAt(selectedRow, 1));
+                HangHoaDTO tmp = hangHoaBUS.getProductByID((String) 
+                        this.tableModelProduct.getValueAt(selectedRow, 1));
                 this.productsList.remove(selectedRow);
                 this.tableModelProduct.removeRow(selectedRow);
                 // xét lại số thứ tự cho các sản phẩm
@@ -597,25 +608,26 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
             String tmp = this.total_JTF.getText();
             float total = Float.parseFloat(tmp);
             if(this.customer == null) {
+                getAllBillDetails();
                 KhachHangDTO transientGuests = khachHangBUS.getTransientGuests();
                 Payment_JDialog payment_JDialog = new Payment_JDialog(this, 
-                        rootPaneCheckingEnabled, transientGuests, 
-                        total, this.idBill, this.productsList);
+                        rootPaneCheckingEnabled, transientGuests, total, this.idBill, 
+                        this.productsList, this.billDetailsList, MaNV);
                 payment_JDialog.setLocationRelativeTo(null);
                 payment_JDialog.setVisible(true);
-
                 return;
             } else {
+                getAllBillDetails();
                 Payment_JDialog payment_JDialog = new Payment_JDialog(this, 
-                        rootPaneCheckingEnabled, this.customer, 
-                        total, this.idBill, this.productsList);
+                        rootPaneCheckingEnabled, this.customer, total, this.idBill, 
+                        this.productsList, this.billDetailsList, MaNV);
                 payment_JDialog.setLocationRelativeTo(null);
                 payment_JDialog.setVisible(true);
-
                 return;
             }  
         } else {
-            JOptionPane.showMessageDialog(null, "VUI LÒNG CHỌN SẢN PHẨM ĐỂ THANH TOÁN!");
+            JOptionPane.showMessageDialog(null, "VUI LÒNG CHỌN "
+                    + "SẢN PHẨM ĐỂ THANH TOÁN!");
         }
     }//GEN-LAST:event_payment
 
@@ -627,8 +639,8 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addCustomer
 
     private void addProduct(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProduct
-        String productID = this.productID_JTF.getText();
-        if(!productID.equals("")) {
+        String productID = this.productID_JTF.getText().toUpperCase();
+        if(!productID.isEmpty()) {
             product = hangHoaBUS.getProductByID(productID);
             if(product != null) {
                 jDialog1.setLocationRelativeTo(null);
@@ -650,13 +662,17 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
 
     private void enterQuantityOfProduct(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterQuantityOfProduct
         String quantity = this.quantity_JTF.getText();
-        if(quantity != null && !quantity.equals("")) {
+        if(quantity != null && !quantity.isEmpty()) {
             if(isNunmber(quantity)) {
+                float tmp = Float.parseFloat(quantity);
+                // kiểm tra xem số lượng trong kho có đủ không
                 int selectRow = checkExistenceOfProductOnTable(this.product.getMaHH());
                 if(selectRow != -1) {
+                    // kiểm tra xem khuyến mãi có đang được bật hay không
                     if(this.isApplyingLoyaltyPoints) {
                         int selection = JOptionPane.showConfirmDialog(null, 
-                    "ÁP DỤNG ĐIỂM TÍCH LŨY ĐANG ĐƯỢC ÁP DỤNG! HỦY ÁP DỤNG TÍNH ĐIỂM TÍCH LŨY?", "HỦY TÍNH ĐIỂM TÍCH LŨY", 
+                    "ÁP DỤNG ĐIỂM TÍCH LŨY ĐANG ĐƯỢC ÁP DỤNG! HỦY ÁP "
+                            + "DỤNG TÍNH ĐIỂM TÍCH LŨY?", "HỦY TÍNH ĐIỂM TÍCH LŨY", 
                     JOptionPane.OK_CANCEL_OPTION);
                         if(selection == JOptionPane.OK_OPTION) {
                             cancelApplyingLoyaltyPoints();
@@ -664,15 +680,24 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                             return;
                         }
                     }
-                    updateProductOnTable(selectRow, Integer.parseInt(quantity));
-                    this.quantity_JTF.setText("");
-                    product = null;
-                    this.productID_JTF.setText("");
-                    jDialog1.setVisible(false);
+                    float oldQuantity = (float) this.product_JTB.getValueAt(selectRow, 4);
+                    if(hangHoaBUS.checkQuantityOfProduct(tmp + oldQuantity, this.product.getMaHH())) {
+                        updateProductOnTable(selectRow, Integer.parseInt(quantity));
+                        this.quantity_JTF.setText("");
+                        product = null;
+                        this.productID_JTF.setText("");
+                        jDialog1.setVisible(false);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "SỐ "
+                                + "LƯỢNG HÀNG HÓA TRONG KHO KHÔNG ĐỦ!");
+                        this.quantity_JTF.setText("");
+                    }
                 } else {
                     if(this.isApplyingLoyaltyPoints) {
+                        // kiểm tra xem khuyến mãi có đang được bật hay không
                         int selection = JOptionPane.showConfirmDialog(null, 
-                    "ÁP DỤNG ĐIỂM TÍCH LŨY ĐANG ĐƯỢC ÁP DỤNG! HỦY ÁP DỤNG TÍNH ĐIỂM TÍCH LŨY?", "HỦY TÍNH ĐIỂM TÍCH LŨY", 
+                              "ÁP DỤNG ĐIỂM TÍCH LŨY ĐANG ĐƯỢC ÁP DỤNG! HỦY ÁP "
+                            + "DỤNG TÍNH ĐIỂM TÍCH LŨY?", "HỦY TÍNH ĐIỂM TÍCH LŨY", 
                     JOptionPane.OK_CANCEL_OPTION);
                         if(selection == JOptionPane.OK_OPTION) {
                             cancelApplyingLoyaltyPoints();
@@ -680,17 +705,23 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                             return;
                         }
                     }
-                    this.productsList.add(this.product);
-                    this.quantityOfProduct = Integer.parseInt(quantity);
-                    this.quantity_JTF.setText("");
-                    loadProductToTable(product);
-                    product = null;
-                    this.productID_JTF.setText("");
-                    jDialog1.setVisible(false);
+                    if(hangHoaBUS.checkQuantityOfProduct(tmp, this.product.getMaHH())) {
+                        this.productsList.add(this.product);
+                        this.quantityOfProduct = Integer.parseInt(quantity);
+                        this.quantity_JTF.setText("");
+                        loadProductToTable(product);
+                        product = null;
+                        this.productID_JTF.setText("");
+                        jDialog1.setVisible(false);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "SỐ "
+                                + "LƯỢNG HÀNG HÓA TRONG KHO KHÔNG ĐỦ!");
+                        this.quantity_JTF.setText("");
+                    }
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "DỮ LIỆU "
-                        + "NHẬP VÀO KHÔNG PHẢI LÀ SỐ NGUYÊN!");
+                        + "NHẬP VÀO KHÔNG PHẢI LÀ SỐ NGUYÊN VÀ LỚN HƠN 0!");
                 this.quantity_JTF.setText("");
             }
         } else {
@@ -780,13 +811,6 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
         refeshPage();
     }//GEN-LAST:event_refeshPage
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Cashier_MainJFrame().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField accumulatedPoints_JTF;
@@ -794,7 +818,6 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
     private javax.swing.JButton addProduct_JBTN;
     private javax.swing.JButton cancel;
     private javax.swing.JLabel cashierTitle;
-    private javax.swing.JLabel cashierTitle1;
     private javax.swing.JButton closeJBTN;
     private javax.swing.JLabel currnetly_JLB;
     private javax.swing.JButton deleteProduct_JBTN;
@@ -826,6 +849,7 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
     private javax.swing.JButton quantity_JBTN;
     private javax.swing.JTextField quantity_JTF;
     private javax.swing.JButton returnGoodJBTN1;
+    private javax.swing.JLabel staffName_JTF;
     private javax.swing.JTextField total_JTF;
     // End of variables declaration//GEN-END:variables
 
@@ -888,7 +912,7 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
     public boolean isNunmber(String quantity) {
         try {
             Double.parseDouble(quantity); // Thử chuyển đổi văn bản thành số
-            return true;
+            return true && Double.parseDouble(quantity) != 0;
         } catch (NumberFormatException e) {
             return false; // Nếu không thể chuyển đổi, không phải số
         }
@@ -907,7 +931,7 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
     
     // cập nhật lại sản phầm trên bảng
     public void updateProductOnTable(int selectRow, int quantity) {
-        int oldQuantity = (int) this.tableModelProduct.getValueAt(selectRow, 4);
+        float oldQuantity = (float) this.tableModelProduct.getValueAt(selectRow, 4);
         this.tableModelProduct.setValueAt(quantity + oldQuantity, selectRow, 4);
         int newQuantity = quantity;
         quantity += oldQuantity;
@@ -1003,17 +1027,40 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
         this.total = 0;
         this.totalAfterUsePoint = 0;
         this.isApplyingLoyaltyPoints = false;
+        this.productsList.clear();
+        this.billDetailsList.clear();
     }
     
     // lấy toàn bộ chi tiết hóa đơn khi bắt đầu thanh toán
     public void getAllBillDetails() {
-        int rowCount = this.product_JTB.getRowCount();
-        int colCount = this.product_JTB.getColumnCount();
-        
-        for(int i=0; i<rowCount; i++) {
+        for(int i=0; i<this.tableModelProduct.getRowCount(); i++) {
+            String MaHH = (String) this.tableModelProduct.getValueAt(i, 1);
+            System.out.println("ma hang hoa: " + MaHH);
             String MaHD = this.idBill;
-            String MaCT_HH = null;
+            float SLBan = (float) this.tableModelProduct.getValueAt(i, 4);
+            float total = (float) this.tableModelProduct.getValueAt(i, 8);
+            float unitPrice = total / SLBan;
+            // kiểm ta xem số lượng khách mua = số lượng trong kho không
+            if(SLBan == this.hangHoaBUS.getQuantityOfProductInWarehouse(MaHH)) {
+                for (CT_HangHoaDTO productDetailsItem : cT_HangHoaBUS.getProductDetailsByProductID(MaHH)) {
+                    CTHD_BanHangDTO billDetailsItem = new CTHD_BanHangDTO(MaHD, productDetailsItem.getMaCT_HH(), productDetailsItem.getSoLuong(), unitPrice);
+                    this.billDetailsList.add(billDetailsItem);
+                }
+            } 
+            // xử lý trường hợp số lượng khách mau nhỏ hơn số lượng trong kho
+            else {
+                for (CT_HangHoaDTO productDetailsItem : cT_HangHoaBUS.getProductDetailsByProductID(MaHH)) {
+                    if(SLBan <= productDetailsItem.getSoLuong()) {
+                        CTHD_BanHangDTO billDetailsItem = new CTHD_BanHangDTO(MaHD, productDetailsItem.getMaCT_HH(), SLBan, unitPrice);
+                        this.billDetailsList.add(billDetailsItem);
+                        break;  
+                    } else {
+                        SLBan -= productDetailsItem.getSoLuong();
+                        CTHD_BanHangDTO billDetailsItem = new CTHD_BanHangDTO(MaHD, productDetailsItem.getMaCT_HH(), productDetailsItem.getSoLuong(), unitPrice);
+                        this.billDetailsList.add(billDetailsItem);
+                    }
+                }
+            }
         }
     }
-    
 }

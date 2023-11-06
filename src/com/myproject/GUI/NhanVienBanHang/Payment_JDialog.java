@@ -18,23 +18,36 @@ import java.util.ArrayList;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.myproject.BUS.CTHD_BanHangBUS;
+import com.myproject.BUS.CT_HangHoaBUS;
+import com.myproject.BUS.HangHoaBUS;
+import com.myproject.DTO.CTHD_BanHangDTO;
+import com.myproject.DTO.CT_HangHoaDTO;
 import java.sql.Timestamp;
 
 public class Payment_JDialog extends javax.swing.JDialog {
+    private String MaNV;
+    private CT_HangHoaBUS cT_HangHoaBUS = new CT_HangHoaBUS();
+    private HangHoaBUS hangHoaBUS = new HangHoaBUS();
     private HoaDonBanHangBUS hoaDonBanHangBUS = new HoaDonBanHangBUS();
+    private CTHD_BanHangBUS cTHD_BanHangBUS = new CTHD_BanHangBUS();
     private KhachHangDTO customer = null;
     private ArrayList<HangHoaDTO> productsList;
+    private ArrayList<CTHD_BanHangDTO> billDetailsList;
     private float total = 0;
     private String MaHD;
     
     // constructor có truyền tham số vào
     public Payment_JDialog(java.awt.Frame parent, boolean modal, KhachHangDTO 
-            customer, float total, String MaHD, ArrayList<HangHoaDTO> productList) {
+            customer, float total, String MaHD, ArrayList<HangHoaDTO> productList, 
+            ArrayList<CTHD_BanHangDTO> billDetailsList, String MaNV) {
         super(parent, modal);
+        this.MaNV = MaNV;
         this.MaHD = MaHD;
         this.customer = customer;
         this.total = total;
         this.productsList = productList;
+        this.billDetailsList = billDetailsList;
         initComponents();
         setUpPage(); 
     }
@@ -374,9 +387,11 @@ public class Payment_JDialog extends javax.swing.JDialog {
                     long currentTimeMillis = System.currentTimeMillis();
                     Timestamp currentDateTime = new Timestamp(currentTimeMillis);
                     HoaDonBanHangDTO bill = new HoaDonBanHangDTO(this.MaHD, 
-                            currentDateTime, this.total, this.customer.getMaKH(), "NV0002");
-                    int check = this.hoaDonBanHangBUS.addNewBill(bill);
-                    if(check != -1) {
+                            currentDateTime, this.total, this.customer.getMaKH(), MaNV);
+                    int checkBill = this.hoaDonBanHangBUS.addNewBill(bill);
+                    int checkBillDetails = this.cTHD_BanHangBUS.addBillDetails(billDetailsList);
+                    int checkuUpdateQuantity = updateQuantityOfProduct();
+                    if(checkBill != -1 && checkBillDetails != -1 && checkuUpdateQuantity != -1) {
                         JOptionPane.showMessageDialog(null, "LƯU HÓA ĐƠN THÀNH CÔNG!");
                         Cashier_MainJFrame cashier_MainJFrame = (Cashier_MainJFrame) this.getParent();
                         cashier_MainJFrame.refeshPage();
@@ -400,20 +415,6 @@ public class Payment_JDialog extends javax.swing.JDialog {
         printBill();
     }//GEN-LAST:event_printBill
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                Payment_JDialog dialog = new Payment_JDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel amountPaid_JLB;
@@ -471,17 +472,17 @@ public class Payment_JDialog extends javax.swing.JDialog {
 
         try {
             // khởi tạo một PdfWriter truyền vào document và FileOutputStream
-            PdfWriter.getInstance((com.itextpdf.text.Document) document, new FileOutputStream("C:\\Users\\ADMIN\\OneDrive\\Máy tính\\BILL.pdf"));
+            String relativePath = System.getProperty("user.dir") + "\\src\\resources\\pdf\\BILL.pdf";
+            PdfWriter.getInstance((com.itextpdf.text.Document) document, new FileOutputStream(relativePath));
 
             // mở file để thực hiện viết
             document.open();
             // thêm nội dung sử dụng add function
             document.add(new Paragraph("HOA DON BAN HANG"));
             document.add(new Paragraph("Ngay ban: " + formattedDate + "          Quay: 1"));
-            document.add(new Paragraph("Ma hoa don: " + this.MaHD));
+            document.add(new Paragraph("Ma hoa don: " + this.MaHD + "          Ma nhan vien: " + this.MaNV));
             document.add(new Paragraph(""));
             document.add(new Paragraph("DANH SACH SAN PHAM"));
-            
             
             for(HangHoaDTO productItem : this.productsList) {
                 document.add(new Paragraph(productItem.getTenHH() + "--"));
@@ -494,5 +495,21 @@ public class Payment_JDialog extends javax.swing.JDialog {
         } catch (DocumentException ex) {
             Logger.getLogger(Payment_JDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    // cập nhật lại số lượng trong kho
+    public int updateQuantityOfProduct() {
+        int check = -1;
+        for (CTHD_BanHangDTO billDetailsItem : this.billDetailsList) {
+            CT_HangHoaDTO productDetails = this.cT_HangHoaBUS.
+                    getProductDetailsByID(billDetailsItem.getMaCT_HH());
+            productDetails.setSoLuong(productDetails.getSoLuong() - billDetailsItem.getSLBan());
+            if(productDetails.getSoLuong() == 0) {
+                productDetails.setTinhTrang(false);
+            } 
+            check = this.cT_HangHoaBUS.updateQuantityOfProduct2(productDetails.getMaCT_HH(), 
+                    productDetails.getSoLuong(), productDetails.isTinhTrang());
+        }
+        return check;
     }
 }
