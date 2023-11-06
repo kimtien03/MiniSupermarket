@@ -7,24 +7,20 @@ import com.myproject.BUS.HangHoaBUS;
 import com.myproject.BUS.HoaDonBanHangBUS;
 import com.myproject.BUS.KhachHangBUS;
 import com.myproject.BUS.KhuyenMaiBUS;
-import com.myproject.DAO.HangHoaDAO;
 import com.myproject.DTO.CTHD_BanHangDTO;
 import com.myproject.DTO.CT_HangHoaDTO;
 import com.myproject.DTO.HangHoaDTO;
 import com.myproject.DTO.KhachHangDTO;
 import com.myproject.DTO.KhuyenMaiDTO;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import com.myproject.GUI.Login.Login_JFrame;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 public class Cashier_MainJFrame extends javax.swing.JFrame {
     private String MaNV;
@@ -575,7 +571,11 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void closePage(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closePage
-        System.exit(0);
+        int choose = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn đăng xuất?","Đăng xuất",JOptionPane.OK_CANCEL_OPTION);
+        if (choose == JOptionPane.OK_OPTION) {
+            this.dispose();
+            new Login_JFrame().setVisible(true);
+        }
     }//GEN-LAST:event_closePage
 
     private void deleteProduct(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProduct
@@ -609,8 +609,6 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
             float total = Float.parseFloat(tmp);
             if(this.customer == null) {
                 getAllBillDetails();
-                System.out.println(this.billDetailsList.size());
-                System.out.println(this.billDetailsList.size());
                 KhachHangDTO transientGuests = khachHangBUS.getTransientGuests();
                 Payment_JDialog payment_JDialog = new Payment_JDialog(this, 
                         rootPaneCheckingEnabled, transientGuests, total, this.idBill, 
@@ -620,8 +618,6 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                 return;
             } else {
                 getAllBillDetails();
-                System.out.println(this.billDetailsList.size());
-                System.out.println(this.billDetailsList.size());
                 Payment_JDialog payment_JDialog = new Payment_JDialog(this, 
                         rootPaneCheckingEnabled, this.customer, total, this.idBill, 
                         this.productsList, this.billDetailsList, MaNV);
@@ -725,7 +721,7 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "DỮ LIỆU "
-                        + "NHẬP VÀO KHÔNG PHẢI LÀ SỐ NGUYÊN!");
+                        + "NHẬP VÀO KHÔNG PHẢI LÀ SỐ NGUYÊN VÀ LỚN HƠN 0!");
                 this.quantity_JTF.setText("");
             }
         } else {
@@ -815,13 +811,6 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
         refeshPage();
     }//GEN-LAST:event_refeshPage
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Cashier_MainJFrame("", "").setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField accumulatedPoints_JTF;
@@ -923,7 +912,7 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
     public boolean isNunmber(String quantity) {
         try {
             Double.parseDouble(quantity); // Thử chuyển đổi văn bản thành số
-            return true;
+            return true && Double.parseDouble(quantity) != 0;
         } catch (NumberFormatException e) {
             return false; // Nếu không thể chuyển đổi, không phải số
         }
@@ -1075,9 +1064,3 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
         }
     }
 }
-
-
-
-//trường hợp 1: so sánh số lượng khách mua = tổng số lượng trong kho => set số lượng cthh về 0 và tình trạng cthh = false
-//trường hợp 2: 
-//    trường hợp 3: lấy số lượng có ngày sản xuất là xa nhất - số lượng của chi 

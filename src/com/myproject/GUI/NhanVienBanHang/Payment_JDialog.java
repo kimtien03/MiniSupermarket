@@ -415,20 +415,6 @@ public class Payment_JDialog extends javax.swing.JDialog {
         printBill();
     }//GEN-LAST:event_printBill
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                Payment_JDialog dialog = new Payment_JDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel amountPaid_JLB;
@@ -486,7 +472,8 @@ public class Payment_JDialog extends javax.swing.JDialog {
 
         try {
             // khởi tạo một PdfWriter truyền vào document và FileOutputStream
-            PdfWriter.getInstance((com.itextpdf.text.Document) document, new FileOutputStream("C:\\Users\\ADMIN\\OneDrive\\Máy tính\\BILL.pdf"));
+            String relativePath = System.getProperty("user.dir") + "\\src\\resources\\pdf\\BILL.pdf";
+            PdfWriter.getInstance((com.itextpdf.text.Document) document, new FileOutputStream(relativePath));
 
             // mở file để thực hiện viết
             document.open();

@@ -190,9 +190,6 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
         String nameOfCus = this.nameOfCus_JTF.getText();
         String phoneNumOfCus = this.phoneNumOfCus_JTF.getText();
         JTextField dateTextField = (JTextField) dateOfBirth_JDC.getDateEditor().getUiComponent();
-        System.out.println(dateTextField.getText());
-        Date dayOfBirth = Date.valueOf(dateTextField.getText());
-        System.out.println(dayOfBirth);
         if(dateTextField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "VUI LÒNG NHẬP ĐẦY ĐỦ THÔNG TIN KHÁCH HÀNG!");
             return;
@@ -221,8 +218,8 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
                 }
             }
         }
+        Date dayOfBirth = Date.valueOf(dateTextField.getText());
         String MaKH = generateNewMaKH();
-        System.out.println(MaKH);
         KhachHangDTO customer = new KhachHangDTO(MaKH, nameOfCus, phoneNumOfCus, 0, dayOfBirth, true);
         int check = khachHangBUS.addCustomer(customer);
         if(check != -1) {
@@ -237,20 +234,6 @@ public class Cus_Info_JDialog extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_closePage
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                Cus_Info_JDialog dialog = new Cus_Info_JDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeJBTN;
