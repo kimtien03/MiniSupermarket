@@ -10,37 +10,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HangHoaBUS {
-    HangHoaDAO hh;
+    HangHoaDAO hh = new HangHoaDAO();
+    
     public ArrayList<HH_CTHH_DTO> getAllHHFormFixPN() {
-        hh = new HangHoaDAO();
         return hh.getAllHHFormFixPN();
     }
     public List<HangHoaTongDTO> getAllHangHoa() {
-        hh = new HangHoaDAO();
         return hh.getAllHangHoa();
     }
     public List<HangHoaDTO> getList() {
-        hh = new HangHoaDAO();
         return hh.getList();
     }
     public boolean updateTinhTrangHangHoa(String maHH, boolean newTinhTrang) {
-        hh = new HangHoaDAO();
         return hh.updateTinhTrangHangHoa(maHH, newTinhTrang);
     }
     
     public int getCountHH() {
-        hh = new HangHoaDAO();
         return hh.getAllCount();
     }
 
     public boolean insertHangHoa(HangHoaDTO hhDTO) {
-        hh = new HangHoaDAO();
         hh.insertHangHoa(hhDTO);
         return true;
     }
 
     public ArrayList<HangHoaDTO> getListHHTotal(ArrayList<CT_HangHoaDTO> listCTHH, ArrayList<LoaiHangDTO> listLH) {
-        hh = new HangHoaDAO();
         return hh.getHangHoaTotal(listCTHH, listLH);
     }
 
@@ -50,19 +44,36 @@ public class HangHoaBUS {
     }
     
     public ArrayList<Float> getHangSL() {
-        hh = new HangHoaDAO();
         return hh.getHangSL();
     }
     
     public boolean updateHang(String maHH, String maLH, boolean tinhTrang) {
-        hh = new HangHoaDAO();
         hh.updateHang(maHH, maLH, tinhTrang);
         return true;
     }
     
     
     // TIENDAT
+    // tìm kiếm sản phầm theo mã 
     public HangHoaDTO getProductByID(String MaHH) {
-        return hh.getProductByID(MaHH);
+        ArrayList<HangHoaDTO> productList = hh.getAllProducts();
+        for(HangHoaDTO productItem : productList) {
+            if(productItem.getMaHH().trim().equals(MaHH)) {
+                return productItem;
+            }
+        }
+        return null;
+    }
+    
+    public boolean checkQuantityOfProduct(float quantity, String MaHH) {
+        float quantityOfProduct = (float) hh.getQuantityOfProduct(MaHH);
+        if(quantityOfProduct >=  quantity) {
+            return true;
+        }
+        return false;
+    }
+    
+    public float getQuantityOfProductInWarehouse(String MaHH) {
+        return hh.getQuantityOfProduct(MaHH);
     }
 }

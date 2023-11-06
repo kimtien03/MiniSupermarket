@@ -267,6 +267,35 @@ public class HangHoaDAO extends conndb{
     
     
     //TIENDAT
+    // lấy toàn bộ trường dữ liệu hàng hóa 
+    public ArrayList<HangHoaDTO> getAllProducts() {
+        ArrayList<HangHoaDTO> productList = new ArrayList<HangHoaDTO>();
+        
+        if(openConnection()) {
+            try {
+                String sql = "SELECT * FROM HANGHOA WHERE TinhTrang = ?";
+                PreparedStatement preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setBoolean(1, true);
+                ResultSet rs = preparedStatement.executeQuery();
+                while(rs.next()) {
+                    String MaHH = rs.getString("MaHH");
+                    String TenHH = rs.getString("TenHH");
+                    String MaKM = rs.getString("MaKM");
+                    float DonGiaBan = rs.getFloat("DonGiaBan");
+                    String DonVi = rs.getString("DonVi");
+                    String MaLH = rs.getString("MaLH");
+                    boolean TinhTrang = rs.getBoolean("TinhTrang");
+                    
+                    HangHoaDTO product = new HangHoaDTO(MaHH, TenHH, MaLH, DonGiaBan, DonVi, MaKM, TinhTrang);
+                    productList.add(product);
+                }
+            } catch (Exception e) {
+            }
+        }
+        
+        return productList;
+    }
+    
     // lấy một trường dữ liệu hàng hóa theo mã hàng hóa
     public HangHoaDTO getProductByID(String MaHH) {
         HangHoaDTO product = null;
@@ -293,6 +322,29 @@ public class HangHoaDAO extends conndb{
         }
         
         return product;
+    }
+    
+    // lấy số lượng của một hàng hóa theo mã 
+    public float getQuantityOfProduct(String MaHH) {
+        float quantityOfProduct = 0;
+        
+        if(openConnection()) {
+            try {
+                String sql = "select hh.MaHH, hh.TenHH, sum(ct.soluong) as SoLuong "
+                        + "from HANGHOA hh inner join CT_HANGHOA ct on ct.MaHH = hh.MaHH "
+                        + "where hh.TinhTrang = 1 and hh.MaHH = ? and ct.TinhTrang = 1 "
+                        + "group by hh.MaHH, hh.TenHH";
+                PreparedStatement preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setString(1, MaHH);
+                ResultSet rs = preparedStatement.executeQuery();
+                if(rs.next()) {
+                    quantityOfProduct = rs.getFloat("SoLuong");
+                }
+            } catch (SQLException e) {
+            }
+        }
+        
+        return quantityOfProduct;
     }
 }
 

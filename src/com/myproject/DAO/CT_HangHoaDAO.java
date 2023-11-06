@@ -93,30 +93,89 @@ public class CT_HangHoaDAO extends conndb {
     
     // TIENDAT
     // lấy mã chi tiết hoàng hóa theo mã hàng hóa
-    public ArrayList<CT_HangHoaDTO> getBillDetailsByProductID(String MaHH) {
-        ArrayList<CT_HangHoaDTO> productDetails = new ArrayList<CT_HangHoaDTO>();
+    public ArrayList<CT_HangHoaDTO> getProductDetailsByProductID(String MaHH) {
+        ArrayList<CT_HangHoaDTO> productDetailsList = new ArrayList<CT_HangHoaDTO>();
         
         if(openConnection()) {
             try {
-                String sql = "SELECT * FROM CT_HANGHOA WHERE MaHH = ? AND TinhTrang = 1";
+                String sql = "SELECT * FROM CT_HANGHOA WHERE MaHH = ? AND TinhTrang = 1 AND HanSuDung >= GETDATE() ORDER BY NgSanXuat";
                 PreparedStatement preparedStatement = con.prepareStatement(sql);
                 preparedStatement.setString(1, MaHH);
                 ResultSet rs = preparedStatement.executeQuery();
                 while(rs.next()) {
-                    String MaCT_HH = rs.getString("");
-                    int SoLuong = rs.getInt("");
-                    Date NgSanXuat = rs.getDate("");
-                    Date HanSuDung = rs.getDate("");
-                    boolean TinhTrang = rs.getBoolean("");
+                    String MaCT_HH = rs.getString("MaCT_HH");
+                    int SoLuong = rs.getInt("SoLuong");
+                    Date NgSanXuat = rs.getDate("NgSanXuat");
+                    Date HanSuDung = rs.getDate("HanSuDung");
+                    boolean TinhTrang = rs.getBoolean("TinhTrang");
                     
                     CT_HangHoaDTO productDetail = new CT_HangHoaDTO(MaCT_HH, MaHH, 
                             NgSanXuat, HanSuDung, SoLuong, TinhTrang);
+                    productDetailsList.add(productDetail);
                     
                 }
             } catch (Exception e) {
             }
         }
         
+        return productDetailsList;
+    }
+    
+    // lấy chi tiết hàng hóa theo mã chi tiết hàng hóa
+    public CT_HangHoaDTO getProductDetailsByID(String MaCT_HH) {
+        CT_HangHoaDTO productDetails = null;
+        
+        if(openConnection()) {
+            try {
+                String sql = "SELECT * FROM CT_HANGHOA WHERE MaCT_HH = ?";
+                PreparedStatement preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setString(1, MaCT_HH);
+                ResultSet rs = preparedStatement.executeQuery();
+                while(rs.next()) {
+                    Date NgSanXuat = rs.getDate("NgSanXuat");
+                    Date HanSuDung = rs.getDate("HanSuDung");
+                    boolean TinhTrang = rs.getBoolean("TinhTrang");
+                    String MaHH = rs.getString("MaHH");
+                    float soluong = rs.getFloat("soluong");
+                    
+                    productDetails = new CT_HangHoaDTO(MaCT_HH, MaCT_HH, 
+                            NgSanXuat, HanSuDung, soluong, TinhTrang);
+                }
+            } catch (Exception e) {
+            }
+        }
+        
         return productDetails;
+    }
+    
+    // CẬP NHẬT DỮ LIỆU 
+    // cập nhật lại số lượng hàng hóa trong kho khi số lượng khách mua = số lượng trong kho 
+    public int updateQuantityOfProduct1(String MaCT_HH) {
+        if(openConnection()) {
+            try {
+                String sql = "UPDATE CT_HANGHOA SET TinhTrang = 0, soluong = 0 WHERE MaCT_HH = ?";
+                PreparedStatement preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setString(1, MaCT_HH);
+                return preparedStatement.executeUpdate();
+            } catch (Exception e) {
+            }
+        }
+        return -1;
+    }
+    
+    // cập nhật lại số lượng hàng háo trong kho 
+    public int updateQuantityOfProduct2(String MaCT_HH, float soluong, boolean TinhTrang) {
+        if(openConnection()) {
+            try {
+                String sql = "UPDATE CT_HANGHOA SET soluong = ?, TinhTrang = ? WHERE MaCT_HH = ?";
+                PreparedStatement preparedStatement = con.prepareStatement(sql);
+                preparedStatement.setFloat(1, soluong);
+                preparedStatement.setBoolean(2, TinhTrang);
+                preparedStatement.setString(3, MaCT_HH);
+                return preparedStatement.executeUpdate();
+            } catch (Exception e) {
+            }
+        }
+        return -1;
     }
 }
