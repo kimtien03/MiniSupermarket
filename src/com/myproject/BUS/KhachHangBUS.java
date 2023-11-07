@@ -27,10 +27,6 @@ public class KhachHangBUS {
         }
     }
     
-    
-    
-    
-    
     // TIENDAT
     // lấy danh sách khách hàng từ lớp DAO
     public ArrayList<KhachHangDTO> getCusArrayList() {

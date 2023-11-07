@@ -138,7 +138,7 @@ public class CT_HangHoaDAO extends conndb {
                     String MaHH = rs.getString("MaHH");
                     float soluong = rs.getFloat("soluong");
                     
-                    productDetails = new CT_HangHoaDTO(MaCT_HH, MaCT_HH, 
+                    productDetails = new CT_HangHoaDTO(MaCT_HH, MaHH, 
                             NgSanXuat, HanSuDung, soluong, TinhTrang);
                 }
             } catch (Exception e) {

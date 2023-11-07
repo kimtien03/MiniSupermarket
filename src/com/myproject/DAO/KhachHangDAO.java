@@ -18,7 +18,7 @@ public class KhachHangDAO extends conndb {
         try {
             ConKH.openConnection();
             Connection cons = ConKH.getConnection();
-            String sql = "SELECT*FROM KHACHHANG";
+            String sql = "SELECT*FROM KHACHHANG WHERE MAKH <> 'KH000'";
             PreparedStatement ps = cons.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

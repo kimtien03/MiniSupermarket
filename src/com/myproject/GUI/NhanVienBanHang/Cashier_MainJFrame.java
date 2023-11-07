@@ -607,12 +607,19 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
         if(!this.total_JTF.getText().isEmpty()) {
             String tmp = this.total_JTF.getText();
             float total = Float.parseFloat(tmp);
+            String accumulatedPointsString = "";
+            if (this.accumulatedPoints_JTF.getText().isEmpty()) 
+                accumulatedPointsString = "0";
+            else 
+                accumulatedPointsString = this.accumulatedPoints_JTF.getText();
+            int accumulatedPoints = Integer.parseInt(accumulatedPointsString);
             if(this.customer == null) {
                 getAllBillDetails();
                 KhachHangDTO transientGuests = khachHangBUS.getTransientGuests();
                 Payment_JDialog payment_JDialog = new Payment_JDialog(this, 
                         rootPaneCheckingEnabled, transientGuests, total, this.idBill, 
-                        this.productsList, this.billDetailsList, MaNV);
+                        this.productsList, this.billDetailsList, MaNV, 
+                        this.isApplyingLoyaltyPoints,accumulatedPoints);
                 payment_JDialog.setLocationRelativeTo(null);
                 payment_JDialog.setVisible(true);
                 return;
@@ -620,7 +627,8 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                 getAllBillDetails();
                 Payment_JDialog payment_JDialog = new Payment_JDialog(this, 
                         rootPaneCheckingEnabled, this.customer, total, this.idBill, 
-                        this.productsList, this.billDetailsList, MaNV);
+                        this.productsList, this.billDetailsList, MaNV, 
+                        this.isApplyingLoyaltyPoints,accumulatedPoints);
                 payment_JDialog.setLocationRelativeTo(null);
                 payment_JDialog.setVisible(true);
                 return;
@@ -777,13 +785,17 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                     if(this.customer.getDiem() > 0) {
                         this.isApplyingLoyaltyPoints = true;
                         this.totalAfterUsePoint = this.total;
-                        // áp dụng công thức tính điểm ra tiền
-                        this.totalAfterUsePoint = (float) (this.total - (this.customer.getDiem() / 0.0003));
+                        String accumulatedPoints = "0";
+                        this.totalAfterUsePoint = (float) (this.total - (this.customer.getDiem() / 0.01));
                         if(this.totalAfterUsePoint < 0) {
                             this.totalAfterUsePoint = 0;
                         }
+                        if (this.total - (this.customer.getDiem() / 0.01) < 0) {
+                            int Remainingaccumulatedpoints = this.customer.getDiem() - (int)this.total/100;
+                            accumulatedPoints = Integer.toString(Remainingaccumulatedpoints);
+                        }
                         this.total_JTF.setText(this.totalAfterUsePoint + "");
-                        this.accumulatedPoints_JTF.setText("0");
+                        this.accumulatedPoints_JTF.setText(accumulatedPoints);
                         this.isApplyingLoyaltyPoints = true;
                     } else {
                         JOptionPane.showMessageDialog(null, "KHÁCH "

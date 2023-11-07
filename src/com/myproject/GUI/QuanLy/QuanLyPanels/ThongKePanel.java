@@ -960,11 +960,17 @@ public class ThongKePanel extends javax.swing.JPanel {
                     Cell headerCell = headerRow.createCell(i);
                     headerCell.setCellValue(columnHeaders[i]);
                 }
-            } else {
+            } else if (selectedIndex == 3) {
                 Row headerRow = sheet.createRow(1);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                String NgStart = dateFormat.format(jdcStart.getDate());
-                String NgEnd = dateFormat.format(jdcEnd.getDate());
+
+                Date startDate = jdcStart.getDate();
+                Date endDate = jdcEnd.getDate();
+
+                // Kiểm tra và gán giá trị rỗng nếu là null
+                String NgStart = (startDate != null) ? dateFormat.format(startDate) : "";
+                String NgEnd = (endDate != null) ? dateFormat.format(endDate) : "";
+
                 String[] columnHeaders = {"Ngày bắt đầu:", NgStart, "Ngày kết thúc", NgEnd};
                 for (int i = 0; i < columnHeaders.length; i++) {
                     Cell headerCell = headerRow.createCell(i);
@@ -1754,7 +1760,8 @@ public class ThongKePanel extends javax.swing.JPanel {
 
     private void jbttnBCKCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttnBCKCActionPerformed
         JFileChooser fileChooser = new JFileChooser();
-        File defaultDirectory = new File("D:\\OneDrive\\Tai Lieu\\CNPM\\ProJectSieuThi_CNPM\\src\\resources\\excel");
+        String relativePath = System.getProperty("user.dir") + "\\src\\resources\\excel";
+        File defaultDirectory = new File(relativePath);
         fileChooser.setCurrentDirectory(defaultDirectory);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Files (.xlsx)", "xlsx");
         fileChooser.setFileFilter(filter);
