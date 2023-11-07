@@ -16,11 +16,17 @@ import com.itextpdf.text.DocumentException;
 import com.myproject.DTO.HangHoaDTO;
 import java.util.ArrayList;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.myproject.BUS.CTHD_BanHangBUS;
 import com.myproject.BUS.CT_HangHoaBUS;
 import com.myproject.BUS.HangHoaBUS;
+import com.myproject.BUS.KhachHangBUS;
 import com.myproject.DTO.CTHD_BanHangDTO;
 import com.myproject.DTO.CT_HangHoaDTO;
 import java.sql.Timestamp;
@@ -31,16 +37,18 @@ public class Payment_JDialog extends javax.swing.JDialog {
     private HangHoaBUS hangHoaBUS = new HangHoaBUS();
     private HoaDonBanHangBUS hoaDonBanHangBUS = new HoaDonBanHangBUS();
     private CTHD_BanHangBUS cTHD_BanHangBUS = new CTHD_BanHangBUS();
+    private KhachHangBUS khachHangBUS = new KhachHangBUS();
     private KhachHangDTO customer = null;
     private ArrayList<HangHoaDTO> productsList;
     private ArrayList<CTHD_BanHangDTO> billDetailsList;
     private float total = 0;
     private String MaHD;
+    private boolean isApplyingLoyaltyPoints;
     
     // constructor có truyền tham số vào
     public Payment_JDialog(java.awt.Frame parent, boolean modal, KhachHangDTO 
             customer, float total, String MaHD, ArrayList<HangHoaDTO> productList, 
-            ArrayList<CTHD_BanHangDTO> billDetailsList, String MaNV) {
+            ArrayList<CTHD_BanHangDTO> billDetailsList, String MaNV, boolean isApplyingLoyaltyPoints) {
         super(parent, modal);
         this.MaNV = MaNV;
         this.MaHD = MaHD;
@@ -48,6 +56,7 @@ public class Payment_JDialog extends javax.swing.JDialog {
         this.total = total;
         this.productsList = productList;
         this.billDetailsList = billDetailsList;
+        this.isApplyingLoyaltyPoints = isApplyingLoyaltyPoints;
         initComponents();
         setUpPage(); 
     }
@@ -270,6 +279,11 @@ public class Payment_JDialog extends javax.swing.JDialog {
         jButton1.setText("In & lưu");
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton1.setPreferredSize(new java.awt.Dimension(108, 108));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAndPrintBill(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/printer.png"))); // NOI18N
@@ -379,41 +393,17 @@ public class Payment_JDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cashIsReceived
 
     private void saveBill(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBill
-        if(!this.totalPayment_JTF.getText().isEmpty()) {
-            String tmp = this.totalPayment_JTF.getText();
-            if(ValidateNumber(tmp)) {
-                float moneyOfCus = Float.parseFloat(tmp);
-                if(moneyOfCus >= total) {
-                    long currentTimeMillis = System.currentTimeMillis();
-                    Timestamp currentDateTime = new Timestamp(currentTimeMillis);
-                    HoaDonBanHangDTO bill = new HoaDonBanHangDTO(this.MaHD, 
-                            currentDateTime, this.total, this.customer.getMaKH(), MaNV);
-                    int checkBill = this.hoaDonBanHangBUS.addNewBill(bill);
-                    int checkBillDetails = this.cTHD_BanHangBUS.addBillDetails(billDetailsList);
-                    int checkuUpdateQuantity = updateQuantityOfProduct();
-                    if(checkBill != -1 && checkBillDetails != -1 && checkuUpdateQuantity != -1) {
-                        JOptionPane.showMessageDialog(null, "LƯU HÓA ĐƠN THÀNH CÔNG!");
-                        Cashier_MainJFrame cashier_MainJFrame = (Cashier_MainJFrame) this.getParent();
-                        cashier_MainJFrame.refeshPage();
-                        cashier_MainJFrame.createIdBill();
-                        this.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "LƯU HÓA ĐƠN THẤT BẠI!");
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "SỐ TIỀN KHÔNG ĐỦ ĐỂ THANH TOÁN!");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "DỮ LIỆU NHẬP VÀO KHÔNG ĐÚNG!");
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "VUI LÒNG NHẬP SỐ TIỀN KHÁCH ĐÃ TRẢ!");
-        }
+        this.saveBill();
     }//GEN-LAST:event_saveBill
 
     private void printBill(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printBill
         printBill();
     }//GEN-LAST:event_printBill
+
+    private void saveAndPrintBill(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAndPrintBill
+        this.saveBill();
+        this.printBill();
+    }//GEN-LAST:event_saveAndPrintBill
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -460,6 +450,43 @@ public class Payment_JDialog extends javax.swing.JDialog {
         return matcher.matches();
     }
     
+    // lưu hóa đơn
+    public void saveBill() {
+        if(!this.totalPayment_JTF.getText().isEmpty()) {
+            String tmp = this.totalPayment_JTF.getText();
+            if(ValidateNumber(tmp)) {
+                float moneyOfCus = Float.parseFloat(tmp);
+                if(moneyOfCus >= total) {
+                    long currentTimeMillis = System.currentTimeMillis();
+                    Timestamp currentDateTime = new Timestamp(currentTimeMillis);
+                    HoaDonBanHangDTO bill = new HoaDonBanHangDTO(this.MaHD, 
+                            currentDateTime, this.total, this.customer.getMaKH(), MaNV);
+                    int checkBill = this.hoaDonBanHangBUS.addNewBill(bill);
+                    int checkBillDetails = this.cTHD_BanHangBUS.addBillDetails(billDetailsList);
+                    int checkuUpdateQuantity = updateQuantityOfProduct();
+                    if(checkBill != -1 && checkBillDetails != -1 && checkuUpdateQuantity != -1) {
+                        if(!this.isApplyingLoyaltyPoints) {
+                            updateReawardPointOfCus();
+                        }
+                        JOptionPane.showMessageDialog(null, "LƯU HÓA ĐƠN THÀNH CÔNG!");
+                        Cashier_MainJFrame cashier_MainJFrame = (Cashier_MainJFrame) this.getParent();
+                        cashier_MainJFrame.refeshPage();
+                        cashier_MainJFrame.createIdBill();
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "LƯU HÓA ĐƠN THẤT BẠI!");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "SỐ TIỀN KHÔNG ĐỦ ĐỂ THANH TOÁN!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "DỮ LIỆU NHẬP VÀO KHÔNG ĐÚNG!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "VUI LÒNG NHẬP SỐ TIỀN KHÁCH ĐÃ TRẢ!");
+        }
+    }
+    
     // xuất vé cho khách
     public void printBill() {
         // lấy ngày giờ hiện tại lập hóa đơn
@@ -467,33 +494,55 @@ public class Payment_JDialog extends javax.swing.JDialog {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
         String formattedDate = dateFormat.format(currentDate);
         
-        // tạo một document
         Document document = new Document();
 
         try {
-            // khởi tạo một PdfWriter truyền vào document và FileOutputStream
             String relativePath = System.getProperty("user.dir") + "\\src\\resources\\pdf\\BILL.pdf";
             PdfWriter.getInstance((com.itextpdf.text.Document) document, new FileOutputStream(relativePath));
-
-            // mở file để thực hiện viết
             document.open();
-            // thêm nội dung sử dụng add function
-            document.add(new Paragraph("HOA DON BAN HANG"));
-            document.add(new Paragraph("Ngay ban: " + formattedDate + "          Quay: 1"));
-            document.add(new Paragraph("Ma hoa don: " + this.MaHD + "          Ma nhan vien: " + this.MaNV));
-            document.add(new Paragraph(""));
-            document.add(new Paragraph("DANH SACH SAN PHAM"));
-            
+
+            // Tiêu đề hóa đơn
+            Paragraph title = new Paragraph("HÓA ĐƠN BÁN HÀNg", new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD));
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+
+            // Thông tin hóa đơn
+            Paragraph invoiceInfo = new Paragraph("Mã hóa đơn: " + this.MaHD + "\nNgày: " + formattedDate + "\n\n");
+            document.add(invoiceInfo);
+
+            // Danh sách sản phẩm
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+
+            PdfPCell cell1 = new PdfPCell(new Phrase("Sản phẩm"));
+            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell1);
+
+            PdfPCell cell2 = new PdfPCell(new Phrase("Số lượng"));
+            cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell2);
+
+            PdfPCell cell3 = new PdfPCell(new Phrase("Thành tiền"));
+            cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell3);
+
             for(HangHoaDTO productItem : this.productsList) {
-                document.add(new Paragraph(productItem.getTenHH() + "--"));
+                table.addCell(productItem.getTenHH());
+                table.addCell(this.getquantityOfProductOnBillDetails(productItem.getMaHH()) + "");
+                table.addCell(this.getTotalOfProductOnBillDetails(productItem.getMaHH()) + "");
             }
-            // đóng file
+
+            // Tổng tiền
+            Paragraph totalAmount = new Paragraph("Tổng tiền: " + this.total, new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD));
+            totalAmount.setAlignment(Element.ALIGN_RIGHT);
+            document.add(totalAmount);
+
             document.close();
-            System.out.println("ghi thanh cong!");
-        } catch (FileNotFoundException e) {
+            System.out.println("Hóa đơn đã được in vào tệp invoice.pdf.");
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (DocumentException ex) {
-            Logger.getLogger(Payment_JDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -511,5 +560,38 @@ public class Payment_JDialog extends javax.swing.JDialog {
                     productDetails.getSoLuong(), productDetails.isTinhTrang());
         }
         return check;
+    }
+    
+    // lấy số lượng mua của một hàng hóa
+    public float getquantityOfProductOnBillDetails(String MaHH) {
+        float quantity = 0;
+        CT_HangHoaDTO productDetails = null;
+        for(CTHD_BanHangDTO billDetails : this.billDetailsList) {
+            productDetails = this.cT_HangHoaBUS.getProductDetailsByID(billDetails.getMaCT_HH());
+            if(productDetails.getMaHH().equals(MaHH)) {
+                quantity += billDetails.getSLBan();
+            }
+        }
+        return quantity;
+    }
+    
+    // lấy thành tiền của một hàng hóa 
+    public float getTotalOfProductOnBillDetails(String MaHH) {
+        float total = 0;
+        CT_HangHoaDTO productDetails = null;
+        for(CTHD_BanHangDTO billDetails : this.billDetailsList) {
+            productDetails = this.cT_HangHoaBUS.getProductDetailsByID(billDetails.getMaCT_HH());
+            if(productDetails.getMaHH().equals(MaHH)) {
+                total += billDetails.getDonGia() * billDetails.getSLBan();
+            }
+        }
+        return total;
+    }
+    
+    // tích điểm cho khách hàng
+    public void updateReawardPointOfCus() {
+        int rewardPoint = (int) (this.customer.getDiem() + this.total * 0.00004);
+        this.customer.setDiem(this.customer.getDiem() + rewardPoint);
+        this.khachHangBUS.UpdatekhNew(customer);
     }
 }

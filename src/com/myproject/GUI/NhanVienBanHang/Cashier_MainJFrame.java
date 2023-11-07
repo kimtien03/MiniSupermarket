@@ -612,7 +612,8 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                 KhachHangDTO transientGuests = khachHangBUS.getTransientGuests();
                 Payment_JDialog payment_JDialog = new Payment_JDialog(this, 
                         rootPaneCheckingEnabled, transientGuests, total, this.idBill, 
-                        this.productsList, this.billDetailsList, MaNV);
+                        this.productsList, this.billDetailsList, MaNV, 
+                        this.isApplyingLoyaltyPoints);
                 payment_JDialog.setLocationRelativeTo(null);
                 payment_JDialog.setVisible(true);
                 return;
@@ -620,7 +621,8 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                 getAllBillDetails();
                 Payment_JDialog payment_JDialog = new Payment_JDialog(this, 
                         rootPaneCheckingEnabled, this.customer, total, this.idBill, 
-                        this.productsList, this.billDetailsList, MaNV);
+                        this.productsList, this.billDetailsList, MaNV, 
+                        this.isApplyingLoyaltyPoints);
                 payment_JDialog.setLocationRelativeTo(null);
                 payment_JDialog.setVisible(true);
                 return;
@@ -778,7 +780,7 @@ public class Cashier_MainJFrame extends javax.swing.JFrame {
                         this.isApplyingLoyaltyPoints = true;
                         this.totalAfterUsePoint = this.total;
                         // áp dụng công thức tính điểm ra tiền
-                        this.totalAfterUsePoint = (float) (this.total - (this.customer.getDiem() / 0.0003));
+                        this.totalAfterUsePoint = (float) (this.total - (this.customer.getDiem() / 0.01));
                         if(this.totalAfterUsePoint < 0) {
                             this.totalAfterUsePoint = 0;
                         }
